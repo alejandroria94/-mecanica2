@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -45,6 +44,7 @@ public class Equipo {
     private String imagen;
     private ArrayList<OrdenDeTrabajo> listaOrdenesDeTrabajo;
     private ArrayList<Equipo> listaDeEquipos;
+    private String operario;
 
     public Equipo() {
 //        this.nombre = "";
@@ -78,10 +78,10 @@ public class Equipo {
     public boolean guardarEquipo() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-        String sentencia = "INSERT INTO Equipos(nombre, tipoEquipo, marca, modelo, ubicacion, estado, serie, peso, altura, largo, ancho, potencia, tipoPotencia, frecuencia, alimentacion, ambienteCorrosivo, tiempoDeFuncionamiento, horasDeUso, funciones, caracteristicasEspecificas, observaciones, control, estadoPintura, imagen,codigo) "
+        String sentencia = "INSERT INTO Equipos(nombre, tipoEquipo, marca, modelo, ubicacion, estado, serie, peso, altura, largo, ancho, potencia, tipoPotencia, frecuencia, alimentacion, ambienteCorrosivo, tiempoDeFuncionamiento, horasDeUso, funciones, caracteristicasEspecificas, observaciones, control, estadoPintura, imagen,codigo,operario) "
                 + " VALUES ( '" + this.nombre + "','" + this.tipoEquipo + "','" + this.marca + "','" + this.modelo + "','" + this.ubicacion + "','" + this.estado + "','" + this.serie + "','" + this.peso + "','" + this.altura + "','" + this.largo + "','"
                 + this.ancho + "','" + this.potencia + "','" + this.tipoPotencia + "','" + this.frecuencia + "','" + this.alimentacion + "','" + this.ambienteCorrosivo + "','" + this.tiempoDeFuncionamiento + "','" + this.horasDeUso + "','" + this.funciones + "','"
-                + this.caracteristicasEspecificas + "','" + this.observaciones + "','" + this.control + "','" + this.estadoPintura + "','" + this.imagen + "','" + this.codigo + "');  ";
+                + this.caracteristicasEspecificas + "','" + this.observaciones + "','" + this.control + "','" + this.estadoPintura + "','" + this.imagen + "','" + this.codigo + "','" + this.operario + "');  ";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -94,37 +94,9 @@ public class Equipo {
         return exito;
     }
 
-    public boolean actualizarrEquipo(String idEquipos, String nombre, String tipoEquipo, String marca, String modelo, String ubicacion, String estado, String serie,
-            String peso, String altura, String largo, String ancho, String potencia, String tipoPotencia, String frecuencia,
-            String alimentacion, boolean ambienteCorrosivo, float tiempoDeFuncionamiento, float horasDeUso, String funciones, String caracteristicasEspecificas,
-            String observaciones, String control, String estadoPintura, String imagen, String codigo) {
-        boolean exito = false;
-        ConexionBD conexion = new ConexionBD();
-        if (conexion.setAutoCommitBD(false)) {
-            //UPDATE table_name
-            //SET column1=value1,column2=value2,...
-            //WHERE some_column=some_value;
-            int ambienteCorrosivo1 = 0;
-            if (ambienteCorrosivo) {
-                ambienteCorrosivo1 = 1;
-            }
-            String sql2 = "UPDATE `Equipos` SET nombre='" + nombre + "',tipoEquipo='" + tipoEquipo + "',marca='" + marca
-                    + "',modelo='" + modelo + "',ubicacion='" + ubicacion + "',estado='" + estado + "',serie='" + serie
-                    + "',peso='" + peso + "',altura='" + altura + "',largo='" + largo + "',ancho='" + ancho
-                    + "',potencia='" + potencia + "',tipoPotencia='" + tipoPotencia + "',frecuencia='" + frecuencia + "',alimentacion='" + alimentacion
-                    + "',ambienteCorrosivo='" + ambienteCorrosivo1 + "',tiempoDeFuncionamiento='" + tiempoDeFuncionamiento + "',horasDeUso='" + horasDeUso + "',funciones='" + funciones
-                    + "',caracteristicasEspecificas='" + caracteristicasEspecificas + "',observaciones='" + observaciones + "',control='" + control + "',estadoPintura='" + estadoPintura
-                    + "',imagen='" + imagen + "',codigo='" + codigo
-                    + "' WHERE `idEquipos`='" + idEquipos + "'";
-            boolean borro2 = conexion.actualizarBD(sql2);
-            if (borro2) {
-                conexion.commitBD();
-                exito = true;
-            } else {
-                conexion.rollbackBD();
-            }
-        }
-        return exito;
+    public boolean actualizarrEquipo(String idEquipos) {
+        this.idEquipos = Integer.parseInt(idEquipos);
+        return this.actualizarrEquipo();
     }
 
     public boolean actualizarrEquipo() {
@@ -140,8 +112,7 @@ public class Equipo {
                     + "',potencia='" + this.potencia + "',tipoPotencia='" + this.tipoPotencia + "',frecuencia='" + this.frecuencia + "',alimentacion='" + this.alimentacion
                     + "',ambienteCorrosivo='" + this.ambienteCorrosivo + "',tiempoDeFuncionamiento='" + this.tiempoDeFuncionamiento + "',horasDeUso='" + this.horasDeUso + "',funciones='" + this.funciones
                     + "',caracteristicasEspecificas='" + this.caracteristicasEspecificas + "',observaciones='" + this.observaciones + "',control='" + this.control + "',estadoPintura='" + this.estadoPintura
-                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo
-                    + "' WHERE `idEquipos`='" + this.idEquipos + "'";
+                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo+ "',operario='"+this.operario+"' WHERE `idEquipos`='" + this.idEquipos + "'";
             boolean borro2 = conexion.actualizarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -202,6 +173,7 @@ public class Equipo {
             e.setControl(rs.getString("control"));
             e.setEstadoPintura(rs.getString("estadoPintura"));
             e.setImagen(rs.getString("imagen"));
+            e.setOperario(rs.getString("operario"));
         }
 
         return e;
@@ -241,6 +213,7 @@ public class Equipo {
             e.setControl(rs.getString("control"));
             e.setEstadoPintura(rs.getString("estadoPintura"));
             e.setImagen(rs.getString("imagen"));
+            e.setOperario(rs.getString("operario"));
             listaDeEquipos.add(e);
         }
         return this.listaDeEquipos;
@@ -461,7 +434,7 @@ public class Equipo {
                 for (Indicador t : listaIndicador) {
                     for (Indicador tDb : listaIndicador) {
                         if (t.getDia() == tDb.getDia()) {
-                            t.setMantenibilidad((float)(int)(Math.random()*4)+1);
+                            t.setMantenibilidad((float) (int) (Math.random() * 4) + 1);
                         }
 
                     }
@@ -482,7 +455,7 @@ public class Equipo {
                 for (Indicador t : listaIndicador) {
                     for (Indicador tDb : listaIndicador) {
                         if (t.getDia() == tDb.getDia()) {
-                            t.setDisponibilidad((float)(int)(Math.random()*5)+1);
+                            t.setDisponibilidad((float) (int) (Math.random() * 5) + 1);
                         }
 
                     }
@@ -492,7 +465,7 @@ public class Equipo {
                 for (Indicador t : listaIndicador) {
                     for (Indicador tDb : listaIndicador) {
                         if (t.getDia() == tDb.getDia()) {
-                            t.setConfiabilidad((float)(int)(Math.random()*4)+1);
+                            t.setConfiabilidad((float) (int) (Math.random() * 4) + 1);
                         }
 
                     }
@@ -536,12 +509,12 @@ public class Equipo {
             in = new Indicador();
             listaIndicador.add(in);
         }
-            switch (indicador) {
+        switch (indicador) {
             case "mantenibilidad":
                 for (Indicador t : listaIndicador) {
                     for (Indicador tDb : listaIndicador) {
                         if (t.getDia() == tDb.getDia()) {
-                            t.setMantenibilidad((float)(int)(Math.random()*30)+1);
+                            t.setMantenibilidad((float) (int) (Math.random() * 30) + 1);
                         }
 
                     }
@@ -562,7 +535,7 @@ public class Equipo {
                 for (Indicador t : listaIndicador) {
                     for (Indicador tDb : listaIndicador) {
                         if (t.getDia() == tDb.getDia()) {
-                            t.setDisponibilidad((float)(int)(Math.random()*35)+1);
+                            t.setDisponibilidad((float) (int) (Math.random() * 35) + 1);
                         }
 
                     }
@@ -572,7 +545,7 @@ public class Equipo {
                 for (Indicador t : listaIndicador) {
                     for (Indicador tDb : listaIndicador) {
                         if (t.getDia() == tDb.getDia()) {
-                            t.setConfiabilidad((float)(int)(Math.random()*50)+1);
+                            t.setConfiabilidad((float) (int) (Math.random() * 50) + 1);
                         }
 
                     }
@@ -581,7 +554,7 @@ public class Equipo {
             default:
                 break;
         }
-        
+
 //        if (!listaIndicadorEnDb.isEmpty()) {
 //            for (TiempoOcio t : listaIndicador) {
 //                for (TiempoOcio tDb : listaIndicadorEnDb) {
@@ -594,7 +567,6 @@ public class Equipo {
 //            }
 //        }
         //calcular indicador
-
         return listaIndicador;
     }
 
@@ -816,6 +788,14 @@ public class Equipo {
 
     public void setListaOrdenesDeTrabajo(ArrayList<OrdenDeTrabajo> listaOrdenesDeTrabajo) {
         this.listaOrdenesDeTrabajo = listaOrdenesDeTrabajo;
+    }
+
+    public String getOperario() {
+        return operario;
+    }
+
+    public void setOperario(String operario) {
+        this.operario = operario;
     }
 
 }
