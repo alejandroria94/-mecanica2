@@ -33,7 +33,7 @@ public class Equipo {
     private String tipoPotencia;
     private String frecuencia;
     private String alimentacion;
-    private int ambienteCorrosivo;
+    private boolean ambienteCorrosivo;
     private float tiempoDeFuncionamiento;
     private float horasDeUso;
     private String funciones;
@@ -75,6 +75,35 @@ public class Equipo {
 
     }
 
+    public Equipo(String nombre, String codigo, String tipoEquipo, String marca, String modelo, String ubicacion, String estado, String serie, String peso, String altura, String largo, String ancho, String potencia, String tipoPotencia, String frecuencia, String alimentacion, boolean ambienteCorrosivo, float tiempoDeFuncionamiento, float horasDeUso, String funciones, String caracteristicasEspecificas, String observaciones, String control, String estadoPintura, String imagen, String operario) {
+        this.nombre = nombre;
+        this.codigo = codigo;
+        this.tipoEquipo = tipoEquipo;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.ubicacion = ubicacion;
+        this.estado = estado;
+        this.serie = serie;
+        this.peso = peso;
+        this.altura = altura;
+        this.largo = largo;
+        this.ancho = ancho;
+        this.potencia = potencia;
+        this.tipoPotencia = tipoPotencia;
+        this.frecuencia = frecuencia;
+        this.alimentacion = alimentacion;
+        this.ambienteCorrosivo = ambienteCorrosivo;
+        this.tiempoDeFuncionamiento = tiempoDeFuncionamiento;
+        this.horasDeUso = horasDeUso;
+        this.funciones = funciones;
+        this.caracteristicasEspecificas = caracteristicasEspecificas;
+        this.observaciones = observaciones;
+        this.control = control;
+        this.estadoPintura = estadoPintura;
+        this.imagen = imagen;
+        this.operario = operario;
+    }
+
     public boolean guardarEquipo() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
@@ -91,6 +120,7 @@ public class Equipo {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
@@ -112,7 +142,7 @@ public class Equipo {
                     + "',potencia='" + this.potencia + "',tipoPotencia='" + this.tipoPotencia + "',frecuencia='" + this.frecuencia + "',alimentacion='" + this.alimentacion
                     + "',ambienteCorrosivo='" + this.ambienteCorrosivo + "',tiempoDeFuncionamiento='" + this.tiempoDeFuncionamiento + "',horasDeUso='" + this.horasDeUso + "',funciones='" + this.funciones
                     + "',caracteristicasEspecificas='" + this.caracteristicasEspecificas + "',observaciones='" + this.observaciones + "',control='" + this.control + "',estadoPintura='" + this.estadoPintura
-                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo+ "',operario='"+this.operario+"' WHERE `idEquipos`='" + this.idEquipos + "'";
+                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "' WHERE `idEquipos`='" + this.idEquipos + "'";
             boolean borro2 = conexion.actualizarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -121,10 +151,11 @@ public class Equipo {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
-    public boolean borrarEquipo(String idEquipos) {
+    public boolean eliminarEquipo(String idEquipos) {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         if (conexion.setAutoCommitBD(false)) {
@@ -139,47 +170,11 @@ public class Equipo {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
-    public Equipo llenarDatosObjetoEquipo(ResultSet rs) throws SQLException {
-        Equipo e = null;
-
-        if (rs.next()) {
-            e = new Equipo();
-            e.setIdEquipos(Integer.parseInt(rs.getString("idEquipos")));
-            e.setNombre(rs.getString("nombre"));
-            e.setCodigo(rs.getString("codigo"));
-            e.setTipoEquipo(rs.getString("tipoEquipo"));
-            e.setMarca(rs.getString("marca"));
-            e.setModelo(rs.getString("modelo"));
-            e.setUbicacion(rs.getString("ubicacion"));
-            e.setEstado(rs.getString("estado"));
-            e.setSerie(rs.getString("serie"));
-            e.setPeso(rs.getString("peso"));
-            e.setAltura(rs.getString("altura"));
-            e.setLargo(rs.getString("largo"));
-            e.setAncho(rs.getString("ancho"));
-            e.setPotencia(rs.getString("potencia"));
-            e.setTipoPotencia(rs.getString("tipoPotencia"));
-            e.setFrecuencia(rs.getString("frecuencia"));
-            e.setAlimentacion(rs.getString("alimentacion"));
-            e.setAmbienteCorrosivo(rs.getBoolean("ambienteCorrosivo"));
-            e.setTiempoDeFuncionamiento(rs.getFloat("tiempoDeFuncionamiento"));
-            e.setHorasDeUso(rs.getFloat("horasDeUso"));
-            e.setFunciones(rs.getString("funciones"));
-            e.setCaracteristicasEspecificas(rs.getString("caracteristicasEspecificas"));
-            e.setObservaciones(rs.getString("observaciones"));
-            e.setControl(rs.getString("control"));
-            e.setEstadoPintura(rs.getString("estadoPintura"));
-            e.setImagen(rs.getString("imagen"));
-            e.setOperario(rs.getString("operario"));
-        }
-
-        return e;
-    }
-
-    public ArrayList<Equipo> listarEquipos() throws SQLException {
+    public ArrayList<Equipo> getListaDeEquipos() throws SQLException {
         ConexionBD conexion = new ConexionBD();
         Equipo e;
         this.listaDeEquipos = new ArrayList<>();
@@ -216,6 +211,7 @@ public class Equipo {
             e.setOperario(rs.getString("operario"));
             listaDeEquipos.add(e);
         }
+        conexion.cerrarConexion();
         return this.listaDeEquipos;
     }
 
@@ -226,24 +222,43 @@ public class Equipo {
      * @return
      * @throws java.sql.SQLException
      */
-    public Equipo obtenerEquipo(String idEquipo) throws SQLException {
-        ResultSet datosE = buscarEquipo("idEquipos", idEquipo);
-        Equipo e = llenarDatosObjetoEquipo(datosE);
-        return e;
-    }
-
-    /**
-     *
-     * @param parametro
-     * @param busqueda recibe una columna para busqueda en la tabla (Parametro)
-     * y un valor de busqueda (busqueda) retorna un objeto ResultSet con los
-     * datos de la consulta
-     * @return
-     */
-    public ResultSet buscarEquipo(String parametro, String busqueda) {
+    public Equipo buscarEquipo(String idEquipo) throws SQLException {
         ConexionBD conexion = new ConexionBD();
-        ResultSet datosE = conexion.consultarBD("select * from Equipos where " + parametro + "='" + busqueda + "'");
-        return datosE;
+        ResultSet datosE = conexion.consultarBD("select * from Equipos where  idEquipos ='" + idEquipo + "'");
+        Equipo e = null;
+
+        if (datosE.next()) {
+            e = new Equipo();
+            e.setIdEquipos(Integer.parseInt(datosE.getString("idEquipos")));
+            e.setNombre(datosE.getString("nombre"));
+            e.setCodigo(datosE.getString("codigo"));
+            e.setTipoEquipo(datosE.getString("tipoEquipo"));
+            e.setMarca(datosE.getString("marca"));
+            e.setModelo(datosE.getString("modelo"));
+            e.setUbicacion(datosE.getString("ubicacion"));
+            e.setEstado(datosE.getString("estado"));
+            e.setSerie(datosE.getString("serie"));
+            e.setPeso(datosE.getString("peso"));
+            e.setAltura(datosE.getString("altura"));
+            e.setLargo(datosE.getString("largo"));
+            e.setAncho(datosE.getString("ancho"));
+            e.setPotencia(datosE.getString("potencia"));
+            e.setTipoPotencia(datosE.getString("tipoPotencia"));
+            e.setFrecuencia(datosE.getString("frecuencia"));
+            e.setAlimentacion(datosE.getString("alimentacion"));
+            e.setAmbienteCorrosivo(datosE.getBoolean("ambienteCorrosivo"));
+            e.setTiempoDeFuncionamiento(datosE.getFloat("tiempoDeFuncionamiento"));
+            e.setHorasDeUso(datosE.getFloat("horasDeUso"));
+            e.setFunciones(datosE.getString("funciones"));
+            e.setCaracteristicasEspecificas(datosE.getString("caracteristicasEspecificas"));
+            e.setObservaciones(datosE.getString("observaciones"));
+            e.setControl(datosE.getString("control"));
+            e.setEstadoPintura(datosE.getString("estadoPintura"));
+            e.setImagen(datosE.getString("imagen"));
+            e.setOperario(datosE.getString("operario"));
+        }
+        conexion.cerrarConexion();
+        return e;
     }
 
     /**
@@ -283,7 +298,7 @@ public class Equipo {
     public ArrayList<TiempoOcio> listaMes(String idEquipo, String mes, String anno) throws SQLException {
         YearMonth ym;
         ym = YearMonth.of(Integer.parseInt(anno), Integer.parseInt(mes));
-        Equipo e = new Equipo().obtenerEquipo(idEquipo);
+        Equipo e = new Equipo().buscarEquipo(idEquipo);
         float tiempoFuncionamiento = e.getTiempoDeFuncionamiento();
         int diasDelmes = ym.lengthOfMonth();
 //        System.out.println(mesActual + "mes");
@@ -330,7 +345,7 @@ public class Equipo {
         ArrayList<TiempoOcio> listaTiemposDeOcioEnDb = listaMesEnDbOEE(idEquipo, anno);
         YearMonth ym;
 
-        Equipo e = new Equipo().obtenerEquipo(idEquipo);
+        Equipo e = new Equipo().buscarEquipo(idEquipo);
         float tiempoFuncionamiento = e.getTiempoDeFuncionamiento();
         for (int i = 0; i < 12; i++) {
             tO = new TiempoOcio();
@@ -416,7 +431,7 @@ public class Equipo {
     public ArrayList<Indicador> listaMesIndicador(String idEquipo, String mes, String anno, String indicador) throws SQLException {
         YearMonth ym;
         ym = YearMonth.of(Integer.parseInt(anno), Integer.parseInt(mes));
-        Equipo e = new Equipo().obtenerEquipo(idEquipo);
+        Equipo e = new Equipo().buscarEquipo(idEquipo);
         float tiempoFuncionamiento = e.getTiempoDeFuncionamiento();
         int diasDelmes = ym.lengthOfMonth();
 //        System.out.println(mesActual + "mes");
@@ -503,7 +518,7 @@ public class Equipo {
         ArrayList<Indicador> listaIndicador = new ArrayList<>();
         //ArrayList<Indicador> listaIndicadorEnDb = listaMesEnDb(idEquipo, anno);
         YearMonth ym;
-        Equipo e = new Equipo().obtenerEquipo(idEquipo);
+        Equipo e = new Equipo().buscarEquipo(idEquipo);
         float tiempoFuncionamiento = e.getTiempoDeFuncionamiento();
         for (int i = 0; i < 12; i++) {
             in = new Indicador();
@@ -706,16 +721,12 @@ public class Equipo {
         this.alimentacion = alimentacion;
     }
 
-    public boolean getAmbienteCorrosivo() {
-        return ambienteCorrosivo != 0;
+    public boolean isAmbienteCorrosivo() {
+        return ambienteCorrosivo;
     }
 
-    public void setAmbienteCorrosivo(boolean abienteCorrosivo) {
-        if (abienteCorrosivo) {
-            this.ambienteCorrosivo = 1;
-        } else {
-            this.ambienteCorrosivo = 0;
-        }
+    public void setAmbienteCorrosivo(boolean ambienteCorrosivo) {
+        this.ambienteCorrosivo = ambienteCorrosivo;
     }
 
     public float getTiempoDeFuncionamiento() {
