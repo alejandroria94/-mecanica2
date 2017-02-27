@@ -8,6 +8,7 @@ package beans;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -38,9 +39,12 @@ public class SolicitudDeMantenimiento {
     private String realizadoPor;
     private String recibidoPor;
     private Equipo equipo;
-    private ArrayList<SolicitudDeMantenimiento> listaSolicitudesDeMantenimiento;
 
     public SolicitudDeMantenimiento() {
+    }
+
+    SolicitudDeMantenimiento(SolicitudDeMantenimiento sm) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public boolean guardarSolicitudDeMantenimiento() {
@@ -48,7 +52,7 @@ public class SolicitudDeMantenimiento {
         ConexionBD conexion = new ConexionBD();
         String sentencia = "INSERT INTO solicitudesdemantenimiento(equipos_idequipos, codigo, revision, solicitudDeServicio, reparacion, mtoMecanico, mtoPreventivo, mtoElectrico, mtoCorrectivo, otros, descripcionServicio, descripcionAcciones, material, horasParada, horasMTO, horaSolicitud, horaEntrega, solicitadoPor, realizadoPor, recibidoPor,fecha) "
                 + " VALUES ( '" + this.idequipo + "','" + this.codigo + "','" + this.revision + "','" + this.solicitudDeServicio + "','" + this.reparacion + "','" + this.mtoMecanico + "','" + this.mtoPreventivo + "','" + this.mtoElectrico + "','" + this.mtoCorrectivo + "','" + this.otros + "','"
-                + this.descripcionServicio + "','" + this.descripcionAcciones + "','" + this.material + "','" + this.horasParada + "','" + this.horasMTO + "','" + this.horaSolicitud + "','" + this.horaEntrega + "','" + this.solicitadoPor + "','" + this.realizadoPor + "','" + this.recibidoPor + "','"+this.fecha+"');  ";
+                + this.descripcionServicio + "','" + this.descripcionAcciones + "','" + this.material + "','" + this.horasParada + "','" + this.horasMTO + "','" + this.horaSolicitud + "','" + this.horaEntrega + "','" + this.solicitadoPor + "','" + this.realizadoPor + "','" + this.recibidoPor + "','" + this.fecha + "');  ";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -97,10 +101,10 @@ public class SolicitudDeMantenimiento {
         return sM;
     }
 
-    public ArrayList<SolicitudDeMantenimiento> getListaSolicitudesDeMantenimiento() throws SQLException {
+    public List<SolicitudDeMantenimiento> getListaSolicitudesDeMantenimiento() throws SQLException {
         ConexionBD conexion = new ConexionBD();
         SolicitudDeMantenimiento sM;
-        this.listaSolicitudesDeMantenimiento = new ArrayList<>();
+        List<SolicitudDeMantenimiento> listaSolicitudesDeMantenimiento = new ArrayList<>();
         String sql = "select * from solicitudesdemantenimiento";
         ResultSet datosSM = conexion.consultarBD(sql);
         while (datosSM.next()) {
@@ -131,7 +135,7 @@ public class SolicitudDeMantenimiento {
             listaSolicitudesDeMantenimiento.add(sM);
         }
         conexion.cerrarConexion();
-        return this.listaSolicitudesDeMantenimiento;
+        return listaSolicitudesDeMantenimiento;
     }
 
     public boolean actualizarSolicitudDeMantenimiento() {
@@ -146,9 +150,9 @@ public class SolicitudDeMantenimiento {
                     + "',mtoPreventivo='" + this.mtoPreventivo + "',mtoElectrico='" + this.mtoElectrico + "',mtoCorrectivo='" + this.mtoCorrectivo + "',otros='" + this.otros
                     + "',descripcionServicio='" + this.descripcionServicio + "',descripcionAcciones='" + this.descripcionAcciones + "',material='" + this.material + "',horasParada='" + this.horasParada
                     + "',horasMTO='" + this.horasMTO + "',horaSolicitud='" + this.horaSolicitud + "',horaEntrega='" + this.horaEntrega + "',solicitadoPor='" + this.solicitadoPor
-                    + "',realizadoPor='" + this.realizadoPor + "',recibidoPor='" + this.recibidoPor + "'";
-            boolean borro2 = conexion.actualizarBD(sql2);
-            if (borro2) {
+                    + "',realizadoPor='" + this.realizadoPor + "',recibidoPor='" + this.recibidoPor + "' WHERE `idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento + "'";
+            boolean actualizo = conexion.actualizarBD(sql2);
+            if (actualizo) {
                 conexion.commitBD();
                 exito = true;
             } else {
@@ -163,8 +167,8 @@ public class SolicitudDeMantenimiento {
         this.idsolicitudDeMantenimiento = Integer.parseInt(idsolicitudesDeMantenimiento);
         return this.actualizarSolicitudDeMantenimiento();
     }
-    
-     public boolean eliminarSolicitudDeMantenimiento(String idSolicitudDeMantenimiento) {
+
+    public boolean eliminarSolicitudDeMantenimiento(String idSolicitudDeMantenimiento) {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         if (conexion.setAutoCommitBD(false)) {

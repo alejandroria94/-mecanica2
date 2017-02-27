@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  */
 public class Equipo {
 
-    private int idEquipos;
+    private int idEquipo;
     private String nombre;
     private String codigo;
     private String tipoEquipo;
@@ -42,8 +43,6 @@ public class Equipo {
     private String control;
     private String estadoPintura;
     private String imagen;
-    private ArrayList<OrdenDeTrabajo> listaOrdenesDeTrabajo;
-    private ArrayList<Equipo> listaDeEquipos;
     private String operario;
 
     public Equipo() {
@@ -125,7 +124,7 @@ public class Equipo {
     }
 
     public boolean actualizarrEquipo(String idEquipos) {
-        this.idEquipos = Integer.parseInt(idEquipos);
+        this.idEquipo = Integer.parseInt(idEquipos);
         return this.actualizarrEquipo();
     }
 
@@ -142,7 +141,7 @@ public class Equipo {
                     + "',potencia='" + this.potencia + "',tipoPotencia='" + this.tipoPotencia + "',frecuencia='" + this.frecuencia + "',alimentacion='" + this.alimentacion
                     + "',ambienteCorrosivo='" + this.ambienteCorrosivo + "',tiempoDeFuncionamiento='" + this.tiempoDeFuncionamiento + "',horasDeUso='" + this.horasDeUso + "',funciones='" + this.funciones
                     + "',caracteristicasEspecificas='" + this.caracteristicasEspecificas + "',observaciones='" + this.observaciones + "',control='" + this.control + "',estadoPintura='" + this.estadoPintura
-                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "' WHERE `idEquipos`='" + this.idEquipos + "'";
+                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "' WHERE `idEquipos`='" + this.idEquipo + "'";
             boolean borro2 = conexion.actualizarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -174,15 +173,15 @@ public class Equipo {
         return exito;
     }
 
-    public ArrayList<Equipo> getListaDeEquipos() throws SQLException {
+    public List<Equipo> getListaDeEquipos() throws SQLException {
         ConexionBD conexion = new ConexionBD();
         Equipo e;
-        this.listaDeEquipos = new ArrayList<>();
+        List<Equipo> listaDeEquipos = new ArrayList<>();
         String sql = "select * from Equipos";
         ResultSet rs = conexion.consultarBD(sql);
         while (rs.next()) {
             e = new Equipo();
-            e.setIdEquipos(Integer.parseInt(rs.getString("idEquipos")));
+            e.setIdEquipo(Integer.parseInt(rs.getString("idEquipos")));
             e.setNombre(rs.getString("nombre"));
             e.setCodigo(rs.getString("codigo"));
             e.setTipoEquipo(rs.getString("tipoEquipo"));
@@ -212,7 +211,7 @@ public class Equipo {
             listaDeEquipos.add(e);
         }
         conexion.cerrarConexion();
-        return this.listaDeEquipos;
+        return listaDeEquipos;
     }
 
     /**
@@ -229,7 +228,7 @@ public class Equipo {
 
         if (datosE.next()) {
             e = new Equipo();
-            e.setIdEquipos(Integer.parseInt(datosE.getString("idEquipos")));
+            e.setIdEquipo(Integer.parseInt(datosE.getString("idEquipos")));
             e.setNombre(datosE.getString("nombre"));
             e.setCodigo(datosE.getString("codigo"));
             e.setTipoEquipo(datosE.getString("tipoEquipo"));
@@ -295,7 +294,7 @@ public class Equipo {
      * @return lista de horas ocio por dias para un mes del año
      * @throws SQLException
      */
-    public ArrayList<TiempoOcio> listaMes(String idEquipo, String mes, String anno) throws SQLException {
+    public List<TiempoOcio> listaMes(String idEquipo, String mes, String anno) throws SQLException {
         YearMonth ym;
         ym = YearMonth.of(Integer.parseInt(anno), Integer.parseInt(mes));
         Equipo e = new Equipo().buscarEquipo(idEquipo);
@@ -585,12 +584,12 @@ public class Equipo {
         return listaIndicador;
     }
 
-    public int getIdEquipos() {
-        return idEquipos;
+    public int getIdEquipo() {
+        return idEquipo;
     }
 
-    public void setIdEquipos(int idEquipos) {
-        this.idEquipos = idEquipos;
+    public void setIdEquipo(int idEquipos) {
+        this.idEquipo = idEquipos;
     }
 
     public String getNombre() {
@@ -793,13 +792,7 @@ public class Equipo {
         this.imagen = imagen;
     }
 
-    public ArrayList<OrdenDeTrabajo> getListaOrdenesDeTrabajo() {
-        return listaOrdenesDeTrabajo;
-    }
-
-    public void setListaOrdenesDeTrabajo(ArrayList<OrdenDeTrabajo> listaOrdenesDeTrabajo) {
-        this.listaOrdenesDeTrabajo = listaOrdenesDeTrabajo;
-    }
+   
 
     public String getOperario() {
         return operario;

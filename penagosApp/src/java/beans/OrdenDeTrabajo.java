@@ -8,6 +8,7 @@ package beans;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,81 +16,187 @@ import java.util.ArrayList;
  */
 public class OrdenDeTrabajo {
 
-    private int idOrdenesDeTrabajo;
-    private int Equipos_idEquipos;
-    private String solicitante;
-    private String tipoMantenimiento;
-    private int dnElectrico;//convertirlos a true o false para salidas 
-    private int dnElectronico;
-    private int dnMecanico;
-    private String diagnostico;
+    //campos tabla solicitud
+    private SolicitudDeMantenimiento solicitudDeMantenimiento;
+    //fin campos tabla solicitud
+    private int idsolicitudDeMantenimiento;
+    private int idequipo;
+    private String numeroOrdenDeTrabajo;
     private String fechaInicio;
     private String fechaFin;
-    private String codigo;
-    private ArrayList<OrdenDeTrabajo> listaDeOTs;
-    private final ArrayList<Tarea> listaTareas =new ArrayList<>();
+    private String tipoSolicitud;//'Urgente','Normal'
+    private String partes;
+    private String solicitadaPor;
+    private String revisadaPor;
+    private String autorizadaPor;
+    private String descripcionesTrabajos;
+    private String materiales;
+    private float costoManoDeObra;
+    private float costoMateriales;
+    private float costoTotal;
+    private float totalHorasMto;
+    private float totalHorasParada;
+    private String descripcionDanos;
+    private String descripcionTrabajosRealizados;
+    private String ejecutadoPor;
+    private String recibidoAprobadoPor;
+    private boolean dptAdmyControl;
+    private String observaciones;
     
-    public ArrayList<OrdenDeTrabajo> listarOTs(String idEquipos) throws SQLException {
-        ConexionBD conexion = new ConexionBD();
-        OrdenDeTrabajo ot;
-        this.listaDeOTs = new ArrayList<>();
-        String sql = "SELECT * FROM ordenesdetrabajo WHERE `Equipos_idEquipos`='"+idEquipos+"' ";
-        ResultSet rs = conexion.consultarBD(sql);
-        ResultSet rs1;
-        Tarea t;
-        while (rs.next()) {
-            ot = new OrdenDeTrabajo();
-            ot.setCodigo(rs.getString("codigo"));
-            ot.setTipoMantenimiento(rs.getString("tipoMantenimiento"));
-            ot.setSolicitante(rs.getString("solicitante"));
-            ot.setDnElectrico(rs.getBoolean("dnElectrico"));
-            ot.setDnElectronico(rs.getBoolean("dnElectronico"));
-            ot.setDnMecanico(rs.getBoolean("dnMecanico"));
-            ot.setDiagnostico(rs.getString("diagnostico"));
-            ot.setFechaInicio(rs.getString("fechaInicio"));
-            ot.setFechaFin(rs.getString("fechaFin"));
-            ot.setIdOrdenesDeTrabajo(rs.getInt("idOrdenesDeTrabajo"));
-            rs1 = conexion.consultarBD("SELECT * FROM `tareas` WHERE `OrdenesDeTrabajo_idOrdenesDeTrabajo`='"+ot.getIdOrdenesDeTrabajo()+"' AND `OrdenesDeTrabajo_Equipos_idEquipos`='"+idEquipos+"'");
-            while (rs1.next()) {
-                t= new Tarea();
-                t.setNombre(rs1.getString("nombre"));
-                t.setCosto(rs1.getFloat("costo"));
-                t.setMateriales(rs1.getString("materiales"));
-                ot.setTarea(t);
-            }
-            
-            listaDeOTs.add(ot);
-        }
-        return this.listaDeOTs;
+    private List<String> tiposDeMantenimiento;
+
+    public OrdenDeTrabajo() {
     }
 
-    public boolean guardarOT(String idEquipos) throws SQLException {
+    public OrdenDeTrabajo(String idsolicitudesDeMantenimiento) throws SQLException {
+        this.idsolicitudDeMantenimiento = Integer.parseInt(idsolicitudesDeMantenimiento);
+        this.solicitudDeMantenimiento = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(idsolicitudesDeMantenimiento);
+        this.idequipo = solicitudDeMantenimiento.getEquipo().getIdEquipo();
+        tiposDeMantenimiento = new ArrayList<>();
+        if (solicitudDeMantenimiento.isReparacion()) {
+            tiposDeMantenimiento.add("Reparación");
+        }
+        if (solicitudDeMantenimiento.isMtoMecanico()) {
+            tiposDeMantenimiento.add("Mto mecánico");
+        }
+        if (solicitudDeMantenimiento.isMtoPreventivo()) {
+            tiposDeMantenimiento.add("Mto preventivo");
+        }
+        if (solicitudDeMantenimiento.isMtoElectrico()) {
+            tiposDeMantenimiento.add("Mto eléctrico");
+        }
+        if (solicitudDeMantenimiento.isMtoCorrectivo()) {
+            tiposDeMantenimiento.add("Mto correctivo");
+        }
+        if (solicitudDeMantenimiento.isOtros()) {
+            tiposDeMantenimiento.add("Otros");
+        }
+    }
+
+    public boolean guardarOrdenDeTrabajo() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-        String sentencia = "INSERT INTO OrdenesDeTrabajo(Equipos_idEquipos, solicitante, tipoMantenimiento, dnElectrico, dnElectronico, dnMecanico, diagnostico, fechaInicio, fechaFin,codigo) "
-                + " VALUES ( '" + idEquipos + "','" + this.solicitante + "','" + this.tipoMantenimiento + "','" + this.dnElectrico + "','" + this.dnElectronico + "','" + this.dnMecanico + "','" + this.diagnostico + "','" + this.fechaInicio + "','" + this.fechaFin + "','" + this.codigo + "');";
+        String sentencia = "INSERT INTO ordenesdetrabajo(solicitudesDeMantenimiento_idsolicitudesDeMantenimiento, solicitudesDeMantenimiento_equipos_idequipos, numeroOrdenDeTrabajo, fechaInicio,fechaFin"
+                + ", tipoSolicitud, partes,solicitadaPor, revisadaPor, autorizadaPor, descripcionesTrabajos, materiales, costoManoDeObra,costoMateriales,totalHorasMto, totalHorasParada"
+                + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones) "
+                + " VALUES ('" + this.idsolicitudDeMantenimiento + "','" + this.idequipo + "','" + this.numeroOrdenDeTrabajo + "','" + this.fechaInicio + "','" + this.fechaFin + "','" + this.tipoSolicitud + "','" + this.partes + "'"
+                + ",'" + this.solicitadaPor + "','" + this.revisadaPor + "','" + this.autorizadaPor + "','" + this.descripcionesTrabajos + "','" + this.materiales + "','" + this.costoManoDeObra + "','" + this.costoMateriales + "','" + this.totalHorasMto + "','" + this.totalHorasParada + "'"
+                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','"+this.dptAdmyControl+"','"+this.observaciones+"');";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
                 conexion.commitBD();
                 exito = true;
-                ResultSet rs = conexion.consultarBD("SELECT LAST_INSERT_ID() AS idOT;");
-                rs.next();
-                idOrdenesDeTrabajo = rs.getInt("idOT");
             } else {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
-    public boolean borrarOT(String idOrdenesDeTrabajo) {
+    public OrdenDeTrabajo buscarOrdenDeTrabajo(String idOrdenDeTrabajo, String idEquipo) throws SQLException {
+        ConexionBD conexion = new ConexionBD();
+        ResultSet datosOT = conexion.consultarBD("select * from ordenesdetrabajo where  solicitudesDeMantenimiento_idsolicitudesDeMantenimiento ='" + idOrdenDeTrabajo + "' and solicitudesDeMantenimiento_equipos_idequipos='" + idEquipo + "'");
+        OrdenDeTrabajo ot = null;
+
+        if (datosOT.next()) {
+            String idSolicitud = datosOT.getString("solicitudesDeMantenimiento_idsolicitudesDeMantenimiento");
+            ot = new OrdenDeTrabajo(idSolicitud);
+            ot.setNumeroOrdenDeTrabajo(datosOT.getString("numeroOrdenDeTrabajo"));
+            ot.setFechaInicio(datosOT.getString("fechaInicio"));
+            ot.setFechaFin(datosOT.getString("fechaFin"));
+            ot.setTipoSolicitud(datosOT.getString("tipoSolicitud"));
+            ot.setPartes(datosOT.getString("partes"));
+            ot.setSolicitadaPor(datosOT.getString("solicitadaPor"));
+            ot.setRevisadaPor(datosOT.getString("revisadaPor"));
+            ot.setAutorizadaPor(datosOT.getString("autorizadaPor"));
+            ot.setDescripcionesTrabajos(datosOT.getString("descripcionesTrabajos"));
+            ot.setMateriales(datosOT.getString("materiales"));
+            ot.setCostoManoDeObra(datosOT.getFloat("costoManoDeObra"));
+            ot.setCostoMateriales(datosOT.getFloat("costoMateriales"));
+            ot.setCostoTotal(ot.getCostoTotal());
+            ot.setTotalHorasMto(datosOT.getFloat("totalHorasMto"));
+            ot.setTotalHorasParada(datosOT.getFloat("totalHorasParada"));
+            ot.setDescripcionDanos(datosOT.getString("descripcionDanos"));
+            ot.setDescripcionTrabajosRealizados(datosOT.getString("descripcionTrabajosRealizados"));
+            ot.setObservaciones(datosOT.getString("observaciones"));
+            ot.setEjecutadoPor(datosOT.getString("ejecutadoPor"));
+            ot.setRecibidoAprobadoPor(datosOT.getString("recibidoAprobadoPor"));
+            ot.setDptAdmyControl(datosOT.getBoolean("dptAdmyControl"));
+
+        }
+        conexion.cerrarConexion();
+        return ot;
+    }
+
+    public List<OrdenDeTrabajo> getListaOrdenesDeTrabajo() throws SQLException {
+        ConexionBD conexion = new ConexionBD();
+        OrdenDeTrabajo ot;
+        List<OrdenDeTrabajo> listaOrdenesDeTrabajo = new ArrayList<>();
+        String sql = "select * from ordenesdetrabajo";
+        ResultSet datosOT = conexion.consultarBD(sql);
+        while (datosOT.next()) {
+            String idSolicitud = datosOT.getString("solicitudesDeMantenimiento_idsolicitudesDeMantenimiento");
+            ot = new OrdenDeTrabajo(idSolicitud);
+            ot.setNumeroOrdenDeTrabajo(datosOT.getString("numeroOrdenDeTrabajo"));
+            ot.setFechaInicio(datosOT.getString("fechaInicio"));
+            ot.setFechaFin(datosOT.getString("fechaFin"));
+            ot.setTipoSolicitud(datosOT.getString("tipoSolicitud"));
+            ot.setPartes(datosOT.getString("partes"));
+            ot.setSolicitadaPor(datosOT.getString("solicitadaPor"));
+            ot.setRevisadaPor(datosOT.getString("revisadaPor"));
+            ot.setAutorizadaPor(datosOT.getString("autorizadaPor"));
+            ot.setDescripcionesTrabajos(datosOT.getString("descripcionesTrabajos"));
+            ot.setMateriales(datosOT.getString("materiales"));
+            ot.setCostoManoDeObra(datosOT.getFloat("costoManoDeObra"));
+            ot.setCostoMateriales(datosOT.getFloat("costoMateriales"));
+            ot.setCostoTotal(ot.getCostoTotal());
+            ot.setTotalHorasMto(datosOT.getFloat("totalHorasMto"));
+            ot.setTotalHorasParada(datosOT.getFloat("totalHorasParada"));
+            ot.setDescripcionDanos(datosOT.getString("descripcionDanos"));
+            ot.setDescripcionTrabajosRealizados(datosOT.getString("descripcionTrabajosRealizados"));
+            ot.setObservaciones(datosOT.getString("observaciones"));
+            ot.setEjecutadoPor(datosOT.getString("ejecutadoPor"));
+            ot.setRecibidoAprobadoPor(datosOT.getString("recibidoAprobadoPor"));
+            ot.setDptAdmyControl(datosOT.getBoolean("dptAdmyControl"));
+            listaOrdenesDeTrabajo.add(ot);
+        }
+        conexion.cerrarConexion();
+        return listaOrdenesDeTrabajo;
+    }
+    
+    public boolean actualizarOrdenDeTrabajo() {
+        boolean exito = false;
+        ConexionBD conexion = new ConexionBD();
+        if (conexion.setAutoCommitBD(false)) {
+            //UPDATE table_name
+            //SET column1=value1,column2=value2,...
+            //WHERE some_column=some_value;
+            String sql2 = "UPDATE `ordenesdetrabajo` SET numeroOrdenDeTrabajo='" + this.numeroOrdenDeTrabajo + "',fechaInicio='" + this.fechaInicio + "',fechaFin='"+this.fechaFin+"',tipoSolicitud='"+this.tipoSolicitud+"'"
+                    + ",partes='"+this.partes+"',solicitadaPor='"+this.solicitadaPor+"',revisadaPor='"+this.revisadaPor+"',autorizadaPor='"+this.autorizadaPor+"',descripcionesTrabajos='"+this.descripcionesTrabajos+"'"
+                    + ",materiales='"+this.materiales+"',costoManoDeObra='"+this.costoManoDeObra+"',costoMateriales='"+this.costoMateriales+"',totalHorasMto='"+this.totalHorasMto+"',totalHorasParada='"+this.totalHorasParada+"',observaciones='"+this.observaciones+"'"
+                    + ",descripcionDanos='"+this.descripcionDanos+"',descripcionTrabajosRealizados='"+this.descripcionTrabajosRealizados+"',ejecutadoPor='"+this.ejecutadoPor+"',recibidoAprobadoPor='"+this.recibidoAprobadoPor+"',dptAdmyControl='"+this.dptAdmyControl+"'"
+                    + "WHERE `solicitudesDeMantenimiento_idsolicitudesDeMantenimiento`='"+this.idsolicitudDeMantenimiento+"' AND `solicitudesDeMantenimiento_equipos_idequipos`='"+this.idequipo+"'";
+            boolean actualizo = conexion.actualizarBD(sql2);
+            if (actualizo) {
+                conexion.commitBD();
+                exito = true;
+            } else {
+                conexion.rollbackBD();
+            }
+        }
+        conexion.cerrarConexion();
+        return exito;
+    }
+    
+    public boolean eliminarOrdenesDeTrabajo(String idSolicitudDeMantenimiento,String idEquipo) {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         if (conexion.setAutoCommitBD(false)) {
 //            String sql = "DELETE FROM `comentarios` WHERE `NoIdent`='"+NoIdent+"'";
 //            boolean borro = conexion.borrarBD(sql);
-            String sql2 = "DELETE FROM `OrdenesDeTrabajo` WHERE `idOrdenesDeTrabajo`='" + idOrdenesDeTrabajo + "'";
+            String sql2 = "DELETE FROM `ordenesdetrabajo` WHERE `solicitudesDeMantenimiento_idsolicitudesDeMantenimiento`='" + idSolicitudDeMantenimiento + "' AND `solicitudesDeMantenimiento_equipos_idequipos`='" + idEquipo + "'";
             boolean borro2 = conexion.borrarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -98,84 +205,52 @@ public class OrdenDeTrabajo {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
-    public int getIdOrdenesDeTrabajo() {
-        return idOrdenesDeTrabajo;
+    /**
+     *
+     * @param idSolicitud
+     * @param idEquipo
+     * @return
+     */
+    public boolean actualizarOrdenesDeTrabajo(String idSolicitud,String idEquipo){
+    this.idsolicitudDeMantenimiento=Integer.parseInt(idSolicitud);
+    this.idequipo=Integer.parseInt(idEquipo);
+    return this.actualizarOrdenDeTrabajo();
     }
 
-    public void setIdOrdenesDeTrabajo(int idOrdenesDeTrabajo) {
-        this.idOrdenesDeTrabajo = idOrdenesDeTrabajo;
+    public SolicitudDeMantenimiento getSolicitudDeMantenimiento() {
+        return solicitudDeMantenimiento;
     }
 
-    public int getEquipos_idEquipos() {
-        return Equipos_idEquipos;
+    public void setSolicitudDeMantenimiento(SolicitudDeMantenimiento solicitudDeMantenimiento) {
+        this.solicitudDeMantenimiento = solicitudDeMantenimiento;
     }
 
-    public void setEquipos_idEquipos(int Equipos_idEquipos) {
-        this.Equipos_idEquipos = Equipos_idEquipos;
+    public int getIdsolicitudDeMantenimiento() {
+        return idsolicitudDeMantenimiento;
     }
 
-    public String getSolicitante() {
-        return solicitante;
+    public void setIdsolicitudDeMantenimiento(int idsolicitudesDeMantenimiento) {
+        this.idsolicitudDeMantenimiento = idsolicitudesDeMantenimiento;
     }
 
-    public void setSolicitante(String solicitante) {
-        this.solicitante = solicitante;
+    public int getIdequipo() {
+        return idequipo;
     }
 
-    public String getTipoMantenimiento() {
-        return tipoMantenimiento;
+    public void setIdequipo(int idequipos) {
+        this.idequipo = idequipos;
     }
 
-    public void setTipoMantenimiento(String tipoMantenimiento) {
-        this.tipoMantenimiento = tipoMantenimiento;
+    public String getNumeroOrdenDeTrabajo() {
+        return numeroOrdenDeTrabajo;
     }
 
-    public boolean getDnElectrico() {
-        return dnElectrico != 0;
-    }
-
-    public void setDnElectrico(boolean dnElectrico) {
-
-        if (dnElectrico) {
-            this.dnElectrico = 1;
-        } else {
-            this.dnElectrico = 0;
-        }
-    }
-
-    public boolean getDnElectronico() {
-        return dnElectronico != 0;
-    }
-
-    public void setDnElectronico(boolean dnElectronico) {
-        if (dnElectronico) {
-            this.dnElectronico = 1;
-        } else {
-            this.dnElectronico = 0;
-        }
-    }
-
-    public boolean getDnMecanico() {
-        return dnMecanico != 0;
-    }
-
-    public void setDnMecanico(boolean dnMecanico) {
-        if (dnMecanico) {
-            this.dnMecanico = 1;
-        } else {
-            this.dnMecanico = 0;
-        }
-    }
-
-    public String getDiagnostico() {
-        return diagnostico;
-    }
-
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
+    public void setNumeroOrdenDeTrabajo(String numeroOrdenDeTrabajo) {
+        this.numeroOrdenDeTrabajo = numeroOrdenDeTrabajo;
     }
 
     public String getFechaInicio() {
@@ -190,24 +265,161 @@ public class OrdenDeTrabajo {
         return fechaFin;
     }
 
-    public void setFechaFin(String fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setFechaFin(String fechaFindate) {
+        this.fechaFin = fechaFindate;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public String getTipoSolicitud() {
+        return tipoSolicitud;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-    public void setTarea(Tarea t) {
-        this.listaTareas.add(t);
+    /**
+     *
+     * @param tipoSolicitud Urgente Normal
+     */
+    public void setTipoSolicitud(String tipoSolicitud) {
+        this.tipoSolicitud = tipoSolicitud;
     }
 
-    public ArrayList<Tarea> getListaTareas() {
-        return listaTareas;
+    public String getPartes() {
+        return partes;
+    }
+
+    public void setPartes(String partes) {
+        this.partes = partes;
+    }
+
+    public String getSolicitadaPor() {
+        return solicitadaPor;
+    }
+
+    public void setSolicitadaPor(String solicitadaPor) {
+        this.solicitadaPor = solicitadaPor;
+    }
+
+    public String getRevisadaPor() {
+        return revisadaPor;
+    }
+
+    public void setRevisadaPor(String revisadaPor) {
+        this.revisadaPor = revisadaPor;
+    }
+
+    public String getAutorizadaPor() {
+        return autorizadaPor;
+    }
+
+    public void setAutorizadaPor(String autorizadaPor) {
+        this.autorizadaPor = autorizadaPor;
+    }
+
+    public String getDescripcionesTrabajos() {
+        return descripcionesTrabajos;
+    }
+
+    public void setDescripcionesTrabajos(String descripcionesTrabajos) {
+        this.descripcionesTrabajos = descripcionesTrabajos;
+    }
+
+    public String getMateriales() {
+        return materiales;
+    }
+
+    public void setMateriales(String materiales) {
+        this.materiales = materiales;
+    }
+
+    public float getCostoManoDeObra() {
+        return costoManoDeObra;
+    }
+
+    public void setCostoManoDeObra(float costoManoDeObra) {
+        this.costoManoDeObra = costoManoDeObra;
+    }
+
+    public float getCostoMateriales() {
+        return costoMateriales;
+    }
+
+    public void setCostoMateriales(float costoMateriales) {
+        this.costoMateriales = costoMateriales;
+    }
+
+    public float getCostoTotal() {
+        return costoTotal = costoManoDeObra + costoMateriales;
+    }
+
+    public void setCostoTotal(float costoTotal) {
+        this.costoTotal = costoTotal;
+    }
+
+    public float getTotalHorasMto() {
+        return totalHorasMto;
+    }
+
+    public void setTotalHorasMto(float totalHorasMto) {
+        this.totalHorasMto = totalHorasMto;
+    }
+
+    public float getTotalHorasParada() {
+        return totalHorasParada;
+    }
+
+    public void setTotalHorasParada(float totalHorasParada) {
+        this.totalHorasParada = totalHorasParada;
+    }
+
+    public String getDescripcionDanos() {
+        return descripcionDanos;
+    }
+
+    public void setDescripcionDanos(String descripcionDanos) {
+        this.descripcionDanos = descripcionDanos;
+    }
+
+    public String getDescripcionTrabajosRealizados() {
+        return descripcionTrabajosRealizados;
+    }
+
+    public void setDescripcionTrabajosRealizados(String descripcionTrabajosRealizados) {
+        this.descripcionTrabajosRealizados = descripcionTrabajosRealizados;
+    }
+
+    public String getEjecutadoPor() {
+        return ejecutadoPor;
+    }
+
+    public void setEjecutadoPor(String ejecutadoPor) {
+        this.ejecutadoPor = ejecutadoPor;
+    }
+
+    public String getRecibidoAprobadoPor() {
+        return recibidoAprobadoPor;
+    }
+
+    public void setRecibidoAprobadoPor(String recibidoAprobadoPor) {
+        this.recibidoAprobadoPor = recibidoAprobadoPor;
+    }
+
+    public boolean isDptAdmyControl() {
+        return dptAdmyControl;
+    }
+
+    public void setDptAdmyControl(boolean dptAdmyControl) {
+        this.dptAdmyControl = dptAdmyControl;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
     
+
+    public List<String> getTiposDeMantenimiento() {
+        return tiposDeMantenimiento;
+    }
 
 }

@@ -25,7 +25,7 @@ public class Herramienta {
     public boolean guardarHerramienta() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-        String sentencia = "INSERT INTO Herramientas( nombre, descripcion, cantidad,codigo) "
+        String sentencia = "INSERT INTO herramientas( nombre, descripcion, cantidad,codigo) "
                 + " VALUES ( '" + this.nombre + "','" + this.descripcion + "','" + this.cantidad + "','" + this.codigo + "');";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
@@ -42,7 +42,7 @@ public class Herramienta {
     public boolean actualizarHerramienta() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-            String sql2 = "UPDATE `Herramientas` SET nombre='" + this.nombre + "',descripcion='" + this.descripcion + "',cantidad='" + this.cantidad + "',codigo='" + this.codigo + "' WHERE `idherramientas`='" + this.idherramientas + "'";
+            String sql2 = "UPDATE `herramientas` SET nombre='" + this.nombre + "',descripcion='" + this.descripcion + "',cantidad='" + this.cantidad + "',codigo='" + this.codigo + "' WHERE `idherramientas`='" + this.idherramientas + "'";
         if (conexion.setAutoCommitBD(false)) {
             boolean borro2 = conexion.actualizarBD(sql2);
             if (borro2) {
@@ -59,7 +59,7 @@ public class Herramienta {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         if (conexion.setAutoCommitBD(false)) {
-            String sql2 = "DELETE FROM `Herramientas` WHERE `idherramientas`='" + idherramientas + "'";
+            String sql2 = "DELETE FROM `herramientas` WHERE `idherramientas`='" + idherramientas + "'";
             boolean borro2 = conexion.borrarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -75,7 +75,7 @@ public class Herramienta {
         ConexionBD conexion = new ConexionBD();
         Herramienta h;
         this.listaHerramientas = new ArrayList<>();
-        String sql = "select * from Herramientas";
+        String sql = "select * from herramientas";
         ResultSet rs = conexion.consultarBD(sql);
         while (rs.next()) {
             h = new Herramienta();
