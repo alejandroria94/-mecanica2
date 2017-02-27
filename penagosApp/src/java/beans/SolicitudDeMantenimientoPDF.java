@@ -55,6 +55,7 @@ public class SolicitudDeMantenimientoPDF {
         PdfPCell celda;
         table.setWidthPercentage(100);
 
+        Image img = Image.getInstance("web/img/logo.png");
         celda = new PdfPCell(img, true);
         celda.setPadding(5);
         celda.setColspan(4);

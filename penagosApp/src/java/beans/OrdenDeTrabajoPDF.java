@@ -25,264 +25,284 @@ import java.io.IOException;
 public class OrdenDeTrabajoPDF {
 
     public static final String DEST = "web/pdf/ejemploOT.pdf";
+    public OrdenDeTrabajo ot;
 
-    public static void main(String[] args) throws IOException, DocumentException {
-//        try {
-        File file = new File(DEST);
-        file.getParentFile().mkdirs();
-        new OrdenDeTrabajoPDF().createPdf(DEST);
-        System.out.println("Documento creado Correctamente");
-//        } catch (IOException | DocumentException e) {
-//            System.out.println("Documento en uso, no se ha creado el nuevo");
-//
-//        }
-
+    public OrdenDeTrabajoPDF(OrdenDeTrabajo ot) {
+        this.ot = ot;
     }
 
-    public void createPdf(String dest) throws IOException, DocumentException {
+    public void pdfOT() throws IOException, DocumentException {
+        try {
+            File file = new File(DEST);
+            file.getParentFile().mkdirs();
+            new OrdenDeTrabajoPDF(this.ot).createPdf(DEST);
+            System.out.println("Documento creado Correctamente");
+        } catch (IOException | DocumentException e) {
+            System.out.println("Documento en uso, no se ha creado el nuevo");
+
+        }
+    }
+
+    private void createPdf(String dest) throws IOException, DocumentException {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(dest));
         document.open();
         PdfPTable table = new PdfPTable(12);
-        BaseColor color=new BaseColor(142, 170, 219);
+        BaseColor color = new BaseColor(142, 170, 219);
         PdfPCell celda;
         Phrase texto;
-        Font font=new Font(Font.FontFamily.TIMES_ROMAN, 10);
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10);
         table.setWidthPercentage(100);
 
-        Image img = Image.getInstance("web/images/logopenagos.jpg");
+        Image img = Image.getInstance("web/img/logo.png");
         celda = new PdfPCell(img, true);
         celda.setPadding(5);
         celda.setColspan(4);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("ORDEN DE TRABAJO N°:\nFECHA INICIO:\nFECHA FIN:\nSOLICITUD N°:",font));
+        celda = new PdfPCell(new Phrase("ORDEN DE TRABAJO N°:" + this.ot.getNumeroOrdenDeTrabajo() + "\nFECHA INICIO:" + this.ot.getFechaInicio() + "\nFECHA FIN:" + this.ot.getFechaFin() + "\nSOLICITUD N°:" + this.ot.getSolicitudDeMantenimiento().getCodigo() + "", font));
         celda.setColspan(8);
         // head.setBackgroundColor(BaseColor.CYAN);
         table.addCell(celda);
+        String tipoSolicitud = ot.getTipoSolicitud();
+        if (tipoSolicitud.equals("Urgente")) {
+            celda = new PdfPCell(new Phrase("TIPO DE SOLICITUD    NORMAL:      URGENTE: X", font));
+            celda.setColspan(12);
+            table.addCell(celda);
+        } else {
+            celda = new PdfPCell(new Phrase("TIPO DE SOLICITUD    NORMAL: X    URGENTE:", font));
+            celda.setColspan(12);
+            table.addCell(celda);
+        }
 
-        celda = new PdfPCell(new Phrase("TIPO DE SOLICITUD    NORMAL:     URGENTE:",font));
-        celda.setColspan(12);
-        table.addCell(celda);
+        if (ot.isDptAdmyControl()) {
+            celda = new PdfPCell(new Phrase("DTO.ADMS. Y CONTROL DE LA PRODUCCION"
+                    + " GENERA ORDEN DE TRABAJO DE MTTO SI:X           NO:", font));
+            celda.setColspan(12);
+            table.addCell(celda);
+        } else {
+            celda = new PdfPCell(new Phrase("DTO.ADMS. Y CONTROL DE LA PRODUCCION"
+                    + " GENERA ORDEN DE TRABAJO DE MTTO SI:            NO:X", font));
+            celda.setColspan(12);
+            table.addCell(celda);
+        }
 
-        celda = new PdfPCell(new Phrase("DTO.ADMS. Y CONTROL DE LA PRODUCCION"
-                + " GENERA ORDEN DE TRABAJO DE MTTO SI:X           NO:",font));
-        celda.setColspan(12);
-        table.addCell(celda);
-
-        celda = new PdfPCell(new Phrase("CÓDIGO",font));
+        celda = new PdfPCell(new Phrase("CODIGO EQUIPO: "+ot.getSolicitudDeMantenimiento().getEquipo().getCodigo(), font));
         celda.setColspan(3);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("EQUIPO DE INSTALACIÓN",font));
+        celda = new PdfPCell(new Phrase("NOMBRE EQUIPO: "+ot.getSolicitudDeMantenimiento().getEquipo().getNombre(), font));
         celda.setColspan(9);
         table.addCell(celda);
+        String tipoMantenimiento="";
+        for (String element : ot.getTiposDeMantenimiento()) {
+            tipoMantenimiento+=element+"\n";
+        }
 
-        celda = new PdfPCell(new Phrase("TIPO DE MANTENIMIENTO\n",font));
+        celda = new PdfPCell(new Phrase("TIPO DE MANTENIMIENTO\n", font));
         celda.setColspan(12);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("'\n\n",font));
+        celda = new PdfPCell(new Phrase(tipoMantenimiento, font));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("PARTE",font));
+        celda = new PdfPCell(new Phrase("PARTE", font));
         celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("ANOMALIA",font));
+        celda = new PdfPCell(new Phrase("ANOMALIA", font));
         celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("CAUSA",font));
+        celda = new PdfPCell(new Phrase("CAUSA", font));
         celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("POSIBLE SOLUCION",font));
+        celda = new PdfPCell(new Phrase("POSIBLE SOLUCION", font));
         celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
         for (int i = 0; i < 4; i++) {
 
-            celda = new PdfPCell(new Phrase("p" + i,font));
+            celda = new PdfPCell(new Phrase("p" + i, font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("a" + i,font));
+            celda = new PdfPCell(new Phrase("a" + i, font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("c" + i,font));
+            celda = new PdfPCell(new Phrase("c" + i, font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("ps" + i,font));
+            celda = new PdfPCell(new Phrase("ps" + i, font));
             celda.setColspan(3);
             table.addCell(celda);
 
         }
 
-        celda = new PdfPCell(new Phrase("SOLICTADA POR:\n\nFIRMA",font));
+        celda = new PdfPCell(new Phrase("SOLICTADA POR: "+ot.getSolicitadaPor()+"\n\nFIRMA", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("REVISADA POR:\n\nFIRMA",font));
+        celda = new PdfPCell(new Phrase("REVISADA POR: "+ot.getRevisadaPor()+"\n\nFIRMA", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("AUTORIZADA POR:\n\nFIRMA",font));
+        celda = new PdfPCell(new Phrase("AUTORIZADA POR: "+ot.getAutorizadaPor()+"\n\nFIRMA", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("N°",font));
+        celda = new PdfPCell(new Phrase("N°", font));
         celda.setColspan(1);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("DESCRIPCIÓN DE LOS TRABAJOS A REALIZAR",font));
+        celda = new PdfPCell(new Phrase("DESCRIPCIÓN DE LOS TRABAJOS A REALIZAR", font));
         celda.setColspan(11);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
         for (int i = 0; i < 2; i++) {
 
-            celda = new PdfPCell(new Phrase(i + "",font));
+            celda = new PdfPCell(new Phrase(i + "", font));
             celda.setColspan(1);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("D" + i,font));
+            celda = new PdfPCell(new Phrase("D" + i, font));
             celda.setColspan(11);
             table.addCell(celda);
 
         }
 
-        celda = new PdfPCell(new Phrase("MATERIALES",font));
+        celda = new PdfPCell(new Phrase("MATERIALES", font));
         celda.setColspan(12);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("N°",font));
+        celda = new PdfPCell(new Phrase("N°", font));
         celda.setColspan(1);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("CANTIDAD",font));
+        celda = new PdfPCell(new Phrase("CANTIDAD", font));
         celda.setColspan(2);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("DESCRIPCIÓN",font));
+        celda = new PdfPCell(new Phrase("DESCRIPCIÓN", font));
         celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("REFERENCIA",font));
+        celda = new PdfPCell(new Phrase("REFERENCIA", font));
         celda.setColspan(2);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("VALOR UNI",font));
+        celda = new PdfPCell(new Phrase("VALOR UNI", font));
         celda.setColspan(2);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("VALOR TOTAL",font));
+        celda = new PdfPCell(new Phrase("VALOR TOTAL", font));
         celda.setColspan(2);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
         for (int i = 0; i < 2; i++) {
-            celda = new PdfPCell(new Phrase("" + i,font));
+            celda = new PdfPCell(new Phrase("" + i, font));
             celda.setColspan(1);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("CANTIDAD" + i,font));
+            celda = new PdfPCell(new Phrase("CANTIDAD" + i, font));
             celda.setColspan(2);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("DESCRIPCIÓN" + i,font));
+            celda = new PdfPCell(new Phrase("DESCRIPCIÓN" + i, font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("REFERENCIA" + i,font));
+            celda = new PdfPCell(new Phrase("REFERENCIA" + i, font));
             celda.setColspan(2);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("VALOR UNI" + i,font));
+            celda = new PdfPCell(new Phrase("VALOR UNI" + i, font));
             celda.setColspan(2);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("VALOR TOTAL" + i,font));
+            celda = new PdfPCell(new Phrase("VALOR TOTAL" + i, font));
             celda.setColspan(2);
             table.addCell(celda);
         }
-        celda = new PdfPCell(new Phrase("COSTOS",font));
+        celda = new PdfPCell(new Phrase("COSTOS", font));
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("MANO DE OBRA",font));
+        celda = new PdfPCell(new Phrase("MANO DE OBRA: $"+ot.getCostoManoDeObra()+"", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("MATERIALES",font));
+        celda = new PdfPCell(new Phrase("MATERIALES: $"+ot.getCostoMateriales()+"", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL",font));
+        celda = new PdfPCell(new Phrase("TOTAL: $"+ot.getCostoTotal()+"", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TIEMPO EMPLEADO",font));
+        celda = new PdfPCell(new Phrase("TIEMPO EMPLEADO", font));
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL HORAS MTO:",font));
+        celda = new PdfPCell(new Phrase("TOTAL HORAS MTO: "+ot.getTotalHorasMto()+"", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL HORAS PARADA:",font));
+        celda = new PdfPCell(new Phrase("TOTAL HORAS PARADA: "+ot.getTotalHorasParada()+"", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("DESCRIPCIÓN DE LOS DAÑOS ENCONTRADOS",font));
+        celda = new PdfPCell(new Phrase("DESCRIPCIÓN DE LOS DAÑOS ENCONTRADOS", font));
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("\n\n\n\n",font));
+        celda = new PdfPCell(new Phrase(""+ot.getDescripcionDanos(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("DESCRIPCIÓN DE LOS TRABAJOS REALIZADOS",font));
+        celda = new PdfPCell(new Phrase("DESCRIPCIÓN DE LOS TRABAJOS REALIZADOS", font));
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("\n\n\n",font));
+        celda = new PdfPCell(new Phrase(""+ot.getDescripcionTrabajosRealizados(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("OBSERVACIONES Y RECOMENDACIONES",font));
+        celda = new PdfPCell(new Phrase("OBSERVACIONES Y RECOMENDACIONES", font));
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("\n\n\n",font));
+        celda = new PdfPCell(new Phrase(""+ot.getObservaciones(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("EJECUTO\n\nFIRMA",font));
+        celda = new PdfPCell(new Phrase("EJECUTO: "+ot.getEjecutadoPor()+"\n\nFIRMA", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("RECIBIÓ Y APROBÓ\n\nFIRMA",font));
+        celda = new PdfPCell(new Phrase("RECIBIÓ Y APROBÓ: "+ot.getRecibidoAprobadoPor()+"\n\nFIRMA", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-       
         document.add(table);
         document.close();
     }
