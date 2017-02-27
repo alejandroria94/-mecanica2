@@ -33,7 +33,10 @@
     //Lista de procesos o tareas a realizar 
     List<String> tareas = Arrays.asList(new String[]{
         "login",
+        "logout",
+        "listar",
         "guardar",
+        "vereditar",
         "editar",
         "eliminar",
         "OEE",
@@ -64,7 +67,9 @@
         // -----------------------------------INICIO PROCESOS----------------------------------- //
         // ------------------------------------------------------------------------------------- //
         // ---------------------------------Proceso 1--------------------------------- //
-        if (proceso.equals("registrarproducto")) {
+        if (proceso.equals("logout")) {
+            session.invalidate();
+            respuesta += ",\"" + proceso + "\": true";
             // --------------------------------Proceso 2---------------------------------- //
         } else if (proceso.equals("login")) {
             String login = "" + request.getParameter("usr");
@@ -78,6 +83,11 @@
                 session.setAttribute("usuario", u);
                 respuesta += ",\"" + proceso + "\": false";
             }
+        } else if (proceso.equals("listar")) {
+            Equipo e = new Equipo();
+            List<Equipo> lista = e.getListaDeEquipos();
+            respuesta += ",\"" + proceso + "\": true,\"Maquinas\":" + new Gson().toJson(lista);
+
         } else if (proceso.equals("guardar")) {
             String nombre = "" + request.getParameter("nombre");
             String codigo = "" + request.getParameter("codigo");
@@ -93,17 +103,18 @@
             String largo = "" + request.getParameter("largo");
             String ancho = "" + request.getParameter("ancho");
             String potencia = "" + request.getParameter("potencia");
-            String tipopotencia = "" + request.getParameter("tipopotencia");
+            String tipopotencia = "" + request.getParameter("tipoCF");
             String control = "" + request.getParameter("control");
             String frecuencia = "" + request.getParameter("frecuencia");
             String alimentacion = "" + request.getParameter("alimentacion");
             String tiempofuncionamiento = "" + request.getParameter("tiempofuncionamiento");
             String horasuso = "" + request.getParameter("horasuso");
-            String ambientecorrosivo = "" + request.getParameter("ambientecorrosivo");
-            String estadopintura = "" + request.getParameter("estadopintura");
+            String ambientecorrosivo = "" + request.getParameter("corrosivo");
+            String estadopintura = "" + request.getParameter("pintura");
             String funciones = "" + request.getParameter("funciones");
-            String caracteristicasespecificas = "" + request.getParameter("caracteristicas");
+            String caracteristicasespecificas = "" + request.getParameter("cespecificas");
             String observaciones = "" + request.getParameter("observaciones");
+            String operario = "" + request.getParameter("operario");
 
             Equipo e = new Equipo();
             e.setCodigo(codigo);
@@ -131,6 +142,7 @@
             e.setControl(control);
             e.setEstadoPintura(estadopintura);
             e.setImagen(imagen);
+            e.setOperario(operario);
             if (e.guardarEquipo()) {
                 respuesta += ",\"" + proceso + "\": true";
             } else {
@@ -147,22 +159,23 @@
             String serie = "" + request.getParameter("serie");
             String imagen = "" + request.getParameter("imagen");
             String peso = "" + request.getParameter("peso");
-            String altura = "" + request.getParameter("altura");
+            String altura = "" + request.getParameter("alto");
             String largo = "" + request.getParameter("largo");
             String ancho = "" + request.getParameter("ancho");
             String potencia = "" + request.getParameter("potencia");
-            String tipopotencia = "" + request.getParameter("tipopotencia");
+            String tipopotencia = "" + request.getParameter("tipoCF");
             String control = "" + request.getParameter("control");
             String frecuencia = "" + request.getParameter("frecuencia");
             String alimentacion = "" + request.getParameter("alimentacion");
             String tiempofuncionamiento = "" + request.getParameter("tiempofuncionamiento");
             String horasuso = "" + request.getParameter("horasuso");
-            String ambientecorrosivo = "" + request.getParameter("ambientecorrosivo");
-            String estadopintura = "" + request.getParameter("estadopintura");
+            String ambientecorrosivo = "" + request.getParameter("corrosivo");
+            String estadopintura = "" + request.getParameter("pintura");
             String funciones = "" + request.getParameter("funciones");
-            String caracteristicasespecificas = "" + request.getParameter("caracteristicas");
+            String caracteristicasespecificas = "" + request.getParameter("cespecificas");
             String observaciones = "" + request.getParameter("observaciones");
             String Id = "" + request.getParameter("id");
+             String operario = "" + request.getParameter("operario");
 
             Equipo e = new Equipo();
             e.setIdEquipos(Integer.parseInt(Id));
@@ -191,6 +204,7 @@
             e.setControl(control);
             e.setEstadoPintura(estadopintura);
             e.setImagen(imagen);
+            e.setOperario(operario);
             if (e.actualizarrEquipo()) {
                 respuesta += ",\"" + proceso + "\": true";
             } else {
@@ -210,14 +224,17 @@
             }
 
         } else if (proceso.equals("eliminar")) {
-            String Id = "" + request.getParameter("Id");
-
+            String Id = "" + request.getParameter("id");
             Equipo e = new Equipo();
-            if (e.borrarEquipo(Id)) {
+            if (e.eliminarEquipo(Id)) {
                 respuesta += ",\"" + proceso + "\": true";
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
+        } else if (proceso.equals("vereditar")) {
+            String Id = "" + request.getParameter("id");
+            Equipo e = new Equipo();
+            respuesta += ",\"" + proceso + "\": true,\"Equipo\":" + new Gson().toJson(e.buscarEquipo(Id));
         } else if (proceso.equals("OEE")) {
             String Id = "" + request.getParameter("id");
             String Mes = "" + request.getParameter("mes");
@@ -491,17 +508,17 @@
                 respuesta += ",\"" + proceso + "\": false";
             }
         } else if (proceso.equals("repuestosuma")) {
-             String Total = "" + request.getParameter("total");
-             String Id = "" + request.getParameter("id");
-              Repuesto r = new Repuesto();
-              r.setIdRepuestos(Integer.parseInt(Id));
-              r.setCantidad(Integer.parseInt(Total));
-              if(r.actualizarCantidadRepuesto()){
-                  respuesta += ",\"" + proceso + "\": true";
-              }else{
-                  respuesta += ",\"" + proceso + "\": false";
-              }
-              
+            String Total = "" + request.getParameter("total");
+            String Id = "" + request.getParameter("id");
+            Repuesto r = new Repuesto();
+            r.setIdRepuestos(Integer.parseInt(Id));
+            r.setCantidad(Integer.parseInt(Total));
+            if (r.actualizarCantidadRepuesto()) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+
         }
 
         // ------------------------------------------------------------------------------------- //
