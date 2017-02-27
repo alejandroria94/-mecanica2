@@ -13,8 +13,6 @@
     <head>
         <%
             String id = request.getParameter("id");
-            Equipo e = new Equipo();
-            e = e.buscarEquipo(id);
         %>
         <title>Editar Ficha Tecnica</title>
         <meta charset="UTF-8">
@@ -175,7 +173,6 @@
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Imagen</strong></legend>
                         <div class=" col-lg-12 col-md-12 col-sm-12 fileinput fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100%;height: 200px;"></div>
-                              <!--<img src="<%=e.getImagen()%>">-->
                             <div>
                                 <span class="waves-effect light-blue darken-4  btn btn-file"><span class="fileinput-new">Seleccionar</span><span class="fileinput-exists">Cambiar</span><input type="file" name="..."></span>
                                 <a href="#" class="waves-effect red darken-3 btn fileinput-exists" data-dismiss="fileinput">Quitar</a>
@@ -269,7 +266,7 @@
                     <div class="col s10 offset-s1">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Caracteristicas Especificas</strong></legend>
                         <div class="input-field col s12">
-                            <textarea id="textarea1" class="materialize-textarea" placeholder="" length="120" ng-model="fte.cespecificas"><%=e.getCaracteristicasEspecificas()%></textarea>
+                            <textarea id="textarea1" class="materialize-textarea" placeholder="" length="120" ng-model="fte.cespecificas"></textarea>
                             <label for="textarea1" class="indigo-text text-darken-4">Textarea</label>
                         </div>
                     </div>
@@ -278,7 +275,7 @@
                     <div class="col s10 offset-s1">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Funciones</strong></legend>
                         <div class="input-field col s12">
-                            <textarea id="textarea1" class="materialize-textarea" placeholder=""length="120" ng-model="fte.funciones"><%=e.getFunciones()%></textarea>
+                            <textarea id="textarea1" class="materialize-textarea" placeholder=""length="120" ng-model="fte.funciones"></textarea>
                             <label for="textarea1" class="indigo-text text-darken-4">Textarea</label>
                         </div>
                     </div>
@@ -287,7 +284,7 @@
                     <div class="col s10 offset-s1">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Observaciones</strong></legend>
                         <div class="input-field col s12">
-                            <textarea id="textarea1" class="materialize-textarea"placeholder="" length="120" ng-model="fte.observaciones"><%=e.getObservaciones()%></textarea>
+                            <textarea id="textarea1" class="materialize-textarea"placeholder="" length="120" ng-model="fte.observaciones"></textarea>
                             <label for="textarea1" class="indigo-text text-darken-4">Textarea</label>
                         </div>
                     </div>

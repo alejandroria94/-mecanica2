@@ -180,7 +180,7 @@
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="EditarFichaTecnica.jsp?id={{m.idEquipos}}" >Editar</a></li>
+                                                        <li><a href="EditarFichaTecnica.jsp?id={{m.idEquipo}}" >Editar</a></li>
                                                         <li><a href="#" ng-click="ma.eliminar(m.idEquipos)">Eliminar</a></li>
                                                         <li><a href="#">Hoja de Vida</a></li>
                                                         <li><a href="#">Otras</a></li>
