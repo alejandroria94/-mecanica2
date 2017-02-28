@@ -36,14 +36,25 @@ and open the template in the editor.
             <div class="row">
                 <div class="col s10 offset-s1">
                     <div class="carousel carousel-slider center" data-indicators="true">
-                        <a class="carousel-item" href="#one!"><img src="http://lorempixel.com/800/400/food/1"></a>
-                        <a class="carousel-item" href="#two!"><img src="http://lorempixel.com/800/400/food/2"></a>
-                        <a class="carousel-item" href="#three!"><img src="http://lorempixel.com/800/400/food/3"></a>
-                        <a class="carousel-item" href="#four!"><img src="http://lorempixel.com/800/400/food/4"></a>
+                        <!--                        <a class="carousel-item" href="#one!"><img src="http://lorempixel.com/800/400/food/1"></a>
+                                                <a class="carousel-item" href="#two!"><img src="http://lorempixel.com/800/400/food/2"></a>
+                                                <a class="carousel-item" href="#three!"><img src="http://lorempixel.com/800/400/food/3"></a>
+                                                <a class="carousel-item" href="#four!"><img src="http://lorempixel.com/800/400/food/4"></a>-->
                     </div>
                 </div>
             </div>
 
+            <form action="#">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>File</span>
+                        <input type="file" accept="image/*" id="fileUpload">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" />
+                    </div>
+                </div>
+            </form>
         </div>
         <!-- Modal Structure -->
         <div id="login" class="modal" style="width: 25%">
@@ -83,23 +94,36 @@ and open the template in the editor.
         <script>
             var app = {
                 init: function () {
-                    $(".dropdown-button").dropdown({
-                        inDuration: 300,
-                        outDuration: 225,
-                        constrainWidth: true
+                    $("#fileUpload").on('change', function () {
+                        var inputFileImage = document.getElementById("fileUpload");
+                        var file = inputFileImage.files[0];
+                        var data = new FormData();
+                        data.append('Archivo', file);
+//                                var countFiles = $(this)[0].files.length;
+//                        var imgPath = $(this)[0].value;
+//                        var reader = new FileReader();
+//                        reader.onload = function (e) {
+//                            $('#image_upload_preview').attr('src', e.target.result);
+//                        };
+//                        reader.readAsDataURL(this.files[0]);
                     });
-                    $('.carousel.carousel-slider').carousel({
-                        fullWidth: true,
-                        duration: 500
-                    });
-                    $('.modal').modal({
-                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                        opacity: .5, // Opacity of modal background
-                        inDuration: 300, // Transition in duration
-                        outDuration: 200, // Transition out duration
-                        startingTop: '40%', // Starting top style attribute
-                        endingTop: '10%'
-                    });
+//                    $(".dropdown-button").dropdown({
+//                        inDuration: 300,
+//                        outDuration: 225,
+//                        constrainWidth: true
+//                    });
+//                    $('.carousel.carousel-slider').carousel({
+//                        fullWidth: true,
+//                        duration: 500
+//                    });
+//                    $('.modal').modal({
+//                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+//                        opacity: .5, // Opacity of modal background
+//                        inDuration: 300, // Transition in duration
+//                        outDuration: 200, // Transition out duration
+//                        startingTop: '40%', // Starting top style attribute
+//                        endingTop: '10%'
+//                    });
                 }
             };
             $(document).ready(function () {
