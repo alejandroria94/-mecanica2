@@ -7,7 +7,11 @@ package beans;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,14 +20,17 @@ import java.util.List;
  */
 public class OrdenDeTrabajo {
 
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private final Calendar cal = Calendar.getInstance();
+    private Date fechaHoy;
     //campos tabla solicitud
     private SolicitudDeMantenimiento solicitudDeMantenimiento;
     //fin campos tabla solicitud
     private int idsolicitudDeMantenimiento;
     private int idequipo;
     private String numeroOrdenDeTrabajo;
-    private String fechaInicio;
-    private String fechaFin;
+    private Date fechaInicio;
+    private Date fechaFin;
     private String tipoSolicitud;//'Urgente','Normal'
     private String partes;
     private String solicitadaPor;
@@ -42,7 +49,8 @@ public class OrdenDeTrabajo {
     private String recibidoAprobadoPor;
     private boolean dptAdmyControl;
     private String observaciones;
-    
+    private String estado = "Pendiente"; //enum('Pendiente','Realizada','Vencida')
+    private boolean cerrada;
     private List<String> tiposDeMantenimiento;
 
     public OrdenDeTrabajo() {
@@ -71,6 +79,8 @@ public class OrdenDeTrabajo {
         if (solicitudDeMantenimiento.isOtros()) {
             tiposDeMantenimiento.add("Otros");
         }
+
+        fechaHoy = cal.getTime();
     }
 
     public boolean guardarOrdenDeTrabajo() {
@@ -78,10 +88,10 @@ public class OrdenDeTrabajo {
         ConexionBD conexion = new ConexionBD();
         String sentencia = "INSERT INTO ordenesdetrabajo(solicitudesDeMantenimiento_idsolicitudesDeMantenimiento, solicitudesDeMantenimiento_equipos_idequipos, numeroOrdenDeTrabajo, fechaInicio,fechaFin"
                 + ", tipoSolicitud, partes,solicitadaPor, revisadaPor, autorizadaPor, descripcionesTrabajos, materiales, costoManoDeObra,costoMateriales,totalHorasMto, totalHorasParada"
-                + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones) "
+                + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones,estado,cerrada) "
                 + " VALUES ('" + this.idsolicitudDeMantenimiento + "','" + this.idequipo + "','" + this.numeroOrdenDeTrabajo + "','" + this.fechaInicio + "','" + this.fechaFin + "','" + this.tipoSolicitud + "','" + this.partes + "'"
                 + ",'" + this.solicitadaPor + "','" + this.revisadaPor + "','" + this.autorizadaPor + "','" + this.descripcionesTrabajos + "','" + this.materiales + "','" + this.costoManoDeObra + "','" + this.costoMateriales + "','" + this.totalHorasMto + "','" + this.totalHorasParada + "'"
-                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','"+this.dptAdmyControl+"','"+this.observaciones+"');";
+                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','" + this.dptAdmyControl + "','" + this.observaciones + "','" + this.estado + "','" + this.cerrada + "');";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -104,8 +114,8 @@ public class OrdenDeTrabajo {
             String idSolicitud = datosOT.getString("solicitudesDeMantenimiento_idsolicitudesDeMantenimiento");
             ot = new OrdenDeTrabajo(idSolicitud);
             ot.setNumeroOrdenDeTrabajo(datosOT.getString("numeroOrdenDeTrabajo"));
-            ot.setFechaInicio(datosOT.getString("fechaInicio"));
-            ot.setFechaFin(datosOT.getString("fechaFin"));
+            ot.setFechaInicio(datosOT.getDate("fechaInicio"));
+            ot.setFechaFin(datosOT.getDate("fechaFin"));
             ot.setTipoSolicitud(datosOT.getString("tipoSolicitud"));
             ot.setPartes(datosOT.getString("partes"));
             ot.setSolicitadaPor(datosOT.getString("solicitadaPor"));
@@ -123,7 +133,11 @@ public class OrdenDeTrabajo {
             ot.setObservaciones(datosOT.getString("observaciones"));
             ot.setEjecutadoPor(datosOT.getString("ejecutadoPor"));
             ot.setRecibidoAprobadoPor(datosOT.getString("recibidoAprobadoPor"));
+            ot.setCerrada(datosOT.getBoolean("cerrada"));
+            ot.setEstado(datosOT.getString("estado"));//para actualizar el estado
+            ot.setEstado(ot.estadoActual());//valor que debe quedar en el estado 
             ot.setDptAdmyControl(datosOT.getBoolean("dptAdmyControl"));
+            ot.actualizarOrdenDeTrabajo();//actualizacion a base de datos
 
         }
         conexion.cerrarConexion();
@@ -140,8 +154,8 @@ public class OrdenDeTrabajo {
             String idSolicitud = datosOT.getString("solicitudesDeMantenimiento_idsolicitudesDeMantenimiento");
             ot = new OrdenDeTrabajo(idSolicitud);
             ot.setNumeroOrdenDeTrabajo(datosOT.getString("numeroOrdenDeTrabajo"));
-            ot.setFechaInicio(datosOT.getString("fechaInicio"));
-            ot.setFechaFin(datosOT.getString("fechaFin"));
+            ot.setFechaInicio(datosOT.getDate("fechaInicio"));
+            ot.setFechaFin(datosOT.getDate("fechaFin"));
             ot.setTipoSolicitud(datosOT.getString("tipoSolicitud"));
             ot.setPartes(datosOT.getString("partes"));
             ot.setSolicitadaPor(datosOT.getString("solicitadaPor"));
@@ -159,13 +173,17 @@ public class OrdenDeTrabajo {
             ot.setObservaciones(datosOT.getString("observaciones"));
             ot.setEjecutadoPor(datosOT.getString("ejecutadoPor"));
             ot.setRecibidoAprobadoPor(datosOT.getString("recibidoAprobadoPor"));
+            ot.setCerrada(datosOT.getBoolean("cerrada"));
+            ot.setEstado(datosOT.getString("estado"));//valor en base de datos
+            ot.setEstado(ot.estadoActual());//estado que debe quedar en base de datos
             ot.setDptAdmyControl(datosOT.getBoolean("dptAdmyControl"));
-            listaOrdenesDeTrabajo.add(ot);
+            ot.actualizarOrdenDeTrabajo();
+            listaOrdenesDeTrabajo.add(ot);//actualizacion de estado 
         }
         conexion.cerrarConexion();
         return listaOrdenesDeTrabajo;
     }
-    
+
     public boolean actualizarOrdenDeTrabajo() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
@@ -173,11 +191,11 @@ public class OrdenDeTrabajo {
             //UPDATE table_name
             //SET column1=value1,column2=value2,...
             //WHERE some_column=some_value;
-            String sql2 = "UPDATE `ordenesdetrabajo` SET numeroOrdenDeTrabajo='" + this.numeroOrdenDeTrabajo + "',fechaInicio='" + this.fechaInicio + "',fechaFin='"+this.fechaFin+"',tipoSolicitud='"+this.tipoSolicitud+"'"
-                    + ",partes='"+this.partes+"',solicitadaPor='"+this.solicitadaPor+"',revisadaPor='"+this.revisadaPor+"',autorizadaPor='"+this.autorizadaPor+"',descripcionesTrabajos='"+this.descripcionesTrabajos+"'"
-                    + ",materiales='"+this.materiales+"',costoManoDeObra='"+this.costoManoDeObra+"',costoMateriales='"+this.costoMateriales+"',totalHorasMto='"+this.totalHorasMto+"',totalHorasParada='"+this.totalHorasParada+"',observaciones='"+this.observaciones+"'"
-                    + ",descripcionDanos='"+this.descripcionDanos+"',descripcionTrabajosRealizados='"+this.descripcionTrabajosRealizados+"',ejecutadoPor='"+this.ejecutadoPor+"',recibidoAprobadoPor='"+this.recibidoAprobadoPor+"',dptAdmyControl='"+this.dptAdmyControl+"'"
-                    + "WHERE `solicitudesDeMantenimiento_idsolicitudesDeMantenimiento`='"+this.idsolicitudDeMantenimiento+"' AND `solicitudesDeMantenimiento_equipos_idequipos`='"+this.idequipo+"'";
+            String sql2 = "UPDATE `ordenesdetrabajo` SET numeroOrdenDeTrabajo='" + this.numeroOrdenDeTrabajo + "',fechaInicio='" + this.fechaInicio + "',fechaFin='" + this.fechaFin + "',tipoSolicitud='" + this.tipoSolicitud + "'"
+                    + ",partes='" + this.partes + "',solicitadaPor='" + this.solicitadaPor + "',revisadaPor='" + this.revisadaPor + "',autorizadaPor='" + this.autorizadaPor + "',descripcionesTrabajos='" + this.descripcionesTrabajos + "',estado='" + this.estado + "'"
+                    + ",materiales='" + this.materiales + "',costoManoDeObra='" + this.costoManoDeObra + "',costoMateriales='" + this.costoMateriales + "',totalHorasMto='" + this.totalHorasMto + "',totalHorasParada='" + this.totalHorasParada + "',observaciones='" + this.observaciones + "'"
+                    + ",descripcionDanos='" + this.descripcionDanos + "',descripcionTrabajosRealizados='" + this.descripcionTrabajosRealizados + "',ejecutadoPor='" + this.ejecutadoPor + "',recibidoAprobadoPor='" + this.recibidoAprobadoPor + "',dptAdmyControl='" + this.dptAdmyControl + "'"
+                    + "WHERE `solicitudesDeMantenimiento_idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento + "' AND `solicitudesDeMantenimiento_equipos_idequipos`='" + this.idequipo + "'";
             boolean actualizo = conexion.actualizarBD(sql2);
             if (actualizo) {
                 conexion.commitBD();
@@ -189,8 +207,8 @@ public class OrdenDeTrabajo {
         conexion.cerrarConexion();
         return exito;
     }
-    
-    public boolean eliminarOrdenesDeTrabajo(String idSolicitudDeMantenimiento,String idEquipo) {
+
+    public boolean eliminarOrdenesDeTrabajo(String idSolicitudDeMantenimiento, String idEquipo) {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         if (conexion.setAutoCommitBD(false)) {
@@ -215,10 +233,10 @@ public class OrdenDeTrabajo {
      * @param idEquipo
      * @return
      */
-    public boolean actualizarOrdenesDeTrabajo(String idSolicitud,String idEquipo){
-    this.idsolicitudDeMantenimiento=Integer.parseInt(idSolicitud);
-    this.idequipo=Integer.parseInt(idEquipo);
-    return this.actualizarOrdenDeTrabajo();
+    public boolean actualizarOrdenesDeTrabajo(String idSolicitud, String idEquipo) {
+        this.idsolicitudDeMantenimiento = Integer.parseInt(idSolicitud);
+        this.idequipo = Integer.parseInt(idEquipo);
+        return this.actualizarOrdenDeTrabajo();
     }
 
     public SolicitudDeMantenimiento getSolicitudDeMantenimiento() {
@@ -253,19 +271,19 @@ public class OrdenDeTrabajo {
         this.numeroOrdenDeTrabajo = numeroOrdenDeTrabajo;
     }
 
-    public String getFechaInicio() {
+    public Date getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaFin() {
+    public Date getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(String fechaFindate) {
+    public void setFechaFin(Date fechaFindate) {
         this.fechaFin = fechaFindate;
     }
 
@@ -416,10 +434,44 @@ public class OrdenDeTrabajo {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-    
 
     public List<String> getTiposDeMantenimiento() {
         return tiposDeMantenimiento;
     }
 
+    public String getEstado() {
+
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public boolean isCerrada() {
+        return cerrada;
+    }
+
+    public void setCerrada(boolean cerrada) {
+        this.cerrada = cerrada;
+    }
+
+    public Date getFechaHoy() {
+        return fechaHoy;
+    }
+
+    public String estadoActual() {
+        if (this.cerrada) {
+            this.estado = "realizada";
+        } else {
+
+            if (fechaFin.before(fechaHoy)) {
+                this.estado = "vencida";
+            }
+            if (fechaFin.after(fechaHoy)) {
+                this.estado = "Pendiente";
+            }
+        }
+        return this.estado;
+    }
 }

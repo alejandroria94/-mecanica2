@@ -39,20 +39,17 @@ public class SolicitudDeMantenimiento {
     private String realizadoPor;
     private String recibidoPor;
     private Equipo equipo;
+    private boolean ordenDeTrabajo;
 
     public SolicitudDeMantenimiento() {
-    }
-
-    SolicitudDeMantenimiento(SolicitudDeMantenimiento sm) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public boolean guardarSolicitudDeMantenimiento() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-        String sentencia = "INSERT INTO solicitudesdemantenimiento(equipos_idequipos, codigo, revision, solicitudDeServicio, reparacion, mtoMecanico, mtoPreventivo, mtoElectrico, mtoCorrectivo, otros, descripcionServicio, descripcionAcciones, material, horasParada, horasMTO, horaSolicitud, horaEntrega, solicitadoPor, realizadoPor, recibidoPor,fecha) "
+        String sentencia = "INSERT INTO solicitudesdemantenimiento(equipos_idequipos, codigo, revision, solicitudDeServicio, reparacion, mtoMecanico, mtoPreventivo, mtoElectrico, mtoCorrectivo, otros, descripcionServicio, descripcionAcciones, material, horasParada, horasMTO, horaSolicitud, horaEntrega, solicitadoPor, realizadoPor, recibidoPor,fecha,ordenDeTrabajo) "
                 + " VALUES ( '" + this.idequipo + "','" + this.codigo + "','" + this.revision + "','" + this.solicitudDeServicio + "','" + this.reparacion + "','" + this.mtoMecanico + "','" + this.mtoPreventivo + "','" + this.mtoElectrico + "','" + this.mtoCorrectivo + "','" + this.otros + "','"
-                + this.descripcionServicio + "','" + this.descripcionAcciones + "','" + this.material + "','" + this.horasParada + "','" + this.horasMTO + "','" + this.horaSolicitud + "','" + this.horaEntrega + "','" + this.solicitadoPor + "','" + this.realizadoPor + "','" + this.recibidoPor + "','" + this.fecha + "');  ";
+                + this.descripcionServicio + "','" + this.descripcionAcciones + "','" + this.material + "','" + this.horasParada + "','" + this.horasMTO + "','" + this.horaSolicitud + "','" + this.horaEntrega + "','" + this.solicitadoPor + "','" + this.realizadoPor + "','" + this.recibidoPor + "','" + this.fecha + "','" + this.ordenDeTrabajo + "');  ";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -96,6 +93,7 @@ public class SolicitudDeMantenimiento {
             sM.setRealizadoPor(datosSM.getString("realizadoPor"));
             sM.setRecibidoPor(datosSM.getString("recibidoPor"));
             sM.setEquipo(new Equipo().buscarEquipo(Integer.toString(sM.getIdequipo())));
+            sM.setOrdenDeTrabajo(datosSM.getBoolean("ordenDeTrabajo"));
         }
         conexion.cerrarConexion();
         return sM;
@@ -132,6 +130,7 @@ public class SolicitudDeMantenimiento {
             sM.setRealizadoPor(datosSM.getString("realizadoPor"));
             sM.setRecibidoPor(datosSM.getString("recibidoPor"));
             sM.setEquipo(new Equipo().buscarEquipo(Integer.toString(sM.getIdequipo())));
+            sM.setOrdenDeTrabajo(datosSM.getBoolean("ordenDeTrabajo"));
             listaSolicitudesDeMantenimiento.add(sM);
         }
         conexion.cerrarConexion();
@@ -150,7 +149,7 @@ public class SolicitudDeMantenimiento {
                     + "',mtoPreventivo='" + this.mtoPreventivo + "',mtoElectrico='" + this.mtoElectrico + "',mtoCorrectivo='" + this.mtoCorrectivo + "',otros='" + this.otros
                     + "',descripcionServicio='" + this.descripcionServicio + "',descripcionAcciones='" + this.descripcionAcciones + "',material='" + this.material + "',horasParada='" + this.horasParada
                     + "',horasMTO='" + this.horasMTO + "',horaSolicitud='" + this.horaSolicitud + "',horaEntrega='" + this.horaEntrega + "',solicitadoPor='" + this.solicitadoPor
-                    + "',realizadoPor='" + this.realizadoPor + "',recibidoPor='" + this.recibidoPor + "' WHERE `idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento + "'";
+                    + "',realizadoPor='" + this.realizadoPor + "',recibidoPor='" + this.recibidoPor + "',ordenDeTrabajo='" + this.ordenDeTrabajo + "' WHERE `idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento + "'";
             boolean actualizo = conexion.actualizarBD(sql2);
             if (actualizo) {
                 conexion.commitBD();
@@ -369,6 +368,14 @@ public class SolicitudDeMantenimiento {
 
     public void setEquipo(Equipo equipo) {
         this.equipo = equipo;
+    }
+
+    public boolean isOrdenDeTrabajo() {
+        return ordenDeTrabajo;
+    }
+
+    public void setOrdenDeTrabajo(boolean ordenDeTrabajo) {
+        this.ordenDeTrabajo = ordenDeTrabajo;
     }
 
 }
