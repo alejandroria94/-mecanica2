@@ -34,7 +34,7 @@
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="#">Cronograma</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Gestionar Mto</a></li>
+                            <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
                             <a href="#!"><img src="img/logo.png"/></a>
@@ -46,7 +46,7 @@
                                     %>
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp">Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="#">Orden de Trabajo</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="mantenimiento">Mantenimiento▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" data-activates="mantenimiento">Mantenimiento▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()" href="#!" >Salir</a></li>
@@ -99,36 +99,38 @@
                     </div>
                 </div>
             </div>
+
         </div>
+
         <script src="js/jquery.min.js"></script>
         <script src="js/materialize.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/index.js"></script>
         <script>
-        var app = {
-            init: function () {
-                $(".dropdown-button").dropdown({
-                    inDuration: 300,
-                    outDuration: 225,
-                    constrainWidth: true
-                });
-                $('.carousel.carousel-slider').carousel({
-                    fullWidth: true,
-                    duration: 500
-                });
-                $('.modal').modal({
-                    dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                    opacity: .5, // Opacity of modal background
-                    inDuration: 300, // Transition in duration
-                    outDuration: 200, // Transition out duration
-                    startingTop: '40%', // Starting top style attribute
-                    endingTop: '10%'
-                });
-            }
-        };
-        $(document).ready(function () {
-            app.init();
-        });
+                                    var app = {
+                                        init: function () {
+                                            $(".dropdown-button").dropdown({
+                                                inDuration: 300,
+                                                outDuration: 225,
+                                                constrainWidth: true
+                                            });
+                                            $('.carousel.carousel-slider').carousel({
+                                                fullWidth: true,
+                                                duration: 500
+                                            });
+                                            $('.modal').modal({
+                                                dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                                opacity: .5, // Opacity of modal background
+                                                inDuration: 300, // Transition in duration
+                                                outDuration: 200, // Transition out duration
+                                                startingTop: '40%', // Starting top style attribute
+                                                endingTop: '10%'
+                                            });
+                                        }
+                                    };
+                                    $(document).ready(function () {
+                                        app.init();
+                                    });
         </script>
     </body>
 </html>

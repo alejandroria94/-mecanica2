@@ -6,7 +6,6 @@
 --%>
 
 
-<%@page import="beans.SolicitudDeMantenimiento"%>
 <%@page import="beans.Produccion"%>
 <%@page import="beans.Proveedor"%>
 <%@page import="beans.Indicador"%>
@@ -34,12 +33,28 @@
         "login",
         "logout",
         "listar",
-        "listarsolicitud",
         "guardar",
         "vereditar",
         "editar",
         "eliminar",
-      });
+        "OEE",
+        "tiempodeocio",
+        "guardaherramineta",
+        "eliminarherramienta",
+        "guardaproduccion",
+        "eliminarproveedor",
+        "eliminarproducto",
+        "guardarepuesto",
+        "guardarot",
+        "guardaproveedor",
+        "accidentabilidad",
+        "estadomantenimiento",
+        "disponibilidad",
+        "confiabilidad",
+        "mantenibilidad",
+        "guardarmantenimiento",
+        "repuestosuma",
+        "eliminarrepuesto",});
 
     // Si el usuario tiene sesión válida y permisos.
     String proceso = "" + request.getParameter("proceso");
@@ -70,11 +85,6 @@
             Equipo e = new Equipo();
             List<Equipo> lista = e.getListaDeEquipos();
             respuesta += ",\"" + proceso + "\": true,\"Maquinas\":" + new Gson().toJson(lista);
-
-        }else if (proceso.equals("listarsolicitud")) {
-            SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento();
-            List<SolicitudDeMantenimiento> lista = sm.getListaSolicitudesDeMantenimiento();
-            respuesta += ",\"" + proceso + "\": true,\"Solicitudes\":" + new Gson().toJson(lista);
 
         } else if (proceso.equals("guardar")) {
             String nombre = "" + request.getParameter("nombre");

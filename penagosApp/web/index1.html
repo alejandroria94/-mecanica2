@@ -12,43 +12,12 @@ and open the template in the editor.
         <link href="css/materialize.min.css" rel="stylesheet">
     </head>
     <body>
-        <div>
-            <br>
-            <div class="row">
-                <div class="col s10 offset-s1">
-                    <!-- Dropdown Structure -->
-                    <ul id="dropdown1" class="dropdown-content">
-                        <li><a class="blue-text text-darken-2"href="#!">Mantenimiento</a></li>
-                        <li><a class="blue-text text-darken-2" href="#!">two</a></li>
-                        <li><a class="blue-text text-darken-2" href="#!">three</a></li>
-                    </ul>
-                    <nav class="nav-wrapper white ">
-                        <a href="#!"><img src="img/logo.png"/></a>
-                        <ul class="right hide-on-med-and-down">
-                            <li ><a class="blue-text text-darken-2" href="#">Sass</a></li>
-                            <li><a class="blue-text text-darken-2" href="#">Components</a></li>
-                            <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="dropdown1">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;</a></li>
-                            <li><a class="dropdown-button blue-text text-darken-2" href="#login" >&nbsp;Ingreso&nbsp;</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s10 offset-s1">
-                    <div class="carousel carousel-slider center" data-indicators="true">
-                        <!--                        <a class="carousel-item" href="#one!"><img src="http://lorempixel.com/800/400/food/1"></a>
-                                                <a class="carousel-item" href="#two!"><img src="http://lorempixel.com/800/400/food/2"></a>
-                                                <a class="carousel-item" href="#three!"><img src="http://lorempixel.com/800/400/food/3"></a>
-                                                <a class="carousel-item" href="#four!"><img src="http://lorempixel.com/800/400/food/4"></a>-->
-                    </div>
-                </div>
-            </div>
-
-            <form action="#">
+        <div ng-app="penagosApp">
+            <form action="#" ng-controller="penagosAppCtrl as vm">
                 <div class="file-field input-field">
                     <div class="btn">
                         <span>File</span>
-                        <input type="file" accept="image/*" id="fileUpload">
+                        <input type="file" accept="image/*" id="fileUpload" ng-change="vm.login()">
                     </div>
                     <div class="file-path-wrapper">
                         <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" />
@@ -56,49 +25,45 @@ and open the template in the editor.
                 </div>
             </form>
         </div>
-        <!-- Modal Structure -->
-        <div id="login" class="modal" style="width: 25%">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col s10 offset-s1">
-                        <img src="img/logo.png">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s10 offset-s1 ">
-                        <input id="email" type="text" >
-                        <label for="email" class="blue-text text-darken-2">Username</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s10 offset-s1">
-                        <input id="password" type="password" >
-                        <label for="password" class="blue-text text-darken-2">Password</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s5 offset-s1">
-                        <a class="waves-effect  light-blue darken-4  btn">Login</a>
-                    </div>
-                    <div class="col s5">
-                        <a class="waves-effect red btn">Exit</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <script src="js/jquery.min.js"></script>
         <script src="js/materialize.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="js/index.js"></script>
+        <script src="js/index1.js"></script>
         <script>
-            var app = {
-                init: function () {
-                    $("#fileUpload").on('change', function () {
-                        var inputFileImage = document.getElementById("fileUpload");
-                        var file = inputFileImage.files[0];
-                        var data = new FormData();
-                        data.append('Archivo', file);
+//            var app = {
+//                init: function () {
+//                    $("#fileUpload").on('change', function () {
+//                        var inputFileImage = document.getElementById("fileUpload");
+//                        var file = inputFileImage.files[0];
+//                        var data = new FormData();
+//                        data.append('Archivo', file);
+//                        var params = {
+//                            proceso: "archivo",
+//                            file: file
+//                        };
+//                        $.ajax({
+//                            url: "Peticiones1.jsp",
+//                            data: params,
+//                            type: 'POST',
+//                            success: function (data, textStatus, jqXHR) {
+//                                if (data.ok === true) {
+//                                    if (data[params.proceso] === true) {
+//                                        app.aalert('Guardo');
+//                                        $('#codigo').val("");
+//                                        $('#nombre').val("");
+//                                        $('#cantidad').val("");
+//                                        $('#descripcion').val("");
+//                                        window.opener.location.reload();
+//                                    } else {
+//                                        app.aalert('Lo sentimos no se ha podido guardar');
+//                                    }
+//                                } else {
+//                                    alert(data.errorMsg);
+//                                }
+//                            }
+//                        });
 //                                var countFiles = $(this)[0].files.length;
 //                        var imgPath = $(this)[0].value;
 //                        var reader = new FileReader();
@@ -106,29 +71,13 @@ and open the template in the editor.
 //                            $('#image_upload_preview').attr('src', e.target.result);
 //                        };
 //                        reader.readAsDataURL(this.files[0]);
-                    });
-//                    $(".dropdown-button").dropdown({
-//                        inDuration: 300,
-//                        outDuration: 225,
-//                        constrainWidth: true
 //                    });
-//                    $('.carousel.carousel-slider').carousel({
-//                        fullWidth: true,
-//                        duration: 500
-//                    });
-//                    $('.modal').modal({
-//                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-//                        opacity: .5, // Opacity of modal background
-//                        inDuration: 300, // Transition in duration
-//                        outDuration: 200, // Transition out duration
-//                        startingTop: '40%', // Starting top style attribute
-//                        endingTop: '10%'
-//                    });
-                }
-            };
-            $(document).ready(function () {
-                app.init();
-            });
+////                    
+//                }
+//            };
+//            $(document).ready(function () {
+//                app.init();
+//            });
         </script>
     </body>
 </html>

@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Maquinas
+    Document   : Solicitudes Mantenimiento
     Created on : 23/02/2017, 04:34:07 PM
     Author     : Andres
 --%>
@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Maquinas</title>
+        <title>Solicitudes</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
@@ -88,8 +88,8 @@
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#">Cronograma</a></li>
-                            <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
+                            <li><a class="blue-text text-darken-2"href="Maquinas.jsp">Cronograma</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
                             <a href="#!"><img src="img/logo.png"/></a>
@@ -99,9 +99,9 @@
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
-                                <li ><a class="blue-text text-darken-2" href="#" style="background-color: #ccc">Maquinas</a></li>
+                                <li ><a class="blue-text text-darken-2" href="#" >Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="#">Orden de Trabajo</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp" style="background-color: #ccc" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
@@ -147,15 +147,15 @@
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosListaAppCtrl as ma">
+            <div ng-controller="penagosSolicitudesAppCtrl as sm">
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
-                            <div class="input-field col s2">
-                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="ma.nuevaMaquina()">Nueva</a>
+                            <div class="input-field col s3">
+                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="sm.nuevaSolicitud()">Nueva Solicitud</a>
                             </div>
-                            <div class="input-field col s2 offset-s8">
-                                <input id="last_name" type="text" ng-model="ma.busqueda" class="validate ">
+                            <div class="input-field col s2 offset-s7">
+                                <input id="last_name" type="text" ng-model="sm.busqueda" class="validate ">
                                 <label class="indigo-text text-darken-4" >Busqueda</label>
                             </div>
 
@@ -164,25 +164,25 @@
                             <thead>
                                 <tr>
                                     <th class="indigo-text text-darken-4">Codigo</th>
-                                    <th class="indigo-text text-darken-4">Nombre</th>
-                                    <th class="indigo-text text-darken-4">Seccion</th>
-                                    <th class="indigo-text text-darken-4">Modelo</th>
+                                    <th class="indigo-text text-darken-4">NombreEquipo</th>
+                                    <th class="indigo-text text-darken-4">Fecha</th>
+                                    <th class="indigo-text text-darken-4">Solicitado Por</th>
                                     <th class="indigo-text text-darken-4" style="width: 200px">Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  ng-repeat="m in ma.Maquinas| filter:ma.busqueda |orderBy: 'nombre'" data-id="{{m.idEquipos}}">
-                                    <td>{{m.codigo}}</td>
-                                    <td>{{m.nombre}}</td>
-                                    <td>{{m.ubicacion}}</td>
-                                    <td>{{m.modelo}}</td>
+                                <tr  ng-repeat="mto in sm.Solicitudes| filter:sm.busqueda |orderBy: 'fecha'" data-id="{{mto.idsolicitudesDeMantenimiento}}">
+                                    <td>{{mto.codigo}}</td>
+                                    <td>{{mto.equipo.nombre}}</td>
+                                    <td>{{mto.fecha}}</td>
+                                    <td>{{mto.solicitadoPor}}</td>
                                     <td>
                                         <div id="menu">
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="EditarFichaTecnica.jsp?id={{m.idEquipo}}" >Editar</a></li>
-                                                        <li><a href="#" ng-click="ma.eliminar(m.idEquipo)">Eliminar</a></li>
+                                                        <li><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
+                                                        <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudesDeMantenimiento)">Eliminar</a></li>
                                                         <li><a href="#">Hoja de Vida</a></li>
                                                         <!--<li><a href="#">Otras</a></li>-->
                                                     </ul>
