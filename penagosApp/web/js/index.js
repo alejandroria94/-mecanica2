@@ -3,6 +3,8 @@ app.controller('penagosAppCtrl', ['$http', controladorPrincipal]);
 app.controller('penagosListaAppCtrl', ['$http', controladorLista]);
 app.controller('penagosFichaAppCtrl', ['$http', controladorFichaTecnica]);
 app.controller('penagosFichaEdtiAppCtrl', ['$http', controladorFichaTecnicaEditar]);
+app.controller('penagosSolicitudesAppCtrl', ['$http', controladorSolicitudesEditar]);
+app.controller('penagosSolicitudAppCtrl', ['$http', controladorSolicitud]);
 
 function controladorLista($http) {
     var ma = this;
@@ -24,23 +26,42 @@ function controladorLista($http) {
             proceso: "eliminar",
             id: id
         };
-        $http({
-            method: 'POST',
-            url: 'Peticiones.jsp',
-            params: params
-        }).then(function (res, textStatus, jqXHR) {
-            if (res.data.ok === true) {
-                if (res.data[params.proceso] === true) {
-                    window.location.reload();
-                } else {
-                    alert("No se ha eliminado, consulte con el administrador");
-                }
-            } else {
-                alert(res.data.errorMsg);
-            }
-//            ma.Maquinas = _.without(ma.Maquinas, _.findWhere(ma.Maquinas, {idEquipos: id}));
-            ;
-        });
+        swal({
+            title: "Esta seguro?",
+            text: "Se eliminara todo los registros asociados",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: params
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[params.proceso] === true) {
+                                    swal("Eliminado!", "Se ha eliminado el registro", "success", function () {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
+                                }
+                            } else {
+                                swal(res.data.errorMsg);
+                            }
+                            ;
+                        });
+                    } else {
+                        swal("Cancelado", "", "error");
+                    }
+                });
+
     };
 }
 ;
@@ -258,6 +279,94 @@ function controladorPrincipal($http) {
             }
         });
     };
+    vm.archivo = function () {
+        var inputFileImage = document.getElementById("fileUpload");
+        var file = inputFileImage.files[0];
+        var data = new FormData();
+        data.append('Archivo', file);
+        var data = {
+            proceso: "archivo",
+            file: file
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones1.jsp',
+            contentType: 'multipart/form-data',
+            params: data
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[data.proceso] === true) {
+                    alert("Se elimino");
+                } else {
+                    alert("No se pudo guardar");
+                }
+            } else {
+                alert(res.data.errorMsg);
+            }
+        });
+    };
 }
 ;
+function controladorSolicitudesEditar($http) {
+    var sm = this;
+    var params = {
+        proceso: "listarsolicitud"
+    };
+    $http({
+        method: 'POST',
+        url: 'Peticiones.jsp',
+        params: params
+    }).then(function (res, textStatus, jqXHR) {
+        sm.Solicitudes = res.data.Solicitudes;
+    });
+    sm.nuevaSolicitud = function () {
+        window.location = "Solicitud.jsp";
+    };
+//    sm.eliminar = function (id) {
+//        var params = {
+//            proceso: "eliminar",
+//            id: id
+//        };
+//        swal({
+//            title: "Esta seguro?",
+//            text: "Se eliminara todo los registros asociados",
+//            type: "warning",
+//            showCancelButton: true,
+//            confirmButtonColor: "#DD6B55",
+//            confirmButtonText: "Si, eliminar!",
+//            cancelButtonText: "No, cancelar!",
+//            closeOnConfirm: false,
+//            closeOnCancel: false
+//        },
+//                function (isConfirm) {
+//                    if (isConfirm) {
+//                        $http({
+//                            method: 'POST',
+//                            url: 'Peticiones.jsp',
+//                            params: params
+//                        }).then(function (res, textStatus, jqXHR) {
+//                            if (res.data.ok === true) {
+//                                if (res.data[params.proceso] === true) {
+//                                    swal("Eliminado!", "Se ha eliminado el registro", "success", function () {
+//                                        window.location.reload();
+//                                    });
+//                                } else {
+//                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
+//                                }
+//                            } else {
+//                                swal(res.data.errorMsg);
+//                            }
+//                            ;
+//                        });
+//                    } else {
+//                        swal("Cancelado", "", "error");
+//                    }
+//                });
+//
+//    };
+}
+;
+function controladorSolicitud($http){
+    
+};
 
