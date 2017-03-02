@@ -276,9 +276,9 @@
             String observaciones = "" + request.getParameter("observaciones");
             String ejecuto = "" + request.getParameter("ejecuto");
             String recibio = "" + request.getParameter("recibio");
-            String tiposolicitud="" + request.getParameter("tiposolicitud");
-            String generasolicitud="" + request.getParameter("generasolicitud");
-            
+            String tiposolicitud = "" + request.getParameter("tiposolicitud");
+            String generasolicitud = "" + request.getParameter("generasolicitud");
+
             OrdenDeTrabajo ot = new OrdenDeTrabajo();
 
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -305,16 +305,15 @@
             ot.setDptAdmyControl(Boolean.parseBoolean(generasolicitud));//departamento de administracion y control genera la orden ?
             ot.setObservaciones(observaciones);
             ot.setCerrada(false);
-            
-             if (ot.guardarOrdenDeTrabajo()) {
+
+            if (ot.guardarOrdenDeTrabajo()) {
+                SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(solicitud);
+                sM.setOtros(true);
+                sM.actualizarSolicitudDeMantenimiento();
                 respuesta += ",\"" + proceso + "\": true";
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
-
-            
-            
-            
 
         } else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");

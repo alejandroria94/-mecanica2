@@ -324,12 +324,12 @@
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Tiempo empleado</strong></legend>
                         <div class="row">
                             <div class="input-field col s6">
-                                <input id="last_name" type="number" class=" " ng-model="ot.horasmto">
+                                <input id="last_name" type="number" class="horasMTO " ng-model="ot.horasmto">
                                 <label for="last_name" class="indigo-text text-darken-4" >Total horas mantenimiento</label> 
                             </div>
                             <div class="input-field col s6">
-                                <input id="last_name" type="number" class=" " ng-model="ot.horasparada">
-                                <label for="last_name" class="indigo-text text-darken-4" >Total horas parada</label> 
+                                <input id="last_name" type="number" class="horasParada" ng-model="ot.horasparada">
+                                <label for="last_name" class="indigo-text text-darken-4 horasParada" >Total horas parada</label> 
                             </div>
 
                         </div>
@@ -413,7 +413,7 @@
         <script type="text/template" id="filamaterial">
             <div class="row materiales">
             <div class="input-field col s2">
-            <input id="last_name" type="number" class="validate cantidad" >
+            <input id="last_name" type="number" class="validate cantidad" value="0">
             </div>
             <div class="input-field col s4">
             <input type="text" class="validate descripcion">
@@ -422,10 +422,10 @@
             <input type="text" class="validate referencia">
             </div>
             <div class="input-field col s2">
-            <input id="last_name" type="number" class="validate vunitario" >
+            <input id="last_name" type="number" class="validate vunitario"value="0" >
             </div>
             <div class="input-field col s2">
-            <input id="last_name" type="number" class="validate vtotal" readonly="">
+            <input id="last_name" type="number" class="validate vtotal" readonly=""value="0">
              </div>
             </div>
         </script>
@@ -452,6 +452,11 @@
                                     $(".manoobra").val("0");
                                     $(".materialesvalor").val("0");
                                     $(".valortotal").val("0");
+                                    $(".horasParada").val("0");
+                                    $(".horasMTO").val("0");
+                                    $(".cantidad").val("0");
+                                    $(".vtotal").val("0");
+                                    $(".vunitario").val("0");
                                     $(".addanomalia").off('click').on('click', function () {
                                         $(app._plantillaAnomalia()).appendTo(".tablaanomalia");
                                     });
@@ -475,18 +480,19 @@
 //                                                obj.solucion = solucion;
 //                                                materiales.push(obj);
 //                                            });
-                                    $(".vunitario").on('change', function () {
+                                    $(".vunitario, .cantidad").on('change', function () {
                                         var cantidad = $(this).parents(".materiales").find(".cantidad").val();
-                                        var unitario = $(this).val();
-                                        $(this).parents(".materiales").find(".vtotal").val(parseInt(cantidad) * unitario);
+                                        var unitario = $(this).parents(".materiales").find(".vunitario").val();
+                                        $(this).parents(".materiales").find(".vtotal").val(parseFloat(cantidad) * unitario);
                                         var vtotal = 0;
                                         $('.materiales').each(function (indice, elemento) {
                                             var total = $(elemento).find(".vtotal").val();
-                                            vtotal += parseInt(total);
+                                            vtotal += parseFloat(total);
                                         });
                                         $(".materialesvalor").val(vtotal);
                                         $(".valortotal").val(parseFloat($(".materialesvalor").val()) + parseFloat($(".manoobra").val()));
                                     });
+                                    
                                     $('.datepicker').pickadate({
                                         format: "yyyy-mm-dd"
                                     });
@@ -522,14 +528,14 @@
                                     });
                                 },
                                 evento: function () {
-                                    $(".vunitario").on('change', function () {
+                                  $(".vunitario, .cantidad").on('change', function () {
                                         var cantidad = $(this).parents(".materiales").find(".cantidad").val();
-                                        var unitario = $(this).val();
-                                        $(this).parents(".materiales").find(".vtotal").val(parseInt(cantidad) * unitario);
+                                        var unitario = $(this).parents(".materiales").find(".vunitario").val();
+                                        $(this).parents(".materiales").find(".vtotal").val(parseFloat(cantidad) * unitario);
                                         var vtotal = 0;
                                         $('.materiales').each(function (indice, elemento) {
                                             var total = $(elemento).find(".vtotal").val();
-                                            vtotal += parseInt(total);
+                                            vtotal += parseFloat(total);
                                         });
                                         $(".materialesvalor").val(vtotal);
                                         $(".valortotal").val(parseFloat($(".materialesvalor").val()) + parseFloat($(".manoobra").val()));
