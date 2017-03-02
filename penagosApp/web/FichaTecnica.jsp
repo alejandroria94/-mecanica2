@@ -166,13 +166,18 @@
                     </div>
                     <div class="col s2">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Imagen</strong></legend>
-                        <div class=" col-lg-12 col-md-12 col-sm-12 fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100%;height: 200px;"></div>
-                            <div>
-                                <span class="waves-effect light-blue darken-4  btn btn-file"><span class="fileinput-new">Seleccionar</span><span class="fileinput-exists">Cambiar</span><input type="file" name="..."></span>
-                                <a href="#" class="waves-effect red darken-3 btn fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                        <form  action="fileupload.jsp" method="post" enctype="multipart/form-data">
+                            <div class="file-field input-field">
+                                <div class="file-path-wrapper">
+                                    <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" width="200px"/>
+                                </div>
+                                <div class="btn">
+                                    <span>Imagen</span>
+                                    <input type="file" accept="image/*" id="fileUpload">
+                                </div>
                             </div>
-                        </div>
+                            <input type="submit" class="btn hide">
+                        </form>
                     </div>
                 </div>
                 <div class="row">
@@ -262,7 +267,6 @@
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Caracteristicas Especificas</strong></legend>
                         <div class="input-field col s12">
                             <textarea id="textarea1" class="materialize-textarea" length="120" ng-model="ft.cespecificas"></textarea>
-                            <label for="textarea1" class="indigo-text text-darken-4">Textarea</label>
                         </div>
                     </div>
                 </div>
@@ -271,7 +275,6 @@
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Funciones</strong></legend>
                         <div class="input-field col s12">
                             <textarea id="textarea1" class="materialize-textarea" length="120" ng-model="ft.funciones"></textarea>
-                            <label for="textarea1" class="indigo-text text-darken-4">Textarea</label>
                         </div>
                     </div>
                 </div>
@@ -280,7 +283,6 @@
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Observaciones</strong></legend>
                         <div class="input-field col s12">
                             <textarea id="textarea1" class="materialize-textarea" length="120" ng-model="ft.observaciones"></textarea>
-                            <label for="textarea1" class="indigo-text text-darken-4">Textarea</label>
                         </div>
                     </div>
                 </div>
@@ -316,30 +318,43 @@
         <script src="js/index.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
         <script>
-                                    var app = {
-                                        init: function () {
-                                            $(".dropdown-button").dropdown({
-                                                inDuration: 300,
-                                                outDuration: 225,
-                                                constrainWidth: true
-                                            });
-                                            $('.carousel.carousel-slider').carousel({
-                                                fullWidth: true,
-                                                duration: 500
-                                            });
-                                            $('.modal').modal({
-                                                dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                                                opacity: .5, // Opacity of modal background
-                                                inDuration: 300, // Transition in duration
-                                                outDuration: 200, // Transition out duration
-                                                startingTop: '40%', // Starting top style attribute
-                                                endingTop: '10%'
-                                            });
-                                        }
-                                    };
-                                    $(document).ready(function () {
-                                        app.init();
+                            var app = {
+                                init: function () {
+                                    $("#fileUpload").on('change', function () {
+                                        var inputFileImage = document.getElementById("fileUpload");
+                                        var file = inputFileImage.files[0];
+                                        var data = new FormData();
+                                        data.append('Archivo', file);
+                                        var countFiles = $(this)[0].files.length;
+                                        var imgPath = $(this)[0].value;
+                                        var reader = new FileReader();
+                                        reader.onload = function (e) {
+                                            $('#image_upload_preview').attr('src', e.target.result);
+                                        };
+                                        reader.readAsDataURL(this.files[0]);
                                     });
+                                    $(".dropdown-button").dropdown({
+                                        inDuration: 300,
+                                        outDuration: 225,
+                                        constrainWidth: true
+                                    });
+                                    $('.carousel.carousel-slider').carousel({
+                                        fullWidth: true,
+                                        duration: 500
+                                    });
+                                    $('.modal').modal({
+                                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                        opacity: .5, // Opacity of modal background
+                                        inDuration: 300, // Transition in duration
+                                        outDuration: 200, // Transition out duration
+                                        startingTop: '40%', // Starting top style attribute
+                                        endingTop: '10%'
+                                    });
+                                }
+                            };
+                            $(document).ready(function () {
+                                app.init();
+                            });
         </script>
     </body>
 </html>
