@@ -45,7 +45,7 @@
                                         if (usuarios != null) {
                                     %>
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp">Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="#">Orden de Trabajo</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" data-activates="mantenimiento">Mantenimiento▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
