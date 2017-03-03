@@ -105,9 +105,9 @@ public class OrdenDeTrabajo {
         return exito;
     }
 
-    public OrdenDeTrabajo buscarOrdenDeTrabajo(String idOrdenDeTrabajo, String idEquipo) throws SQLException {
+    public OrdenDeTrabajo buscarOrdenDeTrabajo(String idSolicitudMantenimiento, String idEquipo) throws SQLException {
         ConexionBD conexion = new ConexionBD();
-        ResultSet datosOT = conexion.consultarBD("select * from ordenesdetrabajo where  solicitudesDeMantenimiento_idsolicitudesDeMantenimiento ='" + idOrdenDeTrabajo + "' and solicitudesDeMantenimiento_equipos_idequipos='" + idEquipo + "'");
+        ResultSet datosOT = conexion.consultarBD("select * from ordenesdetrabajo where  solicitudesDeMantenimiento_idsolicitudesDeMantenimiento ='" + idSolicitudMantenimiento + "' and solicitudesDeMantenimiento_equipos_idequipos='" + idEquipo + "'");
         OrdenDeTrabajo ot = null;
 
         if (datosOT.next()) {

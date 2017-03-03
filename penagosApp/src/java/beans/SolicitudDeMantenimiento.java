@@ -40,6 +40,8 @@ public class SolicitudDeMantenimiento {
     private String recibidoPor;
     private Equipo equipo;
     private boolean ordenDeTrabajo;
+    private OrdenDeTrabajo ot;
+    private String estado;
 
     public SolicitudDeMantenimiento() {
     }
@@ -376,6 +378,15 @@ public class SolicitudDeMantenimiento {
 
     public void setOrdenDeTrabajo(boolean ordenDeTrabajo) {
         this.ordenDeTrabajo = ordenDeTrabajo;
+    }
+
+    public String getEstado() throws SQLException {
+        this.estado = "Sin Asignar";
+        if (this.ordenDeTrabajo) {
+            this.ot = new OrdenDeTrabajo().buscarOrdenDeTrabajo(this.getIdsolicitudDeMantenimiento() + "", this.getIdequipo() + "");
+            this.estado = ot.estadoActual();
+        }
+        return estado;
     }
 
 }
