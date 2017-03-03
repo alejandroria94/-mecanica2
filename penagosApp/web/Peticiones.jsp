@@ -6,6 +6,8 @@
 --%>
 
 
+<%@page import="beans.CrearPDF"%>
+<%@page import="beans.OrdenDeTrabajoPDF"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.util.Date"%>
@@ -43,7 +45,9 @@
         "vereditar",
         "editar",
         "eliminar",
+        "generarpdf",
         "guardasolicitud",
+        "listarordenes",
         "guardarot",});
 
     // Si el usuario tiene sesión válida y permisos.
@@ -308,12 +312,21 @@
 
             if (ot.guardarOrdenDeTrabajo()) {
                 SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(solicitud);
-                sM.setOtros(true);
+                sM.setOrdenDeTrabajo(true);
                 sM.actualizarSolicitudDeMantenimiento();
                 respuesta += ",\"" + proceso + "\": true";
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
+
+        } else if (proceso.equals("listarordenes")) {
+            OrdenDeTrabajo ot = new OrdenDeTrabajo();
+            List<OrdenDeTrabajo> lista = ot.getListaOrdenesDeTrabajo();
+            respuesta += ",\"" + proceso + "\": true,\"Ordenes\":" + new Gson().toJson(lista);
+        } else if (proceso.equals("generarpdf")) {
+            String idSolicitud = "" + request.getParameter("id");
+            String idEquipo = "" + request.getParameter("idequipo");
+            CrearPDF.crear(idSolicitud, idEquipo);
 
         } else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");

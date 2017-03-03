@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Solicitudes</title>
+        <title>Ordenes de trabajo</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
@@ -147,15 +147,12 @@
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosSolicitudesAppCtrl as sm">
+            <div ng-controller="penagosListOTAppCtrl as lot">
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
-                            <div class="input-field col s3">
-                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="sm.nuevaSolicitud()">Nueva Solicitud</a>
-                            </div>
-                            <div class="input-field col s2 offset-s7">
-                                <input id="last_name" type="text" ng-model="sm.busqueda" class="validate ">
+                            <div class="input-field col s2 offset-s10">
+                                <input id="last_name" type="text" ng-model="lot.busqueda" class="validate ">
                                 <label class="indigo-text text-darken-4" >Busqueda</label>
                             </div>
 
@@ -163,28 +160,26 @@
                         <table class="bordered highlight responsive-table">
                             <thead>
                                 <tr>
-                                    <th class="indigo-text text-darken-4">Codigo</th>
-                                    <th class="indigo-text text-darken-4">NombreEquipo</th>
-                                    <th class="indigo-text text-darken-4">Fecha</th>
-                                    <th class="indigo-text text-darken-4">Solicitado Por</th>
+                                    <th class="indigo-text text-darken-4">Numero</th>
+                                    <th class="indigo-text text-darken-4">Tipo de solicitud</th>
+                                    <th class="indigo-text text-darken-4">Fecha inicio</th>
+                                    <th class="indigo-text text-darken-4">Fecha fin</th>
                                     <th class="indigo-text text-darken-4" style="width: 200px">Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  ng-repeat="mto in sm.Solicitudes| filter:sm.busqueda |orderBy: 'fecha'" data-id="{{mto.idsolicitudesDeMantenimiento}}">
-                                    <td>{{mto.codigo}}</td>
-                                    <td>{{mto.equipo.nombre}}</td>
-                                    <td>{{mto.fecha}}</td>
-                                    <td>{{mto.solicitadoPor}}</td>
+                                <tr  ng-repeat="ot in lot.Ordenes| filter:lot.busqueda |orderBy: 'numeroOrdenDeTrabajo'" >
+                                    <td>{{ot.numeroOrdenDeTrabajo}}</td>
+                                    <td>{{ot.tipoSolicitud}}</td>
+                                    <td>{{ot.fechaInicio}}</td>
+                                    <td>{{ot.fechaFin}}</td>
                                     <td>
                                         <div id="menu">
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
-                                                        <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudesDeMantenimiento)">Eliminar</a></li>
-                                                        <li><a href="#" ng-click="sm.PDF(mto.idsolicitudDeMantenimiento, mto.equipo.idEquipo)">Generar PDF</a></li>
-                                                        <li ng-if="mto.ordenDeTrabajo===false"><a href="OrdenDeTrabajo.jsp?codigo={{mto.idsolicitudDeMantenimiento}}">Orden de trabajo</a></li>
+                                                        <li><a href="#" ng-click="lot.eliminar(lot.solicitudesDeMantenimiento_idsolicitudesDeMantenimiento+lot.solicitudesDeMantenimiento_equipos_idequipos)">Eliminar</a></li>
+                                                        <li><a href="#">PDF</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>

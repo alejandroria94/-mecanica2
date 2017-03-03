@@ -5,6 +5,8 @@
  */
 package beans;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -24,8 +26,11 @@ import java.io.IOException;
  */
 public class OrdenDeTrabajoPDF {
 
-    public static final String DEST = "web/pdf/ejemploOT.pdf";
+    public static String ruta = "";
     public OrdenDeTrabajo ot;
+    private JsonArray listaPartes ;////json object
+    private JsonArray listaDescripcionesTrabajos ;////json object
+    private JsonArray listaMateriales ;////json object
 
     public OrdenDeTrabajoPDF(OrdenDeTrabajo ot) {
         this.ot = ot;
@@ -33,9 +38,12 @@ public class OrdenDeTrabajoPDF {
 
     public void pdfOT() throws IOException, DocumentException {
         try {
-            File file = new File(DEST);
+            ruta="web/pdf/"+ot.getIdsolicitudDeMantenimiento()+""+ot.getIdequipo()+"OrdenDeTrabajo.pdf";
+            ot.setRuta(ruta);
+            ot.actualizarOrdenDeTrabajo();
+            File file = new File(ruta);
             file.getParentFile().mkdirs();
-            new OrdenDeTrabajoPDF(this.ot).createPdf(DEST);
+            new OrdenDeTrabajoPDF(this.ot).createPdf(ruta);
             System.out.println("Documento creado Correctamente");
         } catch (IOException | DocumentException e) {
             System.out.println("Documento en uso, no se ha creado el nuevo");
@@ -44,6 +52,10 @@ public class OrdenDeTrabajoPDF {
     }
 
     private void createPdf(String dest) throws IOException, DocumentException {
+        this.listaPartes=new JsonParser().parse(ot.getPartes()).getAsJsonArray();
+        this.listaDescripcionesTrabajos=new JsonParser().parse(ot.getDescripcionesTrabajos()).getAsJsonArray();
+        this.listaMateriales=new JsonParser().parse(ot.getMateriales()).getAsJsonArray();
+        
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(dest));
         document.open();
@@ -86,15 +98,15 @@ public class OrdenDeTrabajoPDF {
             table.addCell(celda);
         }
 
-        celda = new PdfPCell(new Phrase("CODIGO EQUIPO: "+ot.getSolicitudDeMantenimiento().getEquipo().getCodigo(), font));
+        celda = new PdfPCell(new Phrase("CODIGO EQUIPO: " + ot.getSolicitudDeMantenimiento().getEquipo().getCodigo(), font));
         celda.setColspan(3);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("NOMBRE EQUIPO: "+ot.getSolicitudDeMantenimiento().getEquipo().getNombre(), font));
+        celda = new PdfPCell(new Phrase("NOMBRE EQUIPO: " + ot.getSolicitudDeMantenimiento().getEquipo().getNombre(), font));
         celda.setColspan(9);
         table.addCell(celda);
-        String tipoMantenimiento="";
+        String tipoMantenimiento = "";
         for (String element : ot.getTiposDeMantenimiento()) {
-            tipoMantenimiento+=element+"\n";
+            tipoMantenimiento += element + "\n";
         }
 
         celda = new PdfPCell(new Phrase("TIPO DE MANTENIMIENTO\n", font));
@@ -125,35 +137,35 @@ public class OrdenDeTrabajoPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < listaPartes.size(); i++) {
 
-            celda = new PdfPCell(new Phrase("p" + i, font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("parte").toString().replace("\"", "") , font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("a" + i, font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("anomalia").toString().replace("\"", "") , font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("c" + i, font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("causa").toString().replace("\"", "") , font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("ps" + i, font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("solucion").toString().replace("\"", "") , font));
             celda.setColspan(3);
             table.addCell(celda);
 
         }
 
-        celda = new PdfPCell(new Phrase("SOLICTADA POR: "+ot.getSolicitadaPor()+"\n\nFIRMA", font));
+        celda = new PdfPCell(new Phrase("SOLICTADA POR: " + ot.getSolicitadaPor() + "\n\nFIRMA", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("REVISADA POR: "+ot.getRevisadaPor()+"\n\nFIRMA", font));
+        celda = new PdfPCell(new Phrase("REVISADA POR: " + ot.getRevisadaPor() + "\n\nFIRMA", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("AUTORIZADA POR: "+ot.getAutorizadaPor()+"\n\nFIRMA", font));
+        celda = new PdfPCell(new Phrase("AUTORIZADA POR: " + ot.getAutorizadaPor() + "\n\nFIRMA", font));
         celda.setColspan(4);
         table.addCell(celda);
 
@@ -167,13 +179,13 @@ public class OrdenDeTrabajoPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < listaDescripcionesTrabajos.size(); i++) {
 
-            celda = new PdfPCell(new Phrase(i + "", font));
+            celda = new PdfPCell(new Phrase((i+1) + "", font));
             celda.setColspan(1);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("D" + i, font));
+            celda = new PdfPCell(new Phrase(listaDescripcionesTrabajos.get(i).getAsJsonObject().get("trabajo").toString().replace("\"", ""), font));
             celda.setColspan(11);
             table.addCell(celda);
 
@@ -214,28 +226,28 @@ public class OrdenDeTrabajoPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        for (int i = 0; i < 2; i++) {
-            celda = new PdfPCell(new Phrase("" + i, font));
+        for (int i = 0; i < listaMateriales.size(); i++) {
+            celda = new PdfPCell(new Phrase("" + (1+i), font));
             celda.setColspan(1);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("CANTIDAD" + i, font));
+            celda = new PdfPCell(new Phrase(listaMateriales.get(i).getAsJsonObject().get("cantidad").toString().replace("\"", ""), font));
             celda.setColspan(2);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("DESCRIPCIÓN" + i, font));
+            celda = new PdfPCell(new Phrase(listaMateriales.get(i).getAsJsonObject().get("descripcion").toString().replace("\"", ""), font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("REFERENCIA" + i, font));
+            celda = new PdfPCell(new Phrase(listaMateriales.get(i).getAsJsonObject().get("referencia").toString().replace("\"", ""), font));
             celda.setColspan(2);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("VALOR UNI" + i, font));
+            celda = new PdfPCell(new Phrase(listaMateriales.get(i).getAsJsonObject().get("unitario").toString().replace("\"", ""), font));
             celda.setColspan(2);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase("VALOR TOTAL" + i, font));
+            celda = new PdfPCell(new Phrase(listaMateriales.get(i).getAsJsonObject().get("total").toString().replace("\"", ""), font));
             celda.setColspan(2);
             table.addCell(celda);
         }
@@ -243,15 +255,15 @@ public class OrdenDeTrabajoPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("MANO DE OBRA: $"+ot.getCostoManoDeObra()+"", font));
+        celda = new PdfPCell(new Phrase("MANO DE OBRA: $" + ot.getCostoManoDeObra() + "", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("MATERIALES: $"+ot.getCostoMateriales()+"", font));
+        celda = new PdfPCell(new Phrase("MATERIALES: $" + ot.getCostoMateriales() + "", font));
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL: $"+ot.getCostoTotal()+"", font));
+        celda = new PdfPCell(new Phrase("TOTAL: $" + ot.getCostoTotal() + "", font));
         celda.setColspan(4);
         table.addCell(celda);
 
@@ -260,11 +272,11 @@ public class OrdenDeTrabajoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL HORAS MTO: "+ot.getTotalHorasMto()+"", font));
+        celda = new PdfPCell(new Phrase("TOTAL HORAS MTO: " + ot.getTotalHorasMto() + "", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL HORAS PARADA: "+ot.getTotalHorasParada()+"", font));
+        celda = new PdfPCell(new Phrase("TOTAL HORAS PARADA: " + ot.getTotalHorasParada() + "", font));
         celda.setColspan(6);
         table.addCell(celda);
 
@@ -273,7 +285,7 @@ public class OrdenDeTrabajoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+ot.getDescripcionDanos(), font));
+        celda = new PdfPCell(new Phrase("" + ot.getDescripcionDanos(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
@@ -282,7 +294,7 @@ public class OrdenDeTrabajoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+ot.getDescripcionTrabajosRealizados(), font));
+        celda = new PdfPCell(new Phrase("" + ot.getDescripcionTrabajosRealizados(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
@@ -291,15 +303,15 @@ public class OrdenDeTrabajoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+ot.getObservaciones(), font));
+        celda = new PdfPCell(new Phrase("" + ot.getObservaciones(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("EJECUTO: "+ot.getEjecutadoPor()+"\n\nFIRMA", font));
+        celda = new PdfPCell(new Phrase("EJECUTO: " + ot.getEjecutadoPor() + "\n\nFIRMA", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("RECIBIÓ Y APROBÓ: "+ot.getRecibidoAprobadoPor()+"\n\nFIRMA", font));
+        celda = new PdfPCell(new Phrase("RECIBIÓ Y APROBÓ: " + ot.getRecibidoAprobadoPor() + "\n\nFIRMA", font));
         celda.setColspan(6);
         table.addCell(celda);
 

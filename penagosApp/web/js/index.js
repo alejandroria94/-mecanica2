@@ -1,3 +1,4 @@
+
 var app = angular.module('penagosApp', []);
 app.controller('penagosAppCtrl', ['$http', controladorPrincipal]);
 app.controller('penagosListaAppCtrl', ['$http', controladorLista]);
@@ -6,6 +7,7 @@ app.controller('penagosFichaEdtiAppCtrl', ['$http', controladorFichaTecnicaEdita
 app.controller('penagosSolicitudesAppCtrl', ['$http', controladorSolicitudesEditar]);
 app.controller('penagosSolicitudAppCtrl', ['$http', controladorSolicitud]);
 app.controller('penagosOTAppCtrl', ['$http', controladorOT]);
+app.controller('penagosListOTAppCtrl', ['$http', controladorListOT]);
 
 function controladorLista($http) {
     var ma = this;
@@ -323,6 +325,20 @@ function controladorSolicitudesEditar($http) {
     sm.nuevaSolicitud = function () {
         window.location = "Solicitud.jsp";
     };
+    sm.PDF = function (ids, ide) {
+        var params = {
+            proceso: "generarpdf",
+            id:ids,
+            idequipo:ide
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            sm.Solicitudes = res.data.Solicitudes;
+        });
+    };
 
 }
 ;
@@ -379,21 +395,30 @@ function controladorSolicitud($http) {
             realizado: st.realizado,
             recibido: st.recibido
         };
-        $http({
-            method: 'POST',
-            url: 'Peticiones.jsp',
-            params: solicitud
-        }).then(function (res, textStatus, jqXHR) {
-            if (res.data.ok === true) {
-                if (res.data[solicitud.proceso] === true) {
-                    window.location = "SolicitudesMto.jsp";
-                } else {
-                    alert("Por favor vefifique sus datos");
-                }
+        if (st.fecha !== undefined) {
+            if (id !== undefined) {
+                $http({
+                    method: 'POST',
+                    url: 'Peticiones.jsp',
+                    params: solicitud
+                }).then(function (res, textStatus, jqXHR) {
+                    if (res.data.ok === true) {
+                        if (res.data[solicitud.proceso] === true) {
+                            window.location = "SolicitudesMto.jsp";
+                        } else {
+                            alert("Por favor vefifique sus datos");
+                        }
+                    } else {
+                        alert(res.data.errorMsg);
+                    }
+                });
             } else {
-                alert(res.data.errorMsg);
+                swal("Error", "Debe selecionar un equipo", "error");
             }
-        });
+        } else {
+            swal("Error", "Debe selecionar una fecha", "error");
+        }
+
     };
     st.cancelar = function () {
         window.location = "SolicitudesMto.jsp";
@@ -453,6 +478,7 @@ function controladorOT($http) {
             ot.generasolicitud = "false";
         }
         ;
+
         var odt = {
             proceso: "guardarot",
             ordendetrabajo: ot.ordentrabajo,
@@ -470,29 +496,33 @@ function controladorOT($http) {
             materiales: JSON.stringify(materiales),
             cmanoobra: $(".manoobra").val(),
             cmateriales: $(".materialesvalor").val(),
-            horasmto: ot.horasmto,
-            horasparada: ot.horasparada,
+            horasmto: $(".horasMTO").val(),
+            horasparada: $(".horasParada").val(),
             daños: ot.danos,
             trabajosrealizados: ot.trabajosrealizados,
             observaciones: ot.observaciones,
             ejecuto: ot.ejecuto,
             recibio: ot.recibio
         };
-        $http({
-            method: 'POST',
-            url: 'Peticiones.jsp',
-            params: odt
-        }).then(function (res, textStatus, jqXHR) {
-            if (res.data.ok === true) {
-                if (res.data[odt.proceso] === true) {
-                    window.location = "SolicitudesMto.jsp";
+        if (ot.fechafin === undefined || ot.fechainicio === undefined) {
+            swal("Error", "Debe seleccionar fecha inicio y fecha fin", "error");
+        } else {
+            $http({
+                method: 'POST',
+                url: 'Peticiones.jsp',
+                params: odt
+            }).then(function (res, textStatus, jqXHR) {
+                if (res.data.ok === true) {
+                    if (res.data[odt.proceso] === true) {
+                        window.location = "SolicitudesMto.jsp";
+                    } else {
+                        alert("Por favor vefifique sus datos");
+                    }
                 } else {
-                    alert("Por favor vefifique sus datos");
+                    alert(res.data.errorMsg);
                 }
-            } else {
-                alert(res.data.errorMsg);
-            }
-        });
+            });
+        }
     };
     ot.sumar = function () {
         var valor = $(".materialesvalor").val();
@@ -501,6 +531,20 @@ function controladorOT($http) {
     ot.cancelar = function () {
         window.location = "SolicitudesMto.jsp";
     };
+}
+;
+function controladorListOT($http) {
+    var lot = this;
+    var params = {
+        proceso: "listarordenes"
+    };
+    $http({
+        method: 'POST',
+        url: 'Peticiones.jsp',
+        params: params
+    }).then(function (res, textStatus, jqXHR) {
+        lot.Ordenes = res.data.Ordenes;
+    });
 }
 ;
 

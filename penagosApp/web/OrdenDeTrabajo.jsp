@@ -16,6 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
         <link href="css/jasny-bootstrap.css" rel="stylesheet">
+        <link href="css/sweetalert.css" rel="stylesheet">
         <style>
             .switch label input[type=checkbox]:checked+.lever:after{
                 background-color: #1b5e20;
@@ -442,6 +443,7 @@
         <script src="js/index.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/underscore.js"></script>
+         <script src="js/sweetalert.min.js"></script>
         <script>
                             var app = {
                                 _plantillaAnomalia: _.template($('#filaanomalia').html().replace(/\n/gi, "")),
