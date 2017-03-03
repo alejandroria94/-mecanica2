@@ -327,7 +327,7 @@ function controladorSolicitudesEditar($http) {
     };
     sm.PDF = function (ids, ide) {
         var params = {
-            proceso: "generarpdf",
+            proceso: "generarpdfsolicitud",
             id:ids,
             idequipo:ide
         };
@@ -545,6 +545,21 @@ function controladorListOT($http) {
     }).then(function (res, textStatus, jqXHR) {
         lot.Ordenes = res.data.Ordenes;
     });
+    lot.generarPdf = function (ids, ide) {
+        var params = {
+            proceso: "generarpdfot",
+            id:ids,
+            idequipo:ide
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            sm.Solicitudes = res.data.Solicitudes;
+        });
+    };
+
 }
 ;
 

@@ -44,7 +44,8 @@
         "vereditar",
         "editar",
         "eliminar",
-        "generarpdf",
+        "generarpdfsolicitud",
+        "generarpdfot",
         "guardasolicitud",
         "listarordenes",
         "guardarot",});
@@ -322,7 +323,12 @@
             OrdenDeTrabajo ot = new OrdenDeTrabajo();
             List<OrdenDeTrabajo> lista = ot.getListaOrdenesDeTrabajo();
             respuesta += ",\"" + proceso + "\": true,\"Ordenes\":" + new Gson().toJson(lista);
-        } else if (proceso.equals("generarpdf")) {
+        } else if (proceso.equals("generarpdfsolicitud")) {
+//            String idSolicitud = "" + request.getParameter("id");
+//            String idEquipo = "" + request.getParameter("idequipo");
+//            OrdenDeTrabajoPDF otPDF = new OrdenDeTrabajoPDF(new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo));
+//            otPDF.pdfOT();
+        } else if (proceso.equals("generarpdfot")) {
             String idSolicitud = "" + request.getParameter("id");
             String idEquipo = "" + request.getParameter("idequipo");
             OrdenDeTrabajoPDF otPDF = new OrdenDeTrabajoPDF(new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo));
