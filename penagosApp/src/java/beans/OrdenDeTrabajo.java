@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class OrdenDeTrabajo {
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Calendar cal = Calendar.getInstance();
     private Date fechaHoy;
     //campos tabla solicitud
@@ -89,7 +89,7 @@ public class OrdenDeTrabajo {
         String sentencia = "INSERT INTO ordenesdetrabajo(solicitudesDeMantenimiento_idsolicitudesDeMantenimiento, solicitudesDeMantenimiento_equipos_idequipos, numeroOrdenDeTrabajo, fechaInicio,fechaFin"
                 + ", tipoSolicitud, partes,solicitadaPor, revisadaPor, autorizadaPor, descripcionesTrabajos, materiales, costoManoDeObra,costoMateriales,totalHorasMto, totalHorasParada"
                 + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones,estado,cerrada) "
-                + " VALUES ('" + this.idsolicitudDeMantenimiento + "','" + this.idequipo + "','" + this.numeroOrdenDeTrabajo + "','" + this.fechaInicio + "','" + this.fechaFin + "','" + this.tipoSolicitud + "','" + this.partes + "'"
+                + " VALUES ('" + this.idsolicitudDeMantenimiento + "','" + this.idequipo + "','" + this.numeroOrdenDeTrabajo + "','" + dateFormat.format(this.fechaInicio )+ "','" + dateFormat.format(this.fechaFin) + "','" + this.tipoSolicitud + "','" + this.partes + "'"
                 + ",'" + this.solicitadaPor + "','" + this.revisadaPor + "','" + this.autorizadaPor + "','" + this.descripcionesTrabajos + "','" + this.materiales + "','" + this.costoManoDeObra + "','" + this.costoMateriales + "','" + this.totalHorasMto + "','" + this.totalHorasParada + "'"
                 + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','" + this.dptAdmyControl + "','" + this.observaciones + "','" + this.estado + "','" + this.cerrada + "');";
         if (conexion.setAutoCommitBD(false)) {
@@ -191,7 +191,7 @@ public class OrdenDeTrabajo {
             //UPDATE table_name
             //SET column1=value1,column2=value2,...
             //WHERE some_column=some_value;
-            String sql2 = "UPDATE `ordenesdetrabajo` SET numeroOrdenDeTrabajo='" + this.numeroOrdenDeTrabajo + "',fechaInicio='" + this.fechaInicio + "',fechaFin='" + this.fechaFin + "',tipoSolicitud='" + this.tipoSolicitud + "'"
+            String sql2 = "UPDATE `ordenesdetrabajo` SET numeroOrdenDeTrabajo='" + this.numeroOrdenDeTrabajo + "',fechaInicio='" + dateFormat.format(this.fechaInicio) + "',fechaFin='" + dateFormat.format(this.fechaFin) + "',tipoSolicitud='" + this.tipoSolicitud + "'"
                     + ",partes='" + this.partes + "',solicitadaPor='" + this.solicitadaPor + "',revisadaPor='" + this.revisadaPor + "',autorizadaPor='" + this.autorizadaPor + "',descripcionesTrabajos='" + this.descripcionesTrabajos + "',estado='" + this.estado + "'"
                     + ",materiales='" + this.materiales + "',costoManoDeObra='" + this.costoManoDeObra + "',costoMateriales='" + this.costoMateriales + "',totalHorasMto='" + this.totalHorasMto + "',totalHorasParada='" + this.totalHorasParada + "',observaciones='" + this.observaciones + "'"
                     + ",descripcionDanos='" + this.descripcionDanos + "',descripcionTrabajosRealizados='" + this.descripcionTrabajosRealizados + "',ejecutadoPor='" + this.ejecutadoPor + "',recibidoAprobadoPor='" + this.recibidoAprobadoPor + "',dptAdmyControl='" + this.dptAdmyControl + "'"

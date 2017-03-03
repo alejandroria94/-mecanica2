@@ -6,6 +6,10 @@
 --%>
 
 
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="com.mysql.fabric.xmlrpc.base.Data"%>
 <%@page import="beans.SolicitudDeMantenimiento"%>
 <%@page import="beans.Produccion"%>
 <%@page import="beans.Proveedor"%>
@@ -39,7 +43,8 @@
         "vereditar",
         "editar",
         "eliminar",
-      });
+        "guardasolicitud",
+        "guardarot",});
 
     // Si el usuario tiene sesión válida y permisos.
     String proceso = "" + request.getParameter("proceso");
@@ -71,7 +76,7 @@
             List<Equipo> lista = e.getListaDeEquipos();
             respuesta += ",\"" + proceso + "\": true,\"Maquinas\":" + new Gson().toJson(lista);
 
-        }else if (proceso.equals("listarsolicitud")) {
+        } else if (proceso.equals("listarsolicitud")) {
             SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento();
             List<SolicitudDeMantenimiento> lista = sm.getListaSolicitudesDeMantenimiento();
             respuesta += ",\"" + proceso + "\": true,\"Solicitudes\":" + new Gson().toJson(lista);
@@ -163,7 +168,7 @@
             String caracteristicasespecificas = "" + request.getParameter("cespecificas");
             String observaciones = "" + request.getParameter("observaciones");
             String Id = "" + request.getParameter("id");
-             String operario = "" + request.getParameter("operario");
+            String operario = "" + request.getParameter("operario");
 
             Equipo e = new Equipo();
             e.setIdEquipo(Integer.parseInt(Id));
@@ -198,6 +203,118 @@
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
+        } else if (proceso.equals("guardasolicitud")) {
+            String codigo = "" + request.getParameter("codigo");
+            String revision = "" + request.getParameter("revision");
+            String solicitud = "" + request.getParameter("solicitud");
+            String fecha = "" + request.getParameter("fecha");
+            String idequipo = "" + request.getParameter("idequipo");
+            String reparacion = "" + request.getParameter("reparacion");
+            String electrico = "" + request.getParameter("electrico");
+            String mecanico = "" + request.getParameter("mecanico");
+            String correctivo = "" + request.getParameter("correctivo");
+            String preventivo = "" + request.getParameter("preventivo");
+            String otros = "" + request.getParameter("otros");
+            String servicio = "" + request.getParameter("servicio");
+            String acciones = "" + request.getParameter("acciones");
+            String material = "" + request.getParameter("material");
+            String horasparada = "" + request.getParameter("horasparada");
+            String horasmto = "" + request.getParameter("horasmto");
+            String horasolicitud = "" + request.getParameter("horasolicitud");
+            String horaentrega = "" + request.getParameter("horaentrega");
+            String solicitado = "" + request.getParameter("solicitado");
+            String realizado = "" + request.getParameter("realizado");
+            String recibido = "" + request.getParameter("recibido");
+
+            SolicitudDeMantenimiento st = new SolicitudDeMantenimiento();
+            st.setCodigo(codigo);
+            st.setDescripcionAcciones(acciones);
+            st.setDescripcionServicio(servicio);
+            st.setFecha(fecha);
+            st.setHoraEntrega(horaentrega);
+            st.setHoraSolicitud(horasolicitud);
+            st.setHorasMTO(Float.parseFloat(horasmto));
+            st.setHorasParada(Float.parseFloat(horasparada));
+            st.setIdequipo(Integer.parseInt(idequipo));
+            st.setMaterial(material);
+            st.setMtoCorrectivo(Boolean.parseBoolean(correctivo));
+            st.setMtoElectrico(Boolean.parseBoolean(electrico));
+            st.setMtoMecanico(Boolean.parseBoolean(mecanico));
+            st.setMtoPreventivo(Boolean.parseBoolean(preventivo));
+            st.setOrdenDeTrabajo(false);
+            st.setOtros(Boolean.parseBoolean(otros));
+            st.setRevision(revision);
+            st.setSolicitadoPor(solicitado);
+            st.setRealizadoPor(realizado);
+            st.setRecibidoPor(recibido);
+            st.setReparacion(Boolean.parseBoolean(reparacion));
+            st.setSolicitudDeServicio(solicitud);
+            if (st.guardarSolicitudDeMantenimiento()) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+
+        } else if (proceso.equals("guardarot")) {
+            String ordendetrabajo = "" + request.getParameter("ordendetrabajo");
+            String fechainicio = "" + request.getParameter("fechainicio");
+            String fechafin = "" + request.getParameter("fechafin");
+            String solicitud = "" + request.getParameter("solicitud");
+            String idequipo = "" + request.getParameter("idequipo");
+            String anomaliaparte = "" + request.getParameter("anomaliaparte");
+            String solicitada = "" + request.getParameter("solicitada");
+            String revisada = "" + request.getParameter("revisada");
+            String autorizada = "" + request.getParameter("autorizada");
+            String trabajos = "" + request.getParameter("trabajos");
+            String materiales = "" + request.getParameter("materiales");
+            String cmanoobra = "" + request.getParameter("cmanoobra");
+            String cmateriales = "" + request.getParameter("cmateriales");
+            String horasmto = "" + request.getParameter("horasmto");
+            String horasparada = "" + request.getParameter("horasparada");
+            String daños = "" + request.getParameter("daños");
+            String trabajosrealizados = "" + request.getParameter("trabajosrealizados");
+            String observaciones = "" + request.getParameter("observaciones");
+            String ejecuto = "" + request.getParameter("ejecuto");
+            String recibio = "" + request.getParameter("recibio");
+            String tiposolicitud = "" + request.getParameter("tiposolicitud");
+            String generasolicitud = "" + request.getParameter("generasolicitud");
+
+            OrdenDeTrabajo ot = new OrdenDeTrabajo();
+
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            ot.setIdsolicitudDeMantenimiento(Integer.parseInt(solicitud));
+            ot.setIdequipo(Integer.parseInt(idequipo));
+            ot.setNumeroOrdenDeTrabajo(ordendetrabajo);
+            ot.setFechaInicio(format.parse(fechainicio));
+            ot.setFechaFin(format.parse(fechafin));
+            ot.setTipoSolicitud(tiposolicitud);
+            ot.setPartes(anomaliaparte);
+            ot.setSolicitadaPor(solicitada);
+            ot.setRevisadaPor(revisada);
+            ot.setAutorizadaPor(autorizada);
+            ot.setDescripcionesTrabajos(trabajos);
+            ot.setMateriales(materiales);
+            ot.setCostoManoDeObra(Float.parseFloat(cmanoobra));
+            ot.setCostoMateriales(Float.parseFloat(cmateriales));
+            ot.setTotalHorasMto(Float.parseFloat(horasmto));
+            ot.setTotalHorasParada(Float.parseFloat(horasparada));
+            ot.setDescripcionDanos(daños);
+            ot.setDescripcionTrabajosRealizados(trabajosrealizados);
+            ot.setEjecutadoPor(ejecuto);
+            ot.setRecibidoAprobadoPor(recibio);
+            ot.setDptAdmyControl(Boolean.parseBoolean(generasolicitud));//departamento de administracion y control genera la orden ?
+            ot.setObservaciones(observaciones);
+            ot.setCerrada(false);
+
+            if (ot.guardarOrdenDeTrabajo()) {
+                SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(solicitud);
+                sM.setOtros(true);
+                sM.actualizarSolicitudDeMantenimiento();
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+
         } else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");

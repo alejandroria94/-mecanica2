@@ -5,6 +5,7 @@ app.controller('penagosFichaAppCtrl', ['$http', controladorFichaTecnica]);
 app.controller('penagosFichaEdtiAppCtrl', ['$http', controladorFichaTecnicaEditar]);
 app.controller('penagosSolicitudesAppCtrl', ['$http', controladorSolicitudesEditar]);
 app.controller('penagosSolicitudAppCtrl', ['$http', controladorSolicitud]);
+app.controller('penagosOTAppCtrl', ['$http', controladorOT]);
 
 function controladorLista($http) {
     var ma = this;
@@ -322,51 +323,184 @@ function controladorSolicitudesEditar($http) {
     sm.nuevaSolicitud = function () {
         window.location = "Solicitud.jsp";
     };
-//    sm.eliminar = function (id) {
-//        var params = {
-//            proceso: "eliminar",
-//            id: id
-//        };
-//        swal({
-//            title: "Esta seguro?",
-//            text: "Se eliminara todo los registros asociados",
-//            type: "warning",
-//            showCancelButton: true,
-//            confirmButtonColor: "#DD6B55",
-//            confirmButtonText: "Si, eliminar!",
-//            cancelButtonText: "No, cancelar!",
-//            closeOnConfirm: false,
-//            closeOnCancel: false
-//        },
-//                function (isConfirm) {
-//                    if (isConfirm) {
-//                        $http({
-//                            method: 'POST',
-//                            url: 'Peticiones.jsp',
-//                            params: params
-//                        }).then(function (res, textStatus, jqXHR) {
-//                            if (res.data.ok === true) {
-//                                if (res.data[params.proceso] === true) {
-//                                    swal("Eliminado!", "Se ha eliminado el registro", "success", function () {
-//                                        window.location.reload();
-//                                    });
-//                                } else {
-//                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
-//                                }
-//                            } else {
-//                                swal(res.data.errorMsg);
-//                            }
-//                            ;
-//                        });
-//                    } else {
-//                        swal("Cancelado", "", "error");
-//                    }
-//                });
-//
-//    };
+
 }
 ;
-function controladorSolicitud($http){
-    
-};
+function controladorSolicitud($http) {
+    var st = this;
+    var id;
+    st.equipo = function () {
+        var datos = st.equipos;
+        datos = datos.split("//");
+        st.operario = datos[2];
+        st.seccion = datos[1];
+        id = datos[0];
+    };
+    st.guardar = function () {
+        if (st.mtocorrectivo === undefined) {
+            st.mtocorrectivo = false;
+        }
+        if (st.reparacion === undefined) {
+            st.reparacion = false;
+        }
+        if (st.mtoelectrico === undefined) {
+            st.mtoelectrico = false;
+        }
+        if (st.mtomecanico === undefined) {
+            st.mtomecanico = false;
+        }
+        if (st.mtopreventivo === undefined) {
+            st.mtopreventivo = false;
+        }
+        if (st.otros === undefined) {
+            st.otros = false;
+        }
+        var solicitud = {
+            proceso: "guardasolicitud",
+            codigo: st.codigo,
+            revision: st.revision,
+            solicitud: st.solicitud,
+            fecha: st.fecha,
+            idequipo: id,
+            reparacion: st.reparacion,
+            electrico: st.mtoelectrico,
+            mecanico: st.mtomecanico,
+            correctivo: st.mtocorrectivo,
+            preventivo: st.mtopreventivo,
+            otros: st.otros,
+            servicio: st.servicio,
+            acciones: st.acciones,
+            material: st.material,
+            horasparada: st.horasparada,
+            horasmto: st.horasmto,
+            horasolicitud: st.horasolicitud,
+            horaentrega: st.horaentrega,
+            solicitado: st.solicitado,
+            realizado: st.realizado,
+            recibido: st.recibido
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: solicitud
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[solicitud.proceso] === true) {
+                    window.location = "SolicitudesMto.jsp";
+                } else {
+                    alert("Por favor vefifique sus datos");
+                }
+            } else {
+                alert(res.data.errorMsg);
+            }
+        });
+    };
+    st.cancelar = function () {
+        window.location = "SolicitudesMto.jsp";
+    };
+}
+;
+function controladorOT($http) {
+    var ot = this;
+
+    ot.guardar = function () {
+        var anomalialist = [];
+        $('.anomaliaparte').each(function (indice, elemento) {
+            var parte = $(elemento).find(".parte").val();
+            var anomalia = $(elemento).find(".anomalia").val();
+            var causa = $(elemento).find(".causa").val();
+            var solucion = $(elemento).find(".solucion").val();
+            if (parte !== "" && anomalia !== "" && causa !== "" && solucion !== "") {
+                var obj = {};
+                obj.parte = parte;
+                obj.anomalia = anomalia;
+                obj.causa = causa;
+                obj.solucion = solucion;
+                anomalialist.push(obj);
+            }
+        });
+        var materiales = [];
+        $('.materiales').each(function (indice, elemento) {
+            var cantidad = $(elemento).find(".cantidad").val();
+            var descripcion = $(elemento).find(".descripcion").val();
+            var referencia = $(elemento).find(".referencia").val();
+            var unitario = $(elemento).find(".vunitario").val();
+            var total = $(elemento).find(".vtotal").val();
+            if (cantidad !== "" && descripcion !== "" && unitario !== "" && total !== "") {
+                var obj = {};
+                obj.cantidad = cantidad;
+                obj.descripcion = descripcion;
+                obj.referencia = referencia;
+                obj.unitario = unitario;
+                obj.total = total;
+                materiales.push(obj);
+            }
+        });
+        var trabajos = [];
+        $('.descripciontrabajo').each(function (indice, elemento) {
+            var trabajo = $(elemento).find(".trabajo").val();
+            if (trabajo !== "") {
+                var obj = {};
+                obj.trabajo = trabajo;
+                trabajos.push(obj);
+            }
+        });
+        if (ot.tiposolicitud === null) {
+            ot.tiposolicitud = "Normal";
+        }
+        ;
+        if (ot.generasolicitud === undefined) {
+            ot.generasolicitud = "false";
+        }
+        ;
+        var odt = {
+            proceso: "guardarot",
+            ordendetrabajo: ot.ordentrabajo,
+            fechainicio: ot.fechainicio,
+            fechafin: ot.fechafin,
+            tiposolicitud: ot.tiposolicitud,
+            generasolicitud: ot.generasolicitud,
+            solicitud: $(".codigosolicitud").val(),
+            idequipo: $(".idequipo").val(),
+            anomaliaparte: JSON.stringify(anomalialist),
+            solicitada: ot.solicitada,
+            revisada: ot.revisada,
+            autorizada: ot.autorizada,
+            trabajos: JSON.stringify(trabajos),
+            materiales: JSON.stringify(materiales),
+            cmanoobra: $(".manoobra").val(),
+            cmateriales: $(".materialesvalor").val(),
+            horasmto: ot.horasmto,
+            horasparada: ot.horasparada,
+            daños: ot.danos,
+            trabajosrealizados: ot.trabajosrealizados,
+            observaciones: ot.observaciones,
+            ejecuto: ot.ejecuto,
+            recibio: ot.recibio
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: odt
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[odt.proceso] === true) {
+                    window.location = "SolicitudesMto.jsp";
+                } else {
+                    alert("Por favor vefifique sus datos");
+                }
+            } else {
+                alert(res.data.errorMsg);
+            }
+        });
+    };
+    ot.sumar = function () {
+        var valor = $(".materialesvalor").val();
+        ot.valortotal = parseFloat(valor) + parseFloat(ot.manoobra);
+    };
+    ot.cancelar = function () {
+        window.location = "SolicitudesMto.jsp";
+    };
+}
+;
 

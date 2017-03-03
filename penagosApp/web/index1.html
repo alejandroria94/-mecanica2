@@ -12,72 +12,67 @@ and open the template in the editor.
         <link href="css/materialize.min.css" rel="stylesheet">
     </head>
     <body>
-        <div ng-app="penagosApp">
-            <form action="#" ng-controller="penagosAppCtrl as vm">
-                <div class="file-field input-field">
-                    <div class="btn">
-                        <span>File</span>
-                        <input type="file" accept="image/*" id="fileUpload" ng-change="vm.login()">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" />
-                    </div>
+        <form  action="fileupload.jsp" method="post" enctype="multipart/form-data" >
+            <div class="file-field input-field">
+                <div class="file-path-wrapper">
+                    <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" width="200px"/>
                 </div>
-            </form>
-        </div>
-
-
+                <div class="btn">
+                    <span>Imagen</span>
+                    <input type="file" accept="image/*" id="fileUpload">
+                </div>
+            </div>
+            <input type="submit" class="btn hide">
+        </form>
+        
         <script src="js/jquery.min.js"></script>
         <script src="js/materialize.min.js"></script>
-        <script src="js/angular.min.js"></script>
-        <script src="js/index1.js"></script>
         <script>
-//            var app = {
-//                init: function () {
-//                    $("#fileUpload").on('change', function () {
-//                        var inputFileImage = document.getElementById("fileUpload");
-//                        var file = inputFileImage.files[0];
-//                        var data = new FormData();
-//                        data.append('Archivo', file);
-//                        var params = {
-//                            proceso: "archivo",
-//                            file: file
-//                        };
-//                        $.ajax({
-//                            url: "Peticiones1.jsp",
-//                            data: params,
-//                            type: 'POST',
-//                            success: function (data, textStatus, jqXHR) {
-//                                if (data.ok === true) {
-//                                    if (data[params.proceso] === true) {
-//                                        app.aalert('Guardo');
-//                                        $('#codigo').val("");
-//                                        $('#nombre').val("");
-//                                        $('#cantidad').val("");
-//                                        $('#descripcion').val("");
-//                                        window.opener.location.reload();
-//                                    } else {
-//                                        app.aalert('Lo sentimos no se ha podido guardar');
-//                                    }
-//                                } else {
-//                                    alert(data.errorMsg);
-//                                }
-//                            }
-//                        });
-//                                var countFiles = $(this)[0].files.length;
-//                        var imgPath = $(this)[0].value;
-//                        var reader = new FileReader();
-//                        reader.onload = function (e) {
-//                            $('#image_upload_preview').attr('src', e.target.result);
-//                        };
-//                        reader.readAsDataURL(this.files[0]);
-//                    });
-////                    
-//                }
-//            };
-//            $(document).ready(function () {
-//                app.init();
-//            });
+            var app = {
+                init: function () {
+                    $("#fileUpload").on('change', function () {
+                        var inputFileImage = document.getElementById("fileUpload");
+                        var file = inputFileImage.files[0];
+                        var data = new FormData();
+                        data.append('Archivo', file);
+                        var countFiles = $(this)[0].files.length;
+                        var imgPath = $(this)[0].value;
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#image_upload_preview').attr('src', e.target.result);
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    });
+                    $("#subir").on('click', function () {
+                         var inputFileImage = document.getElementById("fileUpload");
+                        var file = inputFileImage.files[0];
+                        var data = new FormData();
+                        data.append('Archivo', file);
+                        var params={
+                            dataForm:data
+                        };
+                        $.ajax({
+                            url: "fileupload.jsp",
+                            data: params,
+                            type: 'POST',
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.ok === true) {
+                                    if (data[params.proceso] === true) {
+
+                                    } else {
+                                        alert('Lo sentimos no se ha podido guardar');
+                                    }
+                                } else {
+                                    alert(data.errorMsg);
+                                }
+                            }
+                        });
+                    });
+                }
+            };
+            $(document).ready(function () {
+                app.init();
+            });
         </script>
     </body>
 </html>

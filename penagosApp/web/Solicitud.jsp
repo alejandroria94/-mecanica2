@@ -17,6 +17,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
         <link href="css/jasny-bootstrap.css" rel="stylesheet">
+        <link href="css/materialize.clockpicker.css" rel="stylesheet">
         <style>
             .switch label input[type=checkbox]:checked+.lever:after{
                 background-color: #1b5e20;
@@ -111,24 +112,24 @@
             %>
             <!--inicio de contenido-->
 
-            <div ng-controller=""> <!--formulario-->
+            <div ng-controller="penagosSolicitudAppCtrl as st" > <!--formulario-->
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
                             <div class="input-field col s3">
-                                <input id="last_name" type="text" class="validate "ng-model="">
+                                <input id="last_name" type="text" class="validate " ng-model="st.codigo">
                                 <label for="last_name" class="indigo-text text-darken-4" >Codigo</label> 
                             </div>
                             <div class="input-field col s3">
-                                <input id="last_name" type="text" class="validate "ng-model="">
+                                <input id="last_name" type="text" class="validate " ng-model="st.revision">
                                 <label for="last_name" class="indigo-text text-darken-4" >Revision</label> 
                             </div>
                             <div class="input-field col s3">
-                                <input id="last_name" type="text" class="validate "ng-model="">
+                                <input id="last_name" type="text" class="validate "ng-model="st.solicitud">
                                 <label for="last_name" class="indigo-text text-darken-4" >Solicitud de servicio</label> 
                             </div>
                             <div class="input-field col s3">
-                                <input type="date" class="datepicker" >
+                                <input type="text" class="datepicker" ng-model="st.fecha">
                                 <label for="last_name" class="indigo-text text-darken-4" >Fecha</label> 
                             </div>
                         </div>
@@ -141,7 +142,7 @@
                         List<Equipo> lista = e.getListaDeEquipos();
                     %>
                     <div class="input-field col s4 offset-s1">
-                        <select class="icons">
+                        <select class="icons" ng-model="st.equipos" ng-change="st.equipo()" id="equipos">
                             <option value="" disabled selected>Seleccione un equipo.</option>
                             <%
                                 for (Equipo eq : lista) {
@@ -152,11 +153,11 @@
                         <label>Equipo</label>
                     </div>
                     <div class="input-field col s3">
-                        <input id="last_name" type="text" class="validate "ng-model="">
+                        <input id="last_name" type="text" class="validate "  placeholder=" " ng-model="st.seccion">
                         <label for="last_name" class="indigo-text text-darken-4" >Seccion</label> 
                     </div>
                     <div class="input-field col s3">
-                        <input id="last_name" type="text" class="validate "ng-model="">
+                        <input id="last_name" type="text" class="active validate "  placeholder=" "  ng-model="st.operario">
                         <label for="last_name" class="indigo-text text-darken-4" >Operario</label> 
                     </div>
                 </div>
@@ -166,43 +167,106 @@
                             <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Servicio solicitado</strong></legend>
                             <div class="col s2">
                                 <p>
-                                    <input type="checkbox" id="reparacion"  />
+                                    <input type="checkbox" id="reparacion" ng-model="st.reparacion" o />
                                     <label for="reparacion">Reparacion</label>
                                 </p>
                             </div>
                             <div class="col s2">
                                 <p>
-                                    <input type="checkbox" id="electrico"  />
+                                    <input type="checkbox" id="electrico" ng-model="st.mtoelectrico" checked= />
                                     <label for="electrico">Mto. Electrico</label>
                                 </p>
                             </div>
                             <div class="col s2">
                                 <p>
-                                    <input type="checkbox" id="macanico"  />
+                                    <input type="checkbox" id="macanico" ng-model="st.mtomecanico"  checked="false"/>
                                     <label for="macanico">Mto. Mecanico</label>
                                 </p>
                             </div>
                             <div class="col s2">
                                 <p>
-                                    <input type="checkbox" id="correctivo"  />
+                                    <input type="checkbox" id="correctivo" ng-model="st.mtocorrectivo" checked="false" />
                                     <label for="correctivo">Mto. Correctivo</label>
                                 </p>
                             </div>
                             <div class="col s2">
                                 <p>
-                                    <input type="checkbox" id="preventivo"  />
+                                    <input type="checkbox" id="preventivo"  ng-model="st.mtopreventivo" checked="false"/>
                                     <label for="preventivo">Mto. Preventico</label>
                                 </p>
                             </div>
                             <div class="col s2">
                                 <p>
-                                    <input type="checkbox" id="otros"  />
+                                    <input type="checkbox" id="otros" ng-model="st.otros"  checked="false"/>
                                     <label for="otros">Otros</label>
                                 </p>
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Descripcion del servicio solicitado</strong></legend>
+                        <textarea id="textarea1" class="materialize-textarea" length="120" ng-model="st.servicio"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Descripcion acciones a realizar</strong></legend>
+                        <textarea id="textarea1" class="materialize-textarea" length="120" ng-model="st.acciones"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Material a emplear</strong></legend>
+                        <textarea id="textarea1" class="materialize-textarea" length="120" ng-model="st.material"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div class="row">
+                            <div class="input-field col s3">
+                                <input id="last_name" type="number" class="validate "ng-model="st.horasparada">
+                                <label for="last_name" class="indigo-text text-darken-4" >Total horas parada</label> 
+                            </div>
+                            <div class="input-field col s3">
+                                <input id="last_name" type="number" class="validate " ng-model="st.horasmto">
+                                <label for="last_name" class="indigo-text text-darken-4" >Total horas mto</label> 
+                            </div>
+                            <div class="input-field col s3">
+                                <input id="timepicker_ampm_dark"  placeholder="" class="timepicker" type="text"ng-model="st.horasolicitud">
+                                <label for="last_name" class="indigo-text text-darken-4 " >Hora solicitud</label> 
+                            </div>
+                            <div class="input-field col s3">
+                                <input id="timepicker_ampm_dark" placeholder="" class="timepicker" type="text" ng-model="st.horaentrega">
+                                <label for="last_name" class="indigo-text text-darken-4" >Hora entrega</label> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div class="row">
+                            <div class="input-field col s4">
+                                <input id="last_name" type="text" class="validate "ng-model="st.solicitado">
+                                <label for="last_name" class="indigo-text text-darken-4" >Servicio solicitado por</label> 
+                            </div>
+                            <div class="input-field col s4">
+                                <input id="last_name" type="text" class="validate " ng-model="st.realizado">
+                                <label for="last_name" class="indigo-text text-darken-4" >Servicio realizado por</label> 
+                            </div>
+                            <div class="input-field col s4">
+                                <input class="validate" d="last_name"  type="text" ng-model="st.recibido">
+                                <label for="last_name" class="indigo-text text-darken-4 " >Recibido a conformidad</label> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s4 right">
+                        <a class="waves-effect red darken-2 btn left-align" ng-click="st.cancelar()">Cancelar</a>
+                        <a class="waves-effect  green  btn left-align" ng-click="st.guardar()">Guardar</a>
+                    </div>
                 </div>
             </div>
             <!-- MFin de contenido-->
@@ -228,33 +292,42 @@
         <script src="js/angular.min.js"></script>
         <script src="js/index.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
+        <script src="js/materialize.clockpicker.js"></script>
         <script>
-                                    var app = {
-                                        init: function () {
-                                            $('.datepicker').pickadate();
-                                            $('select').material_select();
-                                            $(".dropdown-button").dropdown({
-                                                inDuration: 300,
-                                                outDuration: 225,
-                                                constrainWidth: true
-                                            });
-                                            $('.carousel.carousel-slider').carousel({
-                                                fullWidth: true,
-                                                duration: 500
-                                            });
-                                            $('.modal').modal({
-                                                dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                                                opacity: .5, // Opacity of modal background
-                                                inDuration: 300, // Transition in duration
-                                                outDuration: 200, // Transition out duration
-                                                startingTop: '40%', // Starting top style attribute
-                                                endingTop: '10%'
-                                            });
-                                        }
-                                    };
-                                    $(document).ready(function () {
-                                        app.init();
+                            var app = {
+                                init: function () {
+                                    $('.timepicker').pickatime({
+                                        format:"hh:mm:ss",
+                                        twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
+                                        autoclose: true,
+                                        vibrate: true // vibrate the device when dragging clock hand
                                     });
+                                    $('.datepicker').pickadate({
+                                        format:"yyyy-mm-dd"
+                                    });
+                                    $('select').material_select();
+                                    $(".dropdown-button").dropdown({
+                                        inDuration: 300,
+                                        outDuration: 225,
+                                        constrainWidth: true
+                                    });
+                                    $('.carousel.carousel-slider').carousel({
+                                        fullWidth: true,
+                                        duration: 500
+                                    });
+                                    $('.modal').modal({
+                                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                        opacity: .5, // Opacity of modal background
+                                        inDuration: 300, // Transition in duration
+                                        outDuration: 200, // Transition out duration
+                                        startingTop: '40%', // Starting top style attribute
+                                        endingTop: '10%'
+                                    });
+                                }
+                            };
+                            $(document).ready(function () {
+                                app.init();
+                            });
         </script>
     </body>
 </html>

@@ -183,8 +183,7 @@
                                                     <ul>
                                                         <li><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
                                                         <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudesDeMantenimiento)">Eliminar</a></li>
-                                                        <li><a href="#">Hoja de Vida</a></li>
-                                                        <!--<li><a href="#">Otras</a></li>-->
+                                                        <li ng-if="mto.ordenDeTrabajo===false"><a href="OrdenDeTrabajo.jsp?codigo={{mto.idsolicitudDeMantenimiento}}">Orden de trabajo</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -223,32 +222,32 @@
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/underscore.js"></script>
         <script>
-    var app = {
-        init: function () {
+                                                            var app = {
+                                                                init: function () {
 
-            $('.carousel.carousel-slider').carousel({
-                fullWidth: true,
-                duration: 500
-            });
-            $('.modal').modal({
-                dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                opacity: .5, // Opacity of modal background
-                inDuration: 300, // Transition in duration
-                outDuration: 200, // Transition out duration
-                startingTop: '40%', // Starting top style attribute
-                endingTop: '10%'
-            });
+                                                                    $('.carousel.carousel-slider').carousel({
+                                                                        fullWidth: true,
+                                                                        duration: 500
+                                                                    });
+                                                                    $('.modal').modal({
+                                                                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                                                        opacity: .5, // Opacity of modal background
+                                                                        inDuration: 300, // Transition in duration
+                                                                        outDuration: 200, // Transition out duration
+                                                                        startingTop: '40%', // Starting top style attribute
+                                                                        endingTop: '10%'
+                                                                    });
 
-        },
-        boton: function (btn) {
-            $(btn).parents("tr").find("#menu").show();
-            //                                                    $("#menu").show();
-        }
-        
-    };
-    $(document).ready(function () {
-        app.init();
-    });
+                                                                },
+                                                                boton: function (btn) {
+                                                                    $(btn).parents("tr").find("#menu").show();
+                                                                    //                                                    $("#menu").show();
+                                                                }
+
+                                                            };
+                                                            $(document).ready(function () {
+                                                                app.init();
+                                                            });
         </script>
     </body>
 </html>

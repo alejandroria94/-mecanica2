@@ -160,7 +160,7 @@ public class Equipo {
         if (conexion.setAutoCommitBD(false)) {
 //            String sql = "DELETE FROM `comentarios` WHERE `NoIdent`='"+NoIdent+"'";
 //            boolean borro = conexion.borrarBD(sql);
-            String sql2 = "DELETE FROM `Equipos` WHERE `idEquipos`='" + idEquipos + "'";
+            String sql2 = "DELETE FROM `Equipos` WHERE `idequipos`='" + idEquipos + "'";
             boolean borro2 = conexion.borrarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
