@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class OrdenDeTrabajo {
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final Calendar cal = Calendar.getInstance();
+//    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//    private final Calendar cal = Calendar.getInstance();
     private Date fechaHoy;
     //campos tabla solicitud
     private SolicitudDeMantenimiento solicitudDeMantenimiento;
@@ -80,10 +80,11 @@ public class OrdenDeTrabajo {
             tiposDeMantenimiento.add("Otros");
         }
 
-        fechaHoy = cal.getTime();
+        fechaHoy = Calendar.getInstance().getTime();
     }
 
     public boolean guardarOrdenDeTrabajo() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         String sentencia = "INSERT INTO ordenesdetrabajo(solicitudesDeMantenimiento_idsolicitudesDeMantenimiento, solicitudesDeMantenimiento_equipos_idequipos, numeroOrdenDeTrabajo, fechaInicio,fechaFin"
@@ -185,6 +186,7 @@ public class OrdenDeTrabajo {
     }
 
     public boolean actualizarOrdenDeTrabajo() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
         if (conexion.setAutoCommitBD(false)) {
