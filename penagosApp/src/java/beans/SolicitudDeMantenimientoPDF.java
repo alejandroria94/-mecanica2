@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 public class SolicitudDeMantenimientoPDF {
 
-    public static final String DEST = "web/pdf/ejemploMantenimiento.pdf";
+    public static final String ruta = "";
 
      public SolicitudDeMantenimiento sm;
 
@@ -34,9 +34,9 @@ public class SolicitudDeMantenimientoPDF {
 
     public void pdfSM() throws IOException, DocumentException {
         try {
-            File file = new File(DEST);
+            File file = new File(ruta);
             file.getParentFile().mkdirs();
-            new SolicitudDeMantenimientoPDF(this.sm).createPdf(DEST);
+            new SolicitudDeMantenimientoPDF(this.sm).createPdf(ruta);
             System.out.println("Documento creado Correctamente");
         } catch (IOException | DocumentException e) {
             System.out.println("Documento en uso, no se ha creado el nuevo");

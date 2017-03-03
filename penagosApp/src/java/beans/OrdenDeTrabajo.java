@@ -52,6 +52,7 @@ public class OrdenDeTrabajo {
     private String estado = "Pendiente"; //enum('Pendiente','Realizada','Vencida')
     private boolean cerrada;
     private String ruta;
+    private boolean pdf;
     private List<String> tiposDeMantenimiento;
 
     public OrdenDeTrabajo() {
@@ -90,10 +91,10 @@ public class OrdenDeTrabajo {
         ConexionBD conexion = new ConexionBD();
         String sentencia = "INSERT INTO ordenesdetrabajo(solicitudesDeMantenimiento_idsolicitudesDeMantenimiento, solicitudesDeMantenimiento_equipos_idequipos, numeroOrdenDeTrabajo, fechaInicio,fechaFin"
                 + ", tipoSolicitud, partes,solicitadaPor, revisadaPor, autorizadaPor, descripcionesTrabajos, materiales, costoManoDeObra,costoMateriales,totalHorasMto, totalHorasParada"
-                + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones,estado,cerrada,ruta) "
+                + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones,estado,cerrada,ruta,pdf) "
                 + " VALUES ('" + this.idsolicitudDeMantenimiento + "','" + this.idequipo + "','" + this.numeroOrdenDeTrabajo + "','" + dateFormat.format(this.fechaInicio) + "','" + dateFormat.format(this.fechaFin) + "','" + this.tipoSolicitud + "','" + this.partes + "'"
                 + ",'" + this.solicitadaPor + "','" + this.revisadaPor + "','" + this.autorizadaPor + "','" + this.descripcionesTrabajos + "','" + this.materiales + "','" + this.costoManoDeObra + "','" + this.costoMateriales + "','" + this.totalHorasMto + "','" + this.totalHorasParada + "'"
-                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','" + this.dptAdmyControl + "','" + this.observaciones + "','" + this.estado + "','" + this.cerrada + "','ruta');";
+                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','" + this.dptAdmyControl + "','" + this.observaciones + "','" + this.estado + "','" + this.cerrada + "','ruta',false);";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -140,6 +141,7 @@ public class OrdenDeTrabajo {
             ot.setEstado(ot.estadoActual());//valor que debe quedar en el estado 
             ot.setDptAdmyControl(datosOT.getBoolean("dptAdmyControl"));
             ot.setRuta(datosOT.getString("ruta"));
+            ot.setPdf(datosOT.getBoolean("pdf"));
 
             ot.actualizarOrdenDeTrabajo();//actualizacion a base de datos
 
@@ -182,6 +184,7 @@ public class OrdenDeTrabajo {
             ot.setEstado(ot.estadoActual());//estado que debe quedar en base de datos
             ot.setDptAdmyControl(datosOT.getBoolean("dptAdmyControl"));
             ot.setRuta(datosOT.getString("ruta"));
+            ot.setPdf(datosOT.getBoolean("pdf"));
             ot.actualizarOrdenDeTrabajo();
             listaOrdenesDeTrabajo.add(ot);//actualizacion de estado 
         }
@@ -200,7 +203,7 @@ public class OrdenDeTrabajo {
             String sql2 = "UPDATE `ordenesdetrabajo` SET numeroOrdenDeTrabajo='" + this.numeroOrdenDeTrabajo + "',fechaInicio='" + dateFormat.format(this.fechaInicio) + "',fechaFin='" + dateFormat.format(this.fechaFin) + "',tipoSolicitud='" + this.tipoSolicitud + "'"
                     + ",partes='" + this.partes + "',solicitadaPor='" + this.solicitadaPor + "',revisadaPor='" + this.revisadaPor + "',autorizadaPor='" + this.autorizadaPor + "',descripcionesTrabajos='" + this.descripcionesTrabajos + "',estado='" + this.estado + "'"
                     + ",materiales='" + this.materiales + "',costoManoDeObra='" + this.costoManoDeObra + "',costoMateriales='" + this.costoMateriales + "',totalHorasMto='" + this.totalHorasMto + "',totalHorasParada='" + this.totalHorasParada + "',observaciones='" + this.observaciones + "'"
-                    + ",descripcionDanos='" + this.descripcionDanos + "',descripcionTrabajosRealizados='" + this.descripcionTrabajosRealizados + "',ejecutadoPor='" + this.ejecutadoPor + "',recibidoAprobadoPor='" + this.recibidoAprobadoPor + "',dptAdmyControl='" + this.dptAdmyControl + "',ruta='"+this.ruta+"'"
+                    + ",descripcionDanos='" + this.descripcionDanos + "',descripcionTrabajosRealizados='" + this.descripcionTrabajosRealizados + "',ejecutadoPor='" + this.ejecutadoPor + "',recibidoAprobadoPor='" + this.recibidoAprobadoPor + "',dptAdmyControl='" + this.dptAdmyControl + "',ruta='"+this.ruta+"',pdf='"+this.pdf+"'"
                     + "WHERE `solicitudesDeMantenimiento_idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento + "' AND `solicitudesDeMantenimiento_equipos_idequipos`='" + this.idequipo + "'";
             boolean actualizo = conexion.actualizarBD(sql2);
             if (actualizo) {
@@ -487,6 +490,14 @@ public class OrdenDeTrabajo {
 
     public void setRuta(String ruta) {
         this.ruta = ruta;
+    }
+
+    public boolean isPdf() {
+        return pdf;
+    }
+
+    public void setPdf(boolean pdf) {
+        this.pdf = pdf;
     }
 
 }

@@ -28,22 +28,24 @@ public class OrdenDeTrabajoPDF {
 
     public static String ruta = "";
     public OrdenDeTrabajo ot;
-    private JsonArray listaPartes ;////json object
-    private JsonArray listaDescripcionesTrabajos ;////json object
-    private JsonArray listaMateriales ;////json object
+    private JsonArray listaPartes;////json object
+    private JsonArray listaDescripcionesTrabajos;////json object
+    private JsonArray listaMateriales;////json object
 
     public OrdenDeTrabajoPDF(OrdenDeTrabajo ot) {
         this.ot = ot;
     }
 
     public void pdfOT() throws IOException, DocumentException {
+        Parametrizacion p = new Parametrizacion();
         try {
-            ruta="web/pdf/"+ot.getIdsolicitudDeMantenimiento()+""+ot.getIdequipo()+"OrdenDeTrabajo.pdf";
-            ot.setRuta(ruta);
-            ot.actualizarOrdenDeTrabajo();
+            ruta = new Parametrizacion().getParametro("rutaPDFServer") + ot.getIdsolicitudDeMantenimiento() + "" + ot.getIdequipo() + "OrdenDeTrabajo.pdf";
+            ot.setRuta(p.getParametro("rutaPDFBD") + ot.getIdsolicitudDeMantenimiento() + "" + ot.getIdequipo() + "OrdenDeTrabajo.pdf");
             File file = new File(ruta);
             file.getParentFile().mkdirs();
             new OrdenDeTrabajoPDF(this.ot).createPdf(ruta);
+            ot.setPdf(true);
+            ot.actualizarOrdenDeTrabajo();
             System.out.println("Documento creado Correctamente");
         } catch (IOException | DocumentException e) {
             System.out.println("Documento en uso, no se ha creado el nuevo");
@@ -52,10 +54,11 @@ public class OrdenDeTrabajoPDF {
     }
 
     private void createPdf(String dest) throws IOException, DocumentException {
-        this.listaPartes=new JsonParser().parse(ot.getPartes()).getAsJsonArray();
-        this.listaDescripcionesTrabajos=new JsonParser().parse(ot.getDescripcionesTrabajos()).getAsJsonArray();
-        this.listaMateriales=new JsonParser().parse(ot.getMateriales()).getAsJsonArray();
-        
+        Parametrizacion p = new Parametrizacion();
+        this.listaPartes = new JsonParser().parse(ot.getPartes()).getAsJsonArray();
+        this.listaDescripcionesTrabajos = new JsonParser().parse(ot.getDescripcionesTrabajos()).getAsJsonArray();
+        this.listaMateriales = new JsonParser().parse(ot.getMateriales()).getAsJsonArray();
+
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(dest));
         document.open();
@@ -66,7 +69,7 @@ public class OrdenDeTrabajoPDF {
         Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10);
         table.setWidthPercentage(100);
 
-        Image img = Image.getInstance("web/img/logo.png");
+        Image img = Image.getInstance(p.getParametro("rutaImgServer") + "logo.png");
         celda = new PdfPCell(img, true);
         celda.setPadding(5);
         celda.setColspan(4);
@@ -139,19 +142,19 @@ public class OrdenDeTrabajoPDF {
 
         for (int i = 0; i < listaPartes.size(); i++) {
 
-            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("parte").toString().replace("\"", "") , font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("parte").toString().replace("\"", ""), font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("anomalia").toString().replace("\"", "") , font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("anomalia").toString().replace("\"", ""), font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("causa").toString().replace("\"", "") , font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("causa").toString().replace("\"", ""), font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("solucion").toString().replace("\"", "") , font));
+            celda = new PdfPCell(new Phrase(listaPartes.get(i).getAsJsonObject().get("solucion").toString().replace("\"", ""), font));
             celda.setColspan(3);
             table.addCell(celda);
 
@@ -181,7 +184,7 @@ public class OrdenDeTrabajoPDF {
 
         for (int i = 0; i < listaDescripcionesTrabajos.size(); i++) {
 
-            celda = new PdfPCell(new Phrase((i+1) + "", font));
+            celda = new PdfPCell(new Phrase((i + 1) + "", font));
             celda.setColspan(1);
             table.addCell(celda);
 
@@ -227,7 +230,7 @@ public class OrdenDeTrabajoPDF {
         table.addCell(celda);
 
         for (int i = 0; i < listaMateriales.size(); i++) {
-            celda = new PdfPCell(new Phrase("" + (1+i), font));
+            celda = new PdfPCell(new Phrase("" + (1 + i), font));
             celda.setColspan(1);
             table.addCell(celda);
 

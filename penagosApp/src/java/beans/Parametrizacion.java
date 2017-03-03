@@ -18,7 +18,8 @@ public class Parametrizacion {
 
     public Parametrizacion() {
         this.parametros.put("rutaImgServer", "C:\\Users\\Fido\\Documents\\GitHub\\-mecanica2\\penagosApp\\web\\img\\");
-        this.parametros.put("rutaImgDB", "img\\");
+        this.parametros.put("rutaPDFServer", "C:\\Users\\Fido\\Documents\\GitHub\\-mecanica2\\penagosApp\\web\\pdf\\");
+        this.parametros.put("rutaPDFBD", "pdf/");
     }
 
     public String getParametro(String parametro) {

@@ -6,7 +6,6 @@
 --%>
 
 
-<%@page import="beans.CrearPDF"%>
 <%@page import="beans.OrdenDeTrabajoPDF"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
@@ -326,8 +325,8 @@
         } else if (proceso.equals("generarpdf")) {
             String idSolicitud = "" + request.getParameter("id");
             String idEquipo = "" + request.getParameter("idequipo");
-            CrearPDF.crear(idSolicitud, idEquipo);
-
+            OrdenDeTrabajoPDF otPDF = new OrdenDeTrabajoPDF(new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo));
+            otPDF.pdfOT();
         } else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");
