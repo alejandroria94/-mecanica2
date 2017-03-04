@@ -8,6 +8,8 @@ app.controller('penagosSolicitudesAppCtrl', ['$http', controladorSolicitudesEdit
 app.controller('penagosSolicitudAppCtrl', ['$http', controladorSolicitud]);
 app.controller('penagosOTAppCtrl', ['$http', controladorOT]);
 app.controller('penagosListOTAppCtrl', ['$http', controladorListOT]);
+app.controller('penagosProvAppCtrl', ['$http', controladorProv]);
+app.controller('penagosHerrAppCtrl', ['$http', controladorHerr]);
 
 function controladorLista($http) {
     var ma = this;
@@ -328,15 +330,23 @@ function controladorSolicitudesEditar($http) {
     sm.PDF = function (ids, ide) {
         var params = {
             proceso: "generarpdfsolicitud",
-            id:ids,
-            idequipo:ide
+            id: ids,
+            idequipo: ide
         };
         $http({
             method: 'POST',
             url: 'Peticiones.jsp',
             params: params
         }).then(function (res, textStatus, jqXHR) {
-            sm.Solicitudes = res.data.Solicitudes;
+            if (res.data.ok === true) {
+                if (res.data[params.proceso] === true) {
+                    swal("Pdf", "Generado con exito", "success");
+                } else {
+                    swal("Pdf", "Ha ocurrido un error, consulte con el administrador", "error");
+                }
+            } else {
+                swal(res.data.errorMsg);
+            }
         });
     };
 
@@ -548,18 +558,234 @@ function controladorListOT($http) {
     lot.generarPdf = function (ids, ide) {
         var params = {
             proceso: "generarpdfot",
-            id:ids,
-            idequipo:ide
+            id: ids,
+            idequipo: ide
         };
         $http({
             method: 'POST',
             url: 'Peticiones.jsp',
             params: params
         }).then(function (res, textStatus, jqXHR) {
-            sm.Solicitudes = res.data.Solicitudes;
+            if (res.data.ok === true) {
+                if (res.data[params.proceso] === true) {
+                    swal("Pdf", "Generado con exito", "success");
+                } else {
+                    swal("Pdf", "Ha ocurrido un error, consulte con el administrador", "error");
+                }
+            } else {
+                swal(res.data.errorMsg);
+            }
         });
     };
 
+}
+;
+function controladorProv($http) {
+    var p = this;
+    var params = {
+        proceso: "listarproveedores"
+    };
+    $http({
+        method: 'POST',
+        url: 'Peticiones.jsp',
+        params: params
+    }).then(function (res, textStatus, jqXHR) {
+        p.Proveedores = res.data.Proveedores;
+    });
+    p.nuevo = function () {
+        window.location = "Proveedor.jsp";
+    };
+    p.guardar = function () {
+        var params = {
+            proceso: "guardaproveedor",
+            nombre: p.nombre,
+            direccion: p.direccion,
+            telefono: p.telefono,
+            correo: p.correo
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[params.proceso] === true) {
+                    swal({
+                        title: "Proveedor",
+                        text: "Guardado con exito",
+                        type: "success",
+                        confirmButtonColor: "#8CD4F5",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location = "ListaProveedores.jsp";
+                                }
+                            });
+                } else {
+                    swal("Proveedor", "Ha ocurrido un error, consulte con el administrador", "error");
+                }
+            } else {
+                swal(res.data.errorMsg);
+            }
+        });
+    };
+    p.eliminar = function (id) {
+        var params = {
+            proceso: "eliminarproveedor",
+            id: id
+        };
+        swal({
+            title: "Esta seguro?",
+            text: "Se eliminara este proveedor",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: params
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[params.proceso] === true) {
+                                    swal({
+                                        title: "Proveedor",
+                                        text: "Eliminado con exito",
+                                        type: "success",
+                                        confirmButtonColor: "#8CD4F5",
+                                        confirmButtonText: "OK",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.reload();
+                                                }
+                                            });
+                                } else {
+                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
+                                }
+                            } else {
+                                swal(res.data.errorMsg);
+                            }
+                            ;
+                        });
+                    } 
+                });
+    };
+}
+;
+function controladorHerr($http) {
+    var h = this;
+    var params = {
+        proceso: "listarherramientas"
+    };
+    $http({
+        method: 'POST',
+        url: 'Peticiones.jsp',
+        params: params
+    }).then(function (res, textStatus, jqXHR) {
+        h.Herramientas = res.data.Herramientas;
+    });
+    h.nuevo = function () {
+        window.location = "Herramienta.jsp";
+    };
+    h.guardar = function () {
+        var params = {
+            proceso: "guardaherramineta",
+            nombre: h.nombre,
+            direccion: h.direccion,
+            codigo: h.codigo,
+            cantidad: h.cantidad
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[params.proceso] === true) {
+                    swal({
+                        title: "Herramienta",
+                        text: "Guardada con exito",
+                        type: "success",
+                        confirmButtonColor: "#8CD4F5",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location = "ListaHerramientas.jsp";
+                                }
+                            });
+                } else {
+                    swal("Proveedor", "Ha ocurrido un error, consulte con el administrador", "error");
+                }
+            } else {
+                swal(res.data.errorMsg);
+            }
+        });
+    };
+    h.eliminar = function (id) {
+        var params = {
+            proceso: "eliminarherramienta",
+            id: id
+        };
+        swal({
+            title: "Esta seguro?",
+            text: "Se eliminara esta herramienta",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: params
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[params.proceso] === true) {
+                                    swal({
+                                        title: "Herramienta",
+                                        text: "Eliminada con exito",
+                                        type: "success",
+                                        confirmButtonColor: "#8CD4F5",
+                                        confirmButtonText: "OK",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.reload();
+                                                }
+                                            });
+                                } else {
+                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
+                                }
+                            } else {
+                                swal(res.data.errorMsg);
+                            }
+                            ;
+                        });
+                    } 
+                });
+    };
 }
 ;
 
