@@ -99,10 +99,10 @@
                                         if (usuarios != null) {
                                     %>
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" style="background-color: #ccc">Orden de Trabajo</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" >Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" style="background-color: #ccc" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
                                         if (usuarios == null) {%>
@@ -146,12 +146,20 @@
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosListOTAppCtrl as lot">
+            <div ng-controller="penagosHerrAppCtrl as h">
+                <div class="row">
+                    <div class="col s2 offset-s5">
+                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 24px">Herramientas</strong></legend>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
-                            <div class="input-field col s2 offset-s10">
-                                <input id="last_name" type="text" ng-model="lot.busqueda" class="validate ">
+                             <div class="input-field col s3">
+                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="h.nuevo()">Nueva</a>
+                            </div>
+                            <div class="input-field col s2 offset-s7">
+                                <input id="last_name" type="text" ng-model="h.busqueda" class="validate ">
                                 <label class="indigo-text text-darken-4" >Busqueda</label>
                             </div>
 
@@ -159,27 +167,25 @@
                         <table class="bordered highlight responsive-table">
                             <thead>
                                 <tr>
-                                    <th class="indigo-text text-darken-4">Codigo Solicitud</th>
-                                    <th class="indigo-text text-darken-4">Tipo de solicitud</th>
-                                    <th class="indigo-text text-darken-4">Fecha inicio</th>
-                                    <th class="indigo-text text-darken-4">Fecha fin</th>
+                                    <th class="indigo-text text-darken-4">Codigo</th>
+                                    <th class="indigo-text text-darken-4">Nombre</th>
+                                    <th class="indigo-text text-darken-4">Descripcion</th>
+                                    <th class="indigo-text text-darken-4">Cantidad</th>
                                     <th class="indigo-text text-darken-4" style="width: 200px">Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  ng-repeat="ot in lot.Ordenes| filter:lot.busqueda |orderBy: 'fechaInicio'" >
-                                    <td>{{ot.solicitudDeMantenimiento.codigo}}</td>
-                                    <td>{{ot.tipoSolicitud}}</td>
-                                    <td>{{ot.fechaInicio}}</td>
-                                    <td>{{ot.fechaFin}}</td>
+                                <tr  ng-repeat="hr in h.Herramientas| filter:p.busqueda |orderBy: 'nombre'" >
+                                    <td>{{hr.codigo}}</td>
+                                    <td>{{hr.nombre}}</td>
+                                    <td>{{hr.descripcion}}</td>
+                                    <td>{{hr.cantidad}}</td>
                                     <td>
                                         <div id="menu">
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="#" >Eliminar</a></li>
-                                                        <li ng-if="ot.pdf === false"><a href="#" ng-click="lot.generarPdf(ot.idsolicitudDeMantenimiento,ot.idequipo)">Generar PDF</a></li>
-                                                        <li ng-if="ot.pdf === true"><a href="{{ot.ruta}}" target="_blank">Ver PDF</a></li>
+                                                        <li><a href="#" ng-click="h.eliminar(hr.idherramientas)">Eliminar</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
