@@ -6,6 +6,7 @@
 --%>
 
 
+<%@page import="beans.CronogramaPDF"%>
 <%@page import="beans.SolicitudDeMantenimientoPDF"%>
 <%@page import="beans.OrdenDeTrabajoPDF"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -55,6 +56,7 @@
         "listarherramientas",
         "guardaherramineta",
         "eliminarherramienta",
+        "pdfcronograma",
         "guardarot",});
 
     // Si el usuario tiene sesión válida y permisos.
@@ -399,7 +401,13 @@
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
-        } //        -----------------------------------
+        } else if (proceso.equals("pdfcronograma")) {
+            SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento();
+            CronogramaPDF crPDF = new CronogramaPDF(sM.getListaSolicitudesDeMantenimiento());
+            respuesta += ",\"" + proceso + "\":"+crPDF.pdfCronograma();
+            respuesta+=",\"ruta\":\"pdf/Cronograma.pdf\"";
+
+        }//        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");
@@ -443,7 +451,7 @@
             respuesta += ",\"" + proceso + "\": true";
             respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        }else if (proceso.equals("guardarepuesto")) {
+        } else if (proceso.equals("guardarepuesto")) {
             String Codigo = "" + request.getParameter("codigo");
             String Nombre = "" + request.getParameter("nombre");
             String Cantidad = "" + request.getParameter("cantidad");

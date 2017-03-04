@@ -10,6 +10,7 @@ app.controller('penagosOTAppCtrl', ['$http', controladorOT]);
 app.controller('penagosListOTAppCtrl', ['$http', controladorListOT]);
 app.controller('penagosProvAppCtrl', ['$http', controladorProv]);
 app.controller('penagosHerrAppCtrl', ['$http', controladorHerr]);
+app.controller('penagosCRAppCtrl', ['$http', controladorCR]);
 
 function controladorLista($http) {
     var ma = this;
@@ -679,7 +680,7 @@ function controladorProv($http) {
                             }
                             ;
                         });
-                    } 
+                    }
                 });
     };
 }
@@ -783,9 +784,35 @@ function controladorHerr($http) {
                             }
                             ;
                         });
-                    } 
+                    }
                 });
     };
 }
 ;
-
+function controladorCR($http) {
+    var c = this;
+    c.PDF = function () {
+        var params = {
+            proceso: "pdfcronograma"
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[params.proceso] === true) {
+                    var a = document.createElement("a");
+                    a.target = "_blank";
+                    a.href = res.data.ruta;
+                    a.click();
+                } else {
+                    swal("Error", "No se ha generado el pdf, consulte con su administrador", "error");
+                }
+            } else {
+                swal(res.data.errorMsg);
+            }
+        });
+    };
+}
+;
