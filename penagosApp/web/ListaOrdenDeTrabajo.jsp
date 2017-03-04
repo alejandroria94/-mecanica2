@@ -88,20 +88,20 @@
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="Maquinas.jsp">Cronograma</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Gestionar Mto</a></li>
+                            <li><a class="blue-text text-darken-2"href="">Cronograma</a></li>
+                            <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
-                            <a href="#!"><img src="img/logo.png"/></a>
+                            <a href="index.jsp"><img src="img/logo.png"/></a>
                             <ul class="right hide-on-med-and-down">
                                 <li ><a class="red-text text-accent-4" href="#">Info</a></li>
                                     <%
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
-                                <li ><a class="blue-text text-darken-2" href="#" >Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="#">Orden de Trabajo</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp" style="background-color: #ccc" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
+                                <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" style="background-color: #ccc">Orden de Trabajo</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
@@ -178,8 +178,8 @@
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="#" ng-click="lot.eliminar(lot.solicitudesDeMantenimiento_idsolicitudesDeMantenimiento+lot.solicitudesDeMantenimiento_equipos_idequipos)">Eliminar</a></li>
-                                                        <li ng-if="ot.pdf === false"><a href="#" ng-click="lot.generarPdf(lot.solicitudesDeMantenimiento_idsolicitudesDeMantenimiento,lot.solicitudesDeMantenimiento_equipos_idequipos)">Generar PDF</a></li>
+                                                        <li><a href="#" >Eliminar</a></li>
+                                                        <li ng-if="ot.pdf === false"><a href="#" ng-click="lot.generarPdf(ot.idsolicitudDeMantenimiento,ot.idequipo)">Generar PDF</a></li>
                                                         <li ng-if="ot.pdf === true"><a href="{{ot.ruta}}" target="_blank">Ver PDF</a></li>
                                                     </ul>
                                                 </li>

@@ -48,6 +48,7 @@
         "generarpdfsolicitud",
         "generarpdfot",
         "guardasolicitud",
+        "listarproveedores",
         "listarordenes",
         "guardarot",});
 
@@ -325,7 +326,6 @@
             List<OrdenDeTrabajo> lista = ot.getListaOrdenesDeTrabajo();
             respuesta += ",\"" + proceso + "\": true,\"Ordenes\":" + new Gson().toJson(lista);
         } else if (proceso.equals("generarpdfsolicitud")) {
-
             String idSolicitud = "" + request.getParameter("id");
             String idEquipo = "" + request.getParameter("idequipo");
             SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(idSolicitud);
@@ -336,7 +336,15 @@
             String idEquipo = "" + request.getParameter("idequipo");
             OrdenDeTrabajoPDF otPDF = new OrdenDeTrabajoPDF(new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo));
             otPDF.pdfOT();
-        } else if (proceso.equals("tiempodeocio")) {
+        }else if (proceso.equals("listarproveedores")) {
+            Proveedor pv= new Proveedor();
+            List<Proveedor> lista = pv.listarProveedores();
+            respuesta += ",\"" + proceso + "\": true,\"Proveedores\":" + new Gson().toJson(lista);
+
+        }
+//        -----------------------------------
+        
+        else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");
             String Tipo = "" + request.getParameter("tipo");

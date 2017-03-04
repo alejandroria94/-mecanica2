@@ -92,7 +92,7 @@
                             <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
-                            <a href="#!"><img src="img/logo.png"/></a>
+                            <a href="index.jsp"><img src="img/logo.png"/></a>
                             <ul class="right hide-on-med-and-down">
                                 <li ><a class="red-text text-accent-4" href="#">Info</a></li>
                                     <%
@@ -100,7 +100,7 @@
                                         if (usuarios != null) {
                                     %>
                                 <li ><a class="blue-text text-darken-2" href="#" style="background-color: #ccc">Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="#">Orden de Trabajo</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
