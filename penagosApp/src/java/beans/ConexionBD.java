@@ -20,9 +20,9 @@ public class ConexionBD {
     public ConexionBD() {
 
         DB_driver = "com.mysql.jdbc.Driver";
-        url = "jdbc:mysql://localhost:3306/americana"; 		//URL DB
+        url = "jdbc:mysql://localhost:3306/penagos"; 		//URL DB
         username = "root";                      			//usuario base de datos global 
-        password = "piolin";
+        password = "root";
         try {
             //Asignacin del Driver
             Class.forName(DB_driver);
