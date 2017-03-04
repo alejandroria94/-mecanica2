@@ -471,11 +471,11 @@ public class OrdenDeTrabajo {
 
     public String estadoActual() {
         if (this.cerrada) {
-            this.estado = "realizada";
+            this.estado = "Realizada";
         } else {
 
             if (fechaFin.before(fechaHoy)) {
-                this.estado = "vencida";
+                this.estado = "Vencida";
             }
             if (fechaFin.after(fechaHoy)) {
                 this.estado = "Pendiente";
