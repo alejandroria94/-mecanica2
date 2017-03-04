@@ -24,19 +24,25 @@ import java.io.IOException;
  */
 public class SolicitudDeMantenimientoPDF {
 
-    public static final String ruta = "";
+    public static String ruta = "";
 
-     public SolicitudDeMantenimiento sm;
+    public SolicitudDeMantenimiento sm;
 
-    public SolicitudDeMantenimientoPDF(SolicitudDeMantenimiento ot) {
-        this.sm = ot;
+    public SolicitudDeMantenimientoPDF(SolicitudDeMantenimiento sm) {
+        this.sm = sm;
     }
 
     public void pdfSM() throws IOException, DocumentException {
+        Parametrizacion p = new Parametrizacion();
         try {
+
+            ruta = new Parametrizacion().getParametro("rutaPDFServer") + sm.getIdsolicitudDeMantenimiento() + "" + sm.getIdequipo() + "SolicitudMantenimiento.pdf";
+            sm.setRuta(p.getParametro("rutaPDFBD") + sm.getIdsolicitudDeMantenimiento() + "" + sm.getIdequipo() + "SolicitudMantenimiento.pdf");
             File file = new File(ruta);
             file.getParentFile().mkdirs();
             new SolicitudDeMantenimientoPDF(this.sm).createPdf(ruta);
+            sm.setPdf(true);
+            sm.actualizarSolicitudDeMantenimiento();
             System.out.println("Documento creado Correctamente");
         } catch (IOException | DocumentException e) {
             System.out.println("Documento en uso, no se ha creado el nuevo");
@@ -44,9 +50,8 @@ public class SolicitudDeMantenimientoPDF {
         }
     }
 
-
-
     public void createPdf(String dest) throws IOException, DocumentException {
+        Parametrizacion p = new Parametrizacion();
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(dest));
         document.open();
@@ -55,14 +60,14 @@ public class SolicitudDeMantenimientoPDF {
         PdfPCell celda;
         table.setWidthPercentage(100);
 
-        Image img = Image.getInstance("web/img/logo.png");
+        Image img = Image.getInstance(p.getParametro("rutaImgServer") + "logo.png");
         celda = new PdfPCell(img, true);
         celda.setPadding(5);
         celda.setColspan(4);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("CODIGO: "+sm.getCodigo()+"\nREVISION: "+sm.getRevision()+
-                "\nSOLICITUD DE SERVICIO: "+sm.getSolicitudDeServicio()+"\nFECHA: "+sm.getFecha()+"", font));
+        celda = new PdfPCell(new Phrase("CODIGO: " + sm.getCodigo() + "\nREVISION: " + sm.getRevision()
+                + "\nSOLICITUD DE SERVICIO: " + sm.getSolicitudDeServicio() + "\nFECHA: " + sm.getFecha() + "", font));
         celda.setColspan(8);
         // head.setBackgroundColor(BaseColor.CYAN);
         table.addCell(celda);
@@ -80,13 +85,13 @@ public class SolicitudDeMantenimientoPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+sm.getEquipo().getUbicacion(), font));
+        celda = new PdfPCell(new Phrase("" + sm.getEquipo().getUbicacion(), font));
         celda.setColspan(4);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase(""+sm.getEquipo().getNombre(), font));
+        celda = new PdfPCell(new Phrase("" + sm.getEquipo().getNombre(), font));
         celda.setColspan(4);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase(""+sm.getEquipo().getOperario(), font));
+        celda = new PdfPCell(new Phrase("" + sm.getEquipo().getOperario(), font));
         celda.setColspan(4);
         table.addCell(celda);
 
@@ -94,19 +99,31 @@ public class SolicitudDeMantenimientoPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         celda.setColspan(12);
         table.addCell(celda);
-        
-        String reparacion=" ";
-        String mtoMecanico=" ";
-        String mtoPreventivo=" ";
-        String mtoElectrico=" ";
-        String mtoCorrectivo=" ";
-        String otros=" ";
-        if(sm.isReparacion()){reparacion+=" X";}
-        if(sm.isMtoMecanico()){mtoMecanico+=" X";}
-        if(sm.isMtoPreventivo()){mtoPreventivo+=" X";}
-        if(sm.isMtoElectrico()){mtoElectrico+=" X";}
-        if(sm.isMtoCorrectivo()){mtoCorrectivo+=" X";}
-        if(sm.isOtros()){otros+=" X";}
+
+        String reparacion = " ";
+        String mtoMecanico = " ";
+        String mtoPreventivo = " ";
+        String mtoElectrico = " ";
+        String mtoCorrectivo = " ";
+        String otros = " ";
+        if (sm.isReparacion()) {
+            reparacion += " X";
+        }
+        if (sm.isMtoMecanico()) {
+            mtoMecanico += " X";
+        }
+        if (sm.isMtoPreventivo()) {
+            mtoPreventivo += " X";
+        }
+        if (sm.isMtoElectrico()) {
+            mtoElectrico += " X";
+        }
+        if (sm.isMtoCorrectivo()) {
+            mtoCorrectivo += " X";
+        }
+        if (sm.isOtros()) {
+            otros += " X";
+        }
 
         celda = new PdfPCell(new Phrase("REPARACION", font));
         celda.setColspan(3);
@@ -150,7 +167,7 @@ public class SolicitudDeMantenimientoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+sm.getDescripcionServicio(), font));
+        celda = new PdfPCell(new Phrase("" + sm.getDescripcionServicio(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
@@ -159,7 +176,7 @@ public class SolicitudDeMantenimientoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+sm.getDescripcionAcciones(), font));
+        celda = new PdfPCell(new Phrase("" + sm.getDescripcionAcciones(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
@@ -168,7 +185,7 @@ public class SolicitudDeMantenimientoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase(""+sm.getMaterial(), font));
+        celda = new PdfPCell(new Phrase("" + sm.getMaterial(), font));
         celda.setColspan(12);
         table.addCell(celda);
 
@@ -177,25 +194,25 @@ public class SolicitudDeMantenimientoPDF {
         celda.setColspan(12);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL HORAS PARADA: "+sm.getHorasParada()+"", font));
+        celda = new PdfPCell(new Phrase("TOTAL HORAS PARADA: " + sm.getHorasParada() + "", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("HORA SOLICITUD: "+sm.getHoraSolicitud()+"", font));
+        celda = new PdfPCell(new Phrase("HORA SOLICITUD: " + sm.getHoraSolicitud() + "", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("TOTAL HORAS MTO: "+sm.getHorasMTO()+"", font));
+        celda = new PdfPCell(new Phrase("TOTAL HORAS MTO: " + sm.getHorasMTO() + "", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("HORA ENTREGA: "+sm.getHoraEntrega()+"", font));
+        celda = new PdfPCell(new Phrase("HORA ENTREGA: " + sm.getHoraEntrega() + "", font));
         celda.setColspan(6);
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("SERVICIO SOLICITADO POR: "+sm.getSolicitadoPor()+"\n"
-                + "SERVICIO REALIZADO POR: "+sm.getRealizadoPor()+"\n"
-                + "RECIBO A CONFORMIDAD: "+sm.getRecibidoPor()+"\n\n\n FIRMA", font));
+        celda = new PdfPCell(new Phrase("SERVICIO SOLICITADO POR: " + sm.getSolicitadoPor() + "\n"
+                + "SERVICIO REALIZADO POR: " + sm.getRealizadoPor() + "\n"
+                + "RECIBO A CONFORMIDAD: " + sm.getRecibidoPor() + "\n\n\n FIRMA", font));
         celda.setColspan(12);
         table.addCell(celda);
         document.add(table);

@@ -42,6 +42,8 @@ public class SolicitudDeMantenimiento {
     private boolean ordenDeTrabajo;
     private OrdenDeTrabajo ot;
     private String estado;
+    private String ruta;
+    private boolean pdf;
 
     public SolicitudDeMantenimiento() {
     }
@@ -49,9 +51,9 @@ public class SolicitudDeMantenimiento {
     public boolean guardarSolicitudDeMantenimiento() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-        String sentencia = "INSERT INTO solicitudesdemantenimiento(equipos_idequipos, codigo, revision, solicitudDeServicio, reparacion, mtoMecanico, mtoPreventivo, mtoElectrico, mtoCorrectivo, otros, descripcionServicio, descripcionAcciones, material, horasParada, horasMTO, horaSolicitud, horaEntrega, solicitadoPor, realizadoPor, recibidoPor,fecha,ordenDeTrabajo) "
+        String sentencia = "INSERT INTO solicitudesdemantenimiento(equipos_idequipos, codigo, revision, solicitudDeServicio, reparacion, mtoMecanico, mtoPreventivo, mtoElectrico, mtoCorrectivo, otros, descripcionServicio, descripcionAcciones, material, horasParada, horasMTO, horaSolicitud, horaEntrega, solicitadoPor, realizadoPor, recibidoPor,fecha,ordenDeTrabajo,ruta,pdf) "
                 + " VALUES ( '" + this.idequipo + "','" + this.codigo + "','" + this.revision + "','" + this.solicitudDeServicio + "','" + this.reparacion + "','" + this.mtoMecanico + "','" + this.mtoPreventivo + "','" + this.mtoElectrico + "','" + this.mtoCorrectivo + "','" + this.otros + "','"
-                + this.descripcionServicio + "','" + this.descripcionAcciones + "','" + this.material + "','" + this.horasParada + "','" + this.horasMTO + "','" + this.horaSolicitud + "','" + this.horaEntrega + "','" + this.solicitadoPor + "','" + this.realizadoPor + "','" + this.recibidoPor + "','" + this.fecha + "','" + this.ordenDeTrabajo + "');  ";
+                + this.descripcionServicio + "','" + this.descripcionAcciones + "','" + this.material + "','" + this.horasParada + "','" + this.horasMTO + "','" + this.horaSolicitud + "','" + this.horaEntrega + "','" + this.solicitadoPor + "','" + this.realizadoPor + "','" + this.recibidoPor + "','" + this.fecha + "','" + this.ordenDeTrabajo + "','ruta','false');  ";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -96,6 +98,8 @@ public class SolicitudDeMantenimiento {
             sM.setRecibidoPor(datosSM.getString("recibidoPor"));
             sM.setEquipo(new Equipo().buscarEquipo(Integer.toString(sM.getIdequipo())));
             sM.setOrdenDeTrabajo(datosSM.getBoolean("ordenDeTrabajo"));
+            sM.setRuta(datosSM.getString("ruta"));
+            sM.setPdf(datosSM.getBoolean("pdf"));
         }
         conexion.cerrarConexion();
         return sM;
@@ -133,6 +137,8 @@ public class SolicitudDeMantenimiento {
             sM.setRecibidoPor(datosSM.getString("recibidoPor"));
             sM.setEquipo(new Equipo().buscarEquipo(Integer.toString(sM.getIdequipo())));
             sM.setOrdenDeTrabajo(datosSM.getBoolean("ordenDeTrabajo"));
+            sM.setRuta(datosSM.getString("ruta"));
+            sM.setPdf(datosSM.getBoolean("pdf"));
             listaSolicitudesDeMantenimiento.add(sM);
         }
         conexion.cerrarConexion();
@@ -151,7 +157,7 @@ public class SolicitudDeMantenimiento {
                     + "',mtoPreventivo='" + this.mtoPreventivo + "',mtoElectrico='" + this.mtoElectrico + "',mtoCorrectivo='" + this.mtoCorrectivo + "',otros='" + this.otros
                     + "',descripcionServicio='" + this.descripcionServicio + "',descripcionAcciones='" + this.descripcionAcciones + "',material='" + this.material + "',horasParada='" + this.horasParada
                     + "',horasMTO='" + this.horasMTO + "',horaSolicitud='" + this.horaSolicitud + "',horaEntrega='" + this.horaEntrega + "',solicitadoPor='" + this.solicitadoPor
-                    + "',realizadoPor='" + this.realizadoPor + "',recibidoPor='" + this.recibidoPor + "',ordenDeTrabajo='" + this.ordenDeTrabajo + "' WHERE `idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento + "'";
+                    + "',realizadoPor='" + this.realizadoPor + "',recibidoPor='" + this.recibidoPor + "',ordenDeTrabajo='" + this.ordenDeTrabajo + "',ruta='"+this.ruta+"',pdf='"+this.pdf+"' WHERE `idsolicitudesDeMantenimiento`='" + this.idsolicitudDeMantenimiento +"'";
             boolean actualizo = conexion.actualizarBD(sql2);
             if (actualizo) {
                 conexion.commitBD();
@@ -388,5 +394,22 @@ public class SolicitudDeMantenimiento {
         }
         return estado;
     }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+
+    public boolean isPdf() {
+        return pdf;
+    }
+
+    public void setPdf(boolean pdf) {
+        this.pdf = pdf;
+    }
+    
 
 }

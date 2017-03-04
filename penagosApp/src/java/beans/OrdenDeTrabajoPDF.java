@@ -39,7 +39,7 @@ public class OrdenDeTrabajoPDF {
     public void pdfOT() throws IOException, DocumentException {
         Parametrizacion p = new Parametrizacion();
         try {
-            ruta = new Parametrizacion().getParametro("rutaPDFServer") + ot.getIdsolicitudDeMantenimiento() + "" + ot.getIdequipo() + "OrdenDeTrabajo.pdf";
+            ruta = p.getParametro("rutaPDFServer") + ot.getIdsolicitudDeMantenimiento() + "" + ot.getIdequipo() + "OrdenDeTrabajo.pdf";
             ot.setRuta(p.getParametro("rutaPDFBD") + ot.getIdsolicitudDeMantenimiento() + "" + ot.getIdequipo() + "OrdenDeTrabajo.pdf");
             File file = new File(ruta);
             file.getParentFile().mkdirs();

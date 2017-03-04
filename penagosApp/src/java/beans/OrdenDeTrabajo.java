@@ -94,7 +94,7 @@ public class OrdenDeTrabajo {
                 + ", descripcionDanos, descripcionTrabajosRealizados, ejecutadoPor, recibidoAprobadoPor,dptAdmyControl,observaciones,estado,cerrada,ruta,pdf) "
                 + " VALUES ('" + this.idsolicitudDeMantenimiento + "','" + this.idequipo + "','" + this.numeroOrdenDeTrabajo + "','" + dateFormat.format(this.fechaInicio) + "','" + dateFormat.format(this.fechaFin) + "','" + this.tipoSolicitud + "','" + this.partes + "'"
                 + ",'" + this.solicitadaPor + "','" + this.revisadaPor + "','" + this.autorizadaPor + "','" + this.descripcionesTrabajos + "','" + this.materiales + "','" + this.costoManoDeObra + "','" + this.costoMateriales + "','" + this.totalHorasMto + "','" + this.totalHorasParada + "'"
-                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','" + this.dptAdmyControl + "','" + this.observaciones + "','" + this.estado + "','" + this.cerrada + "','ruta',false);";
+                + ",'" + this.descripcionDanos + "','" + this.descripcionTrabajosRealizados + "','" + this.ejecutadoPor + "','" + this.recibidoAprobadoPor + "','" + this.dptAdmyControl + "','" + this.observaciones + "','" + this.estado + "','" + this.cerrada + "','ruta','false');";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {

@@ -181,9 +181,10 @@
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
+                                                        <li ng-if="mto.ordenDeTrabajo === false && mto.pdf===false "><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
                                                         <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudesDeMantenimiento)">Eliminar</a></li>
-                                                        <li><a href="#" ng-click="sm.PDF(mto.idsolicitudDeMantenimiento, mto.equipo.idEquipo)">Generar PDF</a></li>
+                                                        <li ng-if="mto.pdf === true"><a href="{{mto.ruta}}" target="_blank">Ver PDF</a></li>
+                                                        <li ng-if="mto.pdf === false"><a  href="#" ng-click="sm.PDF(mto.idsolicitudDeMantenimiento, mto.equipo.idEquipo)">Generar PDF</a></li>
                                                         <li ng-if="mto.ordenDeTrabajo===false"><a href="OrdenDeTrabajo.jsp?codigo={{mto.idsolicitudDeMantenimiento}}">Orden de trabajo</a></li>
                                                     </ul>
                                                 </li>

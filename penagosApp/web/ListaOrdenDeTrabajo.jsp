@@ -180,7 +180,7 @@
                                                     <ul>
                                                         <li><a href="#" ng-click="lot.eliminar(lot.solicitudesDeMantenimiento_idsolicitudesDeMantenimiento+lot.solicitudesDeMantenimiento_equipos_idequipos)">Eliminar</a></li>
                                                         <li ng-if="ot.pdf === false"><a href="#" ng-click="lot.generarPdf(lot.solicitudesDeMantenimiento_idsolicitudesDeMantenimiento,lot.solicitudesDeMantenimiento_equipos_idequipos)">Generar PDF</a></li>
-                                                        <li ng-if="ot.pdf === true"><a href="{{ot.ruta}}">Ver PDF</a></li>
+                                                        <li ng-if="ot.pdf === true"><a href="{{ot.ruta}}" target="_blank">Ver PDF</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>

@@ -6,6 +6,7 @@
 --%>
 
 
+<%@page import="beans.SolicitudDeMantenimientoPDF"%>
 <%@page import="beans.OrdenDeTrabajoPDF"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
@@ -324,10 +325,12 @@
             List<OrdenDeTrabajo> lista = ot.getListaOrdenesDeTrabajo();
             respuesta += ",\"" + proceso + "\": true,\"Ordenes\":" + new Gson().toJson(lista);
         } else if (proceso.equals("generarpdfsolicitud")) {
-//            String idSolicitud = "" + request.getParameter("id");
-//            String idEquipo = "" + request.getParameter("idequipo");
-//            OrdenDeTrabajoPDF otPDF = new OrdenDeTrabajoPDF(new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo));
-//            otPDF.pdfOT();
+
+            String idSolicitud = "" + request.getParameter("id");
+            String idEquipo = "" + request.getParameter("idequipo");
+            SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(idSolicitud);
+            SolicitudDeMantenimientoPDF smPDF = new SolicitudDeMantenimientoPDF(sm);
+            smPDF.pdfSM();
         } else if (proceso.equals("generarpdfot")) {
             String idSolicitud = "" + request.getParameter("id");
             String idEquipo = "" + request.getParameter("idequipo");
