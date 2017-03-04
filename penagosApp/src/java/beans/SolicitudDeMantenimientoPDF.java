@@ -32,7 +32,7 @@ public class SolicitudDeMantenimientoPDF {
         this.sm = sm;
     }
 
-    public void pdfSM() throws IOException, DocumentException {
+    public boolean pdfSM() throws IOException, DocumentException {
         Parametrizacion p = new Parametrizacion();
         try {
 
@@ -43,10 +43,11 @@ public class SolicitudDeMantenimientoPDF {
             new SolicitudDeMantenimientoPDF(this.sm).createPdf(ruta);
             sm.setPdf(true);
             sm.actualizarSolicitudDeMantenimiento();
-            System.out.println("Documento creado Correctamente");
+//            System.out.println("Documento creado Correctamente");
+            return true;
         } catch (IOException | DocumentException e) {
-            System.out.println("Documento en uso, no se ha creado el nuevo");
-
+//            System.out.println("Documento en uso, no se ha creado el nuevo");
+            return false;
         }
     }
 

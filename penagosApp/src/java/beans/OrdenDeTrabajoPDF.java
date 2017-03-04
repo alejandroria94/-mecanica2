@@ -36,7 +36,7 @@ public class OrdenDeTrabajoPDF {
         this.ot = ot;
     }
 
-    public void pdfOT() throws IOException, DocumentException {
+    public boolean pdfOT() throws IOException, DocumentException {
         Parametrizacion p = new Parametrizacion();
         try {
             ruta = p.getParametro("rutaPDFServer") + ot.getIdsolicitudDeMantenimiento() + "" + ot.getIdequipo() + "OrdenDeTrabajo.pdf";
@@ -46,10 +46,11 @@ public class OrdenDeTrabajoPDF {
             new OrdenDeTrabajoPDF(this.ot).createPdf(ruta);
             ot.setPdf(true);
             ot.actualizarOrdenDeTrabajo();
-            System.out.println("Documento creado Correctamente");
+//            System.out.println("Documento creado Correctamente");
+            return true;
         } catch (IOException | DocumentException e) {
-            System.out.println("Documento en uso, no se ha creado el nuevo");
-
+//            System.out.println("Documento en uso, no se ha creado el nuevo");
+            return false;
         }
     }
 
