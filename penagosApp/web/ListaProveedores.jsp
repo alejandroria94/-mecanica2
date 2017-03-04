@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Solicitudes</title>
+        <title>Ordenes de trabajo</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
@@ -88,8 +88,8 @@
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="Maquinas.jsp">Cronograma</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Gestionar Mto</a></li>
+                            <li><a class="blue-text text-darken-2"href="">Cronograma</a></li>
+                            <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
                             <a href="index.jsp"><img src="img/logo.png"/></a>
@@ -99,11 +99,11 @@
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
-                                <li ><a class="blue-text text-darken-2" href="#" >Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp" style="background-color: #ccc" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
+                                <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" >Orden de Trabajo</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" style="background-color: #ccc" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
                                         if (usuarios == null) {%>
@@ -147,15 +147,15 @@
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosSolicitudesAppCtrl as sm">
+            <div ng-controller="penagosProvppCtrl as p">
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
-                            <div class="input-field col s3">
-                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="sm.nuevaSolicitud()">Nueva Solicitud</a>
+                             <div class="input-field col s3">
+                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="p.nuevaSolicitud()">Nueva Solicitud</a>
                             </div>
                             <div class="input-field col s2 offset-s7">
-                                <input id="last_name" type="text" ng-model="sm.busqueda" class="validate ">
+                                <input id="last_name" type="text" ng-model="p.busqueda" class="validate ">
                                 <label class="indigo-text text-darken-4" >Busqueda</label>
                             </div>
 
@@ -163,29 +163,25 @@
                         <table class="bordered highlight responsive-table">
                             <thead>
                                 <tr>
-                                    <th class="indigo-text text-darken-4">Codigo</th>
-                                    <th class="indigo-text text-darken-4">NombreEquipo</th>
-                                    <th class="indigo-text text-darken-4">Fecha</th>
-                                    <th class="indigo-text text-darken-4">Solicitado Por</th>
+                                    <th class="indigo-text text-darken-4">Nombre</th>
+                                    <th class="indigo-text text-darken-4">Direccion</th>
+                                    <th class="indigo-text text-darken-4">Telefono</th>
+                                    <th class="indigo-text text-darken-4">Correo</th>
                                     <th class="indigo-text text-darken-4" style="width: 200px">Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  ng-repeat="mto in sm.Solicitudes| filter:sm.busqueda |orderBy: 'fecha'" data-id="{{mto.idsolicitudesDeMantenimiento}}">
-                                    <td>{{mto.codigo}}</td>
-                                    <td>{{mto.equipo.nombre}}</td>
-                                    <td>{{mto.fecha}}</td>
-                                    <td>{{mto.solicitadoPor}}</td>
+                                <tr  ng-repeat="pv in p.Proveedores| filter:p.busqueda |orderBy: 'nombre'" >
+                                    <td>{{pv.nombre}}</td>
+                                    <td>{{pv.direccion}}</td>
+                                    <td>{{pv.telefono}}</td>
+                                    <td>{{pv.correoElectronico}}</td>
                                     <td>
                                         <div id="menu">
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li ng-if="mto.ordenDeTrabajo === false && mto.pdf===false "><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
-                                                        <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudesDeMantenimiento)">Eliminar</a></li>
-                                                        <li ng-if="mto.pdf === true"><a href="{{mto.ruta}}" target="_blank">Ver PDF</a></li>
-                                                        <li ng-if="mto.pdf === false"><a  href="#" ng-click="sm.PDF(mto.idsolicitudDeMantenimiento, mto.equipo.idEquipo)">Generar PDF</a></li>
-                                                        <li ng-if="mto.ordenDeTrabajo===false"><a href="OrdenDeTrabajo.jsp?codigo={{mto.idsolicitudDeMantenimiento}}">Orden de trabajo</a></li>
+                                                        <li><a  href="#">Eliminar</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
