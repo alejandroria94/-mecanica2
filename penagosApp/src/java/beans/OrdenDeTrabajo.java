@@ -154,7 +154,7 @@ public class OrdenDeTrabajo {
         ConexionBD conexion = new ConexionBD();
         OrdenDeTrabajo ot;
         List<OrdenDeTrabajo> listaOrdenesDeTrabajo = new ArrayList<>();
-        String sql = "select * from ordenesdetrabajo";
+        String sql = "select * from ordenesdetrabajo ORDER BY `fechaInicio` ASC";
         ResultSet datosOT = conexion.consultarBD(sql);
         while (datosOT.next()) {
             String idSolicitud = datosOT.getString("solicitudesDeMantenimiento_idsolicitudesDeMantenimiento");

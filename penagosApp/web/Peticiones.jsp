@@ -50,6 +50,11 @@
         "guardasolicitud",
         "listarproveedores",
         "listarordenes",
+        "guardaproveedor",
+        "eliminarproveedor",
+        "listarherramientas",
+        "guardaherramineta",
+        "eliminarherramienta",
         "guardarot",});
 
     // Si el usuario tiene sesión válida y permisos.
@@ -330,20 +335,71 @@
             String idEquipo = "" + request.getParameter("idequipo");
             SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento().buscarSolicitudDeMantenimiento(idSolicitud);
             SolicitudDeMantenimientoPDF smPDF = new SolicitudDeMantenimientoPDF(sm);
-            smPDF.pdfSM();
+            respuesta += ",\"" + proceso + "\":" + smPDF.pdfSM();
         } else if (proceso.equals("generarpdfot")) {
             String idSolicitud = "" + request.getParameter("id");
             String idEquipo = "" + request.getParameter("idequipo");
             OrdenDeTrabajoPDF otPDF = new OrdenDeTrabajoPDF(new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo));
-            otPDF.pdfOT();
-        }else if (proceso.equals("listarproveedores")) {
-            Proveedor pv= new Proveedor();
+            respuesta += ",\"" + proceso + "\":" + otPDF.pdfOT();
+        } else if (proceso.equals("listarproveedores")) {
+            Proveedor pv = new Proveedor();
             List<Proveedor> lista = pv.listarProveedores();
             respuesta += ",\"" + proceso + "\": true,\"Proveedores\":" + new Gson().toJson(lista);
 
-        }
-//        -----------------------------------
-        
+        } else if (proceso.equals("guardaproveedor")) {
+            String Nombre = "" + request.getParameter("nombre");
+            String Direccion = "" + request.getParameter("direccion");
+            String Telefono = "" + request.getParameter("telefono");
+            String Correo = "" + request.getParameter("correo");
+            Proveedor p = new Proveedor();
+            p.setCorreoElectronico(Correo);
+            p.setDireccion(Direccion);
+            p.setNombre(Nombre);
+            p.setTelefono(Telefono);
+            if (p.guardarProveedor()) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+        } else if (proceso.equals("eliminarproveedor")) {
+            String Id = "" + request.getParameter("id");
+            Proveedor p = new Proveedor();
+            if (p.borrarProveedor(Id)) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+        } else if (proceso.equals("listarherramientas")) {
+            Herramienta h = new Herramienta();
+            List<Herramienta> lista = h.listarHErramientas();
+            respuesta += ",\"" + proceso + "\": true,\"Herramientas\":" + new Gson().toJson(lista);
+
+        } else if (proceso.equals("guardaherramineta")) {
+            String Codigo = "" + request.getParameter("codigo");
+            String Nombre = "" + request.getParameter("nombre");
+            String Cantidad = "" + request.getParameter("cantidad");
+            String Descripcion = "" + request.getParameter("descripcion");
+            Herramienta h = new Herramienta();
+            h.setCodigo(Codigo);
+            h.setNombre(Nombre);
+            h.setCantidad(Integer.parseInt(Cantidad));
+            h.setDescripcion(Descripcion);
+            if (h.guardarHerramienta()) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+
+        } else if (proceso.equals("eliminarherramienta")) {
+            String Id = "" + request.getParameter("id");
+
+            Herramienta h = new Herramienta();
+            if (h.borrarHerramienta(Id)) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+        } //        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");
@@ -387,32 +443,7 @@
             respuesta += ",\"" + proceso + "\": true";
             respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        } else if (proceso.equals("guardaherramineta")) {
-            String Codigo = "" + request.getParameter("codigo");
-            String Nombre = "" + request.getParameter("nombre");
-            String Cantidad = "" + request.getParameter("cantidad");
-            String Descripcion = "" + request.getParameter("descripcion");
-            Herramienta h = new Herramienta();
-            h.setCodigo(Codigo);
-            h.setNombre(Nombre);
-            h.setCantidad(Integer.parseInt(Cantidad));
-            h.setDescripcion(Descripcion);
-            if (h.guardarHerramienta()) {
-                respuesta += ",\"" + proceso + "\": true";
-            } else {
-                respuesta += ",\"" + proceso + "\": false";
-            }
-
-        } else if (proceso.equals("eliminarherramienta")) {
-            String Id = "" + request.getParameter("id");
-
-            Herramienta h = new Herramienta();
-            if (h.borrarHerramienta(Id)) {
-                respuesta += ",\"" + proceso + "\": true";
-            } else {
-                respuesta += ",\"" + proceso + "\": false";
-            }
-        } else if (proceso.equals("guardarepuesto")) {
+        }else if (proceso.equals("guardarepuesto")) {
             String Codigo = "" + request.getParameter("codigo");
             String Nombre = "" + request.getParameter("nombre");
             String Cantidad = "" + request.getParameter("cantidad");
@@ -586,30 +617,6 @@
 //                respuesta += ",\"" + proceso + "\": false";
 //            }
 
-        } else if (proceso.equals("guardaproveedor")) {
-            String Nombre = "" + request.getParameter("nombre");
-            String Direccion = "" + request.getParameter("direccion");
-            String Telefono = "" + request.getParameter("telefono");
-            String Correo = "" + request.getParameter("correo");
-            Proveedor p = new Proveedor();
-            p.setCorreoElectronico(Correo);
-            p.setDireccion(Direccion);
-            p.setNombre(Nombre);
-            p.setTelefono(Telefono);
-            if (p.guardarProveedor()) {
-                respuesta += ",\"" + proceso + "\": true";
-            } else {
-                respuesta += ",\"" + proceso + "\": false";
-            }
-        } else if (proceso.equals("eliminarproveedor")) {
-            String Id = "" + request.getParameter("id");
-
-            Proveedor p = new Proveedor();
-            if (p.borrarProveedor(Id)) {
-                respuesta += ",\"" + proceso + "\": true";
-            } else {
-                respuesta += ",\"" + proceso + "\": false";
-            }
         } else if (proceso.equals("guardaproduccion")) {
             String Nombre = "" + request.getParameter("nombre");
             String Imagen = "" + request.getParameter("imagen");
