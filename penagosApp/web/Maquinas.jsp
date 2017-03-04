@@ -82,8 +82,9 @@
                             <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
                         </ul>
                         <ul id="almacen" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
-                            <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
+                            <li><a class="blue-text text-darken-2"href="#!">Proveedores</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Produccion</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Herramientas</a></li>
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">

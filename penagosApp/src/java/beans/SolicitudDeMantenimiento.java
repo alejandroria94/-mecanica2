@@ -109,7 +109,7 @@ public class SolicitudDeMantenimiento {
         ConexionBD conexion = new ConexionBD();
         SolicitudDeMantenimiento sM;
         List<SolicitudDeMantenimiento> listaSolicitudesDeMantenimiento = new ArrayList<>();
-        String sql = "select * from solicitudesdemantenimiento ORDER BY `fecha` ASC";
+        String sql = "select * from solicitudesdemantenimiento";
         ResultSet datosSM = conexion.consultarBD(sql);
         while (datosSM.next()) {
             sM = new SolicitudDeMantenimiento();

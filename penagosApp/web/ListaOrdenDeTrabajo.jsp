@@ -82,8 +82,9 @@
                             <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
                         </ul>
                         <ul id="almacen" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
-                            <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
+                            <li><a class="blue-text text-darken-2"href="#!">Proveedores</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Produccion</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Herramientas</a></li>
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
@@ -159,7 +160,7 @@
                         <table class="bordered highlight responsive-table">
                             <thead>
                                 <tr>
-                                    <th class="indigo-text text-darken-4">Codigo Solicitud</th>
+                                    <th class="indigo-text text-darken-4">Numero</th>
                                     <th class="indigo-text text-darken-4">Tipo de solicitud</th>
                                     <th class="indigo-text text-darken-4">Fecha inicio</th>
                                     <th class="indigo-text text-darken-4">Fecha fin</th>
@@ -167,8 +168,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  ng-repeat="ot in lot.Ordenes| filter:lot.busqueda |orderBy: 'fechaInicio'" >
-                                    <td>{{ot.solicitudDeMantenimiento.codigo}}</td>
+                                <tr  ng-repeat="ot in lot.Ordenes| filter:lot.busqueda |orderBy: 'numeroOrdenDeTrabajo'" >
+                                    <td>{{ot.numeroOrdenDeTrabajo}}</td>
                                     <td>{{ot.tipoSolicitud}}</td>
                                     <td>{{ot.fechaInicio}}</td>
                                     <td>{{ot.fechaFin}}</td>

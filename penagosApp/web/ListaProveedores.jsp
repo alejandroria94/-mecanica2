@@ -83,7 +83,8 @@
                         </ul>
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
-                            <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Produccion</a></li>
+                            <li><a class="blue-text text-darken-2" href="#!">Herramientas</a></li>
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
@@ -146,12 +147,12 @@
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosProvAppCtrl as p">
+            <div ng-controller="penagosProvppCtrl as p">
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
                              <div class="input-field col s3">
-                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="p.nuevo()">Nuevo</a>
+                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="p.nuevaSolicitud()">Nueva Solicitud</a>
                             </div>
                             <div class="input-field col s2 offset-s7">
                                 <input id="last_name" type="text" ng-model="p.busqueda" class="validate ">
@@ -180,7 +181,7 @@
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="#" ng-click="p.eliminar(pv.idproveedores)">Eliminar</a></li>
+                                                        <li><a  href="#">Eliminar</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
