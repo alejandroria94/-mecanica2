@@ -57,6 +57,9 @@
         "guardaherramineta",
         "eliminarherramienta",
         "pdfcronograma",
+        "mantenibilidad",
+        "disponibilidad",
+        "confiabilidad",
         "guardarot",});
 
     // Si el usuario tiene sesión válida y permisos.
@@ -407,7 +410,61 @@
             respuesta += ",\"" + proceso + "\":"+crPDF.pdfCronograma();
             respuesta+=",\"ruta\":\"pdf/Cronograma.pdf\"";
 
-        }//        -----------------------------------
+        } else if (proceso.equals("disponibilidad")) {
+            String Id = "" + request.getParameter("id");
+            String Mes = "" + request.getParameter("mes");
+            String Anno = "" + request.getParameter("anno");
+            Equipo e = new Equipo();
+            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
+            List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
+            List<Float> tiempomes = new ArrayList<>();
+            List<Float> tiempoanno = new ArrayList<>();
+            for (Indicador to : anno) {
+                tiempoanno.add(to.getDisponibilidad());
+            }
+            for (Indicador to : mes) {
+                tiempomes.add(to.getDisponibilidad());
+            }
+            respuesta += ",\"" + proceso + "\": true";
+            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
+            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
+        } else if (proceso.equals("confiabilidad")) {
+            String Id = "" + request.getParameter("id");
+            String Mes = "" + request.getParameter("mes");
+            String Anno = "" + request.getParameter("anno");
+            Equipo e = new Equipo();
+            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
+            List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
+            List<Float> tiempomes = new ArrayList<>();
+            List<Float> tiempoanno = new ArrayList<>();
+            for (Indicador to : anno) {
+                tiempoanno.add(to.getConfiabilidad());
+            }
+            for (Indicador to : mes) {
+                tiempomes.add(to.getConfiabilidad());
+            }
+            respuesta += ",\"" + proceso + "\": true";
+            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
+            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
+        } else if (proceso.equals("mantenibilidad")) {
+            String Id = "" + request.getParameter("id");
+            String Mes = "" + request.getParameter("mes");
+            String Anno = "" + request.getParameter("anno");
+            Equipo e = new Equipo();
+            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
+            List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
+            List<Float> tiempomes = new ArrayList<>();
+            List<Float> tiempoanno = new ArrayList<>();
+            for (Indicador to : anno) {
+                tiempoanno.add(to.getMantenibilidad());
+            }
+            for (Indicador to : mes) {
+                tiempomes.add(to.getMantenibilidad());
+            }
+            respuesta += ",\"" + proceso + "\": true";
+            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
+            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
+        } //        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");
@@ -546,61 +603,7 @@
             respuesta += ",\"" + proceso + "\": true";
             respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        } else if (proceso.equals("disponibilidad")) {
-            String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
-            String Anno = "" + request.getParameter("anno");
-            Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
-            List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
-            List<Float> tiempomes = new ArrayList<>();
-            List<Float> tiempoanno = new ArrayList<>();
-            for (Indicador to : anno) {
-                tiempoanno.add(to.getDisponibilidad());
-            }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getDisponibilidad());
-            }
-            respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
-            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        } else if (proceso.equals("confiabilidad")) {
-            String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
-            String Anno = "" + request.getParameter("anno");
-            Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
-            List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
-            List<Float> tiempomes = new ArrayList<>();
-            List<Float> tiempoanno = new ArrayList<>();
-            for (Indicador to : anno) {
-                tiempoanno.add(to.getConfiabilidad());
-            }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getConfiabilidad());
-            }
-            respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
-            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        } else if (proceso.equals("mantenibilidad")) {
-            String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
-            String Anno = "" + request.getParameter("anno");
-            Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
-            List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
-            List<Float> tiempomes = new ArrayList<>();
-            List<Float> tiempoanno = new ArrayList<>();
-            for (Indicador to : anno) {
-                tiempoanno.add(to.getMantenibilidad());
-            }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getMantenibilidad());
-            }
-            respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
-            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        } else if (proceso.equals("guardarmantenimiento")) {
+        }else if (proceso.equals("guardarmantenimiento")) {
 //            String Id = "" + request.getParameter("id");
 //            String Nombre = "" + request.getParameter("nombre");
 //            String Codigo = "" + request.getParameter("codigo");

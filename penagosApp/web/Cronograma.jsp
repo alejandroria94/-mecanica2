@@ -82,11 +82,6 @@
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <!-- Dropdown Structure -->
-                        <ul id="indicadores" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#!">Disponibilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Confiabilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
-                        </ul>
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
@@ -107,7 +102,7 @@
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" >Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp" style="background-color: #ccc"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else

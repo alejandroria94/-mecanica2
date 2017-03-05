@@ -21,11 +21,6 @@
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <!-- Dropdown Structure -->
-                        <ul id="indicadores" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#!">Disponibilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Confiabilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
-                        </ul>
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="#!">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="#!">Produccion</a></li>
@@ -33,7 +28,7 @@
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#">Cronograma</a></li>
+                            <li><a class="blue-text text-darken-2"href="Cronograma.jsp">Cronograma</a></li>
                             <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
@@ -47,7 +42,7 @@
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp">Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" data-activates="mantenimiento">Mantenimiento▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()" href="#!" >Salir</a></li>
                                     <%} else

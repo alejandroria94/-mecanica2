@@ -76,18 +76,13 @@
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <!-- Dropdown Structure -->
-                        <ul id="indicadores" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#!">Disponibilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Confiabilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
-                        </ul>
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
                             <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#!">Cronograma</a></li>
+                            <li><a class="blue-text text-darken-2"href="Cronograma.jsp">Cronograma</a></li>
                             <li><a class="blue-text text-darken-2" href="SolicitudesMto.jsp">Gestionar Mto</a></li>
                         </ul>
                         <nav class="nav-wrapper white ">
@@ -101,7 +96,7 @@
                                 <li ><a class="blue-text text-darken-2" href="#" >Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp" style="background-color: #ccc" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
@@ -147,6 +142,11 @@
             %>
             <!--inicio de contenido-->
             <div ng-controller="penagosSolicitudesAppCtrl as sm">
+                <div class="row">
+                    <div class="col s2 offset-s5">
+                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Solicictudes de Mto</strong></legend>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">

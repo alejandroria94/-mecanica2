@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Ficha Tecnica</title>
+        <title>Orden de Trabajo</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
@@ -39,11 +39,6 @@
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <!-- Dropdown Structure -->
-                        <ul id="indicadores" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#!">Disponibilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Confiabilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
-                        </ul>
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
@@ -64,7 +59,7 @@
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp">Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="indicadores">&nbsp;&nbsp;&nbsp;Indicadores&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
@@ -110,6 +105,11 @@
             %>
             <!--inicio de contenido-->
             <div ng-controller="penagosOTAppCtrl as ot"> <!--formulario-->
+                <div class="row">
+                    <div class="col s2 offset-s5">
+                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Orden de Trabajo</strong></legend>
+                    </div>
+                </div>
                 <%
                     String id = "" + request.getParameter("codigo");
                     OrdenDeTrabajo ot = new OrdenDeTrabajo(id);
@@ -370,7 +370,7 @@
                 </div>
                 <div class="row">
                     <div class="col s4 right">
-                        <a class="waves-effect red darken-2 btn left-align" ng-click="ot.cancelar()">Cancelar</a>
+                        <a class="waves-effect red darken-2 btn left-align" ng-click="ot.salor()">Cancelar</a>
                         <a class="waves-effect  green  btn left-align" ng-click="ot.guardar()">Guardar</a>
                     </div>
                 </div>

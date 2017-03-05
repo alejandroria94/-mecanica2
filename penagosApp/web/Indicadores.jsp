@@ -5,12 +5,16 @@
 --%>
 
 
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.List"%>
+<%@page import="beans.Equipo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="usuarios" class="beans.Usuario" scope="session"/>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Ordenes de trabajo</title>
+        <title>Indicadores</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
@@ -76,11 +80,6 @@
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <!-- Dropdown Structure -->
-                        <ul id="indicadores" class="dropdown-content">
-                            <li><a class="blue-text text-darken-2"href="#!">Disponibilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Confiabilidad</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Mantenibilidad</a></li>
-                        </ul>
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
@@ -99,10 +98,10 @@
                                         if (usuarios != null) {
                                     %>
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" style="background-color: #ccc">Orden de Trabajo</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" >Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" style="background-color: #ccc" href="Indicadores.jsp" >Indicadores</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="#!"  data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
                                         if (usuarios == null) {%>
@@ -146,55 +145,79 @@
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosListOTAppCtrl as lot">
+            <div ng-controller="penagosIndicadorAppCtrl as ind">
                 <div class="row">
-                    <div class="col s2 offset-s5">
-                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Ordenes de Trabajo</strong></legend>
+                    <div class="col s10 offset-s1">
+                        <div class="row">
+                            <%
+                                Equipo e = new Equipo();
+                                List<Equipo> lista = e.getListaDeEquipos();
+                            %>
+                            <div class="input-field col s3">
+                                <select class="icons"  id="equipos" ng-model="ind.equipo">
+                                    <option value="" disabled selected>Seleccione un equipo.</option>
+                                    <%
+                                        for (Equipo eq : lista) {
+                                    %>
+                                    <option value="<%=eq.getIdEquipo()%>+<%=eq.getNombre()%>" data-icon="<%=eq.getImagen()%>" class="left circle"><%=eq.getNombre()%></option>
+                                    <%}%>
+                                </select>
+                                <label>Equipo</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <select class="icons" id="indicador" ng-model="ind.indicador">
+                                    <option value="" disabled selected>Seleccione un indicador.</option>
+                                    <option value="disponibilidad" class="left">Disponibilidad</option>
+                                    <option value="confiabilidad" class="left">Confiabilidad</option>
+                                    <option value="mantenibilidad" class="left">Mantenibilidad</option>
+                                </select>
+                                <label>Indicador</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <select class="icons" id="indicador" ng-model="ind.mes">
+                                    <option value="" disabled selected>Seleccione un mes.</option>
+                                    <option value="1" class="left">Enero</option>
+                                    <option value="2" class="left">Febrero</option>
+                                    <option value="3" class="left">Marzo</option>
+                                    <option value="4" class="left">Abril</option>
+                                    <option value="5" class="left">Mayo</option>
+                                    <option value="6" class="left">Junio</option>
+                                    <option value="7" class="left">Julio</option>
+                                    <option value="8" class="left">Agosto</option>
+                                    <option value="9" class="left">Septiembre</option>
+                                    <option value="10" class="left">Octubre</option>
+                                    <option value="11" class="left">Noviembre</option>
+                                    <option value="12" class="left">Diciembre</option>
+                                </select>
+                                <label>Mes</label>
+                            </div>
+                            <%
+                                Calendar fecha = new GregorianCalendar();
+                                System.out.println(fecha.get(Calendar.YEAR));
+                            %>
+                            <div class="input-field col s1">
+                                <input id="last_name" type="number" class="validate "  placeholder=" " ng-model="ind.anno">
+                                <label for="last_name" class="indigo-text text-darken-4" >Año</label> 
+                            </div>
+                            <div class="input-field col s2">
+                                <a class="waves-effect cyan darken-2 btn left-align" href=""ng-click="ind.ver()">Ver Indicador</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col s10 offset-s1">
-                        <div class="row">
-                            <div class="input-field col s2 offset-s10">
-                                <input id="last_name" type="text" ng-model="lot.busqueda" class="validate ">
-                                <label class="indigo-text text-darken-4" >Busqueda</label>
-                            </div>
+                        <div id="fallasmes">
 
                         </div>
-                        <table class="bordered highlight responsive-table">
-                            <thead>
-                                <tr>
-                                    <th class="indigo-text text-darken-4">Codigo Solicitud</th>
-                                    <th class="indigo-text text-darken-4">Tipo de solicitud</th>
-                                    <th class="indigo-text text-darken-4">Fecha inicio</th>
-                                    <th class="indigo-text text-darken-4">Fecha fin</th>
-                                    <th class="indigo-text text-darken-4" style="width: 200px">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr  ng-repeat="ot in lot.Ordenes| filter:lot.busqueda |orderBy: 'fechaInicio'" >
-                                    <td>{{ot.solicitudDeMantenimiento.codigo}}</td>
-                                    <td>{{ot.tipoSolicitud}}</td>
-                                    <td>{{ot.fechaInicio}}</td>
-                                    <td>{{ot.fechaFin}}</td>
-                                    <td>
-                                        <div id="menu">
-                                            <ul>
-                                                <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
-                                                    <ul>
-                                                        <li><a href="#" >Eliminar</a></li>
-                                                        <li ng-if="ot.pdf === false"><a href="#" ng-click="lot.generarPdf(ot.idsolicitudDeMantenimiento,ot.idequipo)">Generar PDF</a></li>
-                                                        <li ng-if="ot.pdf === true"><a href="{{ot.ruta}}" target="_blank">Ver PDF</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div id="fallasaño">
 
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- MFin de contenido-->
@@ -222,33 +245,16 @@
         <script src="js/index.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/underscore.js"></script>
+        <script src="js/highcharts.js"></script>
         <script>
-                                                            var app = {
-                                                                init: function () {
-
-                                                                    $('.carousel.carousel-slider').carousel({
-                                                                        fullWidth: true,
-                                                                        duration: 500
-                                                                    });
-                                                                    $('.modal').modal({
-                                                                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                                                                        opacity: .5, // Opacity of modal background
-                                                                        inDuration: 300, // Transition in duration
-                                                                        outDuration: 200, // Transition out duration
-                                                                        startingTop: '40%', // Starting top style attribute
-                                                                        endingTop: '10%'
-                                                                    });
-
-                                                                },
-                                                                boton: function (btn) {
-                                                                    $(btn).parents("tr").find("#menu").show();
-                                                                    //                                                    $("#menu").show();
-                                                                }
-
-                                                            };
-                                                            $(document).ready(function () {
-                                                                app.init();
-                                                            });
+                                    var app = {
+                                        init: function () {
+                                            $('select').material_select();
+                                        }
+                                    };
+                                    $(document).ready(function () {
+                                        app.init();
+                                    });
         </script>
     </body>
 </html>

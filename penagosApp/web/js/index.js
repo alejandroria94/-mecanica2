@@ -11,6 +11,7 @@ app.controller('penagosListOTAppCtrl', ['$http', controladorListOT]);
 app.controller('penagosProvAppCtrl', ['$http', controladorProv]);
 app.controller('penagosHerrAppCtrl', ['$http', controladorHerr]);
 app.controller('penagosCRAppCtrl', ['$http', controladorCR]);
+app.controller('penagosIndicadorAppCtrl', ['$http', controladorIndicador]);
 
 function controladorLista($http) {
     var ma = this;
@@ -431,7 +432,7 @@ function controladorSolicitud($http) {
         }
 
     };
-    st.cancelar = function () {
+    st.salir = function () {
         window.location = "SolicitudesMto.jsp";
     };
 }
@@ -539,7 +540,7 @@ function controladorOT($http) {
         var valor = $(".materialesvalor").val();
         ot.valortotal = parseFloat(valor) + parseFloat(ot.manoobra);
     };
-    ot.cancelar = function () {
+    ot.salir = function () {
         window.location = "SolicitudesMto.jsp";
     };
 }
@@ -787,6 +788,9 @@ function controladorHerr($http) {
                     }
                 });
     };
+    h.salir = function () {
+        window.location = "ListaHerramientas.jsp";
+    };
 }
 ;
 function controladorCR($http) {
@@ -813,6 +817,145 @@ function controladorCR($http) {
                 swal(res.data.errorMsg);
             }
         });
+    };
+}
+;
+function controladorIndicador($http) {
+    var ind = this;
+    ind.datosmes = [];
+    ind.datosaño = [];
+    var mes = new Highcharts.Chart({
+        chart: {
+            renderTo: 'fallasmes',
+            type: 'column',
+            options3d: {
+                enabled: true,
+                alpha: 10,
+                beta: 6,
+                depth: 100,
+                viewDistance: 30
+            }
+        },
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: ''
+        },
+        tooltip: {
+            valueSuffix:''
+//            pointFormat: '<span><strong></strong></span><strong><b style="color:red; font-size:16px;">{point.y}</b> </strong><br/>'
+        },
+        xAxis: {
+            title: {
+                text: 'Día del Mes'
+            },
+            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+        },
+        yAxis: {
+            title: {
+                text: 'Horas promedio de uso'
+            },
+            plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+        },
+        plotOptions: {
+            column: {
+                depth: 30
+            }
+        }
+    });
+    var anno = new Highcharts.Chart({
+        chart: {
+            renderTo: 'fallasaño'
+        },
+        title: {
+            text: '',
+            x: -20 //center
+        },
+        subtitle: {
+            text: '',
+            x: -20
+        },
+        xAxis: {
+            categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        yAxis: {
+            title: {
+                text: 'Horas promedio de uso'
+            },
+            plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+        }
+    });
+
+
+    ind.ver = function () {
+        if (ind.equipo !== null) {
+            if (ind.indicador !== null) {
+                if (ind.mes !== null) {
+                    if (ind.anno !== undefined) {
+                        var nombre=ind.equipo.split("+")[1];
+                        var id=ind.equipo.split("+")[0];
+                        var params = {
+                            proceso: ind.indicador,
+                            id: id,
+                            mes: ind.mes,
+                            anno: ind.anno
+                        };
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: params
+                        }).then(function (res, textStatus, jqXHR) {
+                            ind.datosmes = res.data.Mes;
+                            ind.datosaño = res.data.ANNO;
+                            mes.setTitle({text: ind.indicador});
+                            anno.setTitle({text: ind.indicador});
+                            mes.yAxis[0].setTitle({ text: "Bananas" });
+                            anno.yAxis[0].setTitle({ text: "Bananas" });
+                            var listam = mes.series[0];
+                            if (listam !== undefined) {
+                                listam.destroy();
+                            }
+                            var listay = anno.series[0];
+                            if (listay !== undefined) {
+                                listay.destroy();
+                            }
+                            mes.addSeries({
+                                name:nombre,
+                                data: ind.datosmes
+                            });
+
+                            anno.addSeries({
+                                name:nombre,
+                                data: ind.datosaño
+                            });
+
+                        });
+                    } else {
+                        swal("Año", "Debe digitar uno", "error");
+                    }
+                } else {
+                    swal("Mes", "Debe seleccionar uno", "error");
+                }
+            } else {
+                swal("Inidcador", "Debe seleccionar uno", "error");
+            }
+        } else {
+            swal("Equipo", "Debe seleccionar uno", "error");
+        }
+
     };
 }
 ;
