@@ -107,14 +107,14 @@
             %>
             <!--inicio de contenido-->
             <div ng-controller="penagosFichaEdtiAppCtrl as fte"> <!--formulario-->
-                <input type="text" id="identificador" value="<%=id%>" disabled/>
+                <input type="text" id="identificador" value="<%=id%>" hidden="true"/>
                 <div class="row">
                     <div class="col s2 offset-s5">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Editar Ficha Tecnica</strong></legend>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s4 offset-s1">
+                    <div class="col s5 offset-s1">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Equipo</strong></legend>
                         <div class="row">
                             <div class="input-field col s12">
@@ -143,7 +143,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col s4">
+                    <div class="col s5">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Fabricante</strong></legend>   
                         <div class="row">
                             <div class="input-field col s12">
@@ -165,16 +165,6 @@
                             <div class="input-field col s12">
                                 <input id="last_name" type="text" class="validate "placeholder=""ng-model="fte.operario">
                                 <label for="last_name" class="red-text text-darken-4">Operario</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s2">
-                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Imagen</strong></legend>
-                        <div class=" col-lg-12 col-md-12 col-sm-12 fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100%;height: 200px;"></div>
-                            <div>
-                                <span class="waves-effect light-blue darken-4  btn btn-file"><span class="fileinput-new">Seleccionar</span><span class="fileinput-exists">Cambiar</span><input type="file" name="..."></span>
-                                <a href="#" class="waves-effect red darken-3 btn fileinput-exists" data-dismiss="fileinput">Quitar</a>
                             </div>
                         </div>
                     </div>

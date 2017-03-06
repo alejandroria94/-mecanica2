@@ -150,13 +150,13 @@
             <div ng-controller="penagosCRAppCtrl as c">
                 <div class="row">
                     <div class="col s6 offset-s3">
-                        <a class="waves-effect green accent-4 btn left-align" href="#login">Realizada</a>
-                        <a class="waves-effect yellow darken-4 btn left-align" href="#login">Pendiente</a>
-                        <a class="waves-effect red darken-4 btn left-align" href="#login">Vencida</a>
-                        <a class="waves-effect blue darken-4 btn left-align" href="#login">Sin asignar</a>
+                        <a class="waves-effect green accent-4 btn left-align" >Realizada</a>
+                        <a class="waves-effect yellow darken-4 btn left-align" >Pendiente</a>
+                        <a class="waves-effect red darken-4 btn left-align" >Vencida</a>
+                        <a class="waves-effect blue darken-4 btn left-align" >Sin asignar</a>
                     </div>
                     <div class="col s3">
-                        <a class="waves-effect btn left-align" ng-click="c.PDF()"href="#login">PDF</a>
+                        <a class="waves-effect btn left-align" ng-click="c.PDF()">PDF</a>
                     </div>
                 </div>
                 <div class="row">
@@ -176,6 +176,7 @@
                             <p>Lo sentimos su sesion a caducado. Por favor ingrese de nuevo</p>
                         </div>
                         <div class="card-action">
+                            <a class="waves-effect cyan darken-2 btn left-align" href="#login">Ingresar</a>
                             <a class="waves-effect cyan darken-1 btn left-align" href="index.jsp">Inicio</a>
                         </div>
                     </div>
@@ -227,6 +228,14 @@
                             var Solicitudes = <%=solicitudes%>;
                             var app = {
                                 init: function () {
+                                    $('.modal').modal({
+                                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                        opacity: .5, // Opacity of modal background
+                                        inDuration: 300, // Transition in duration
+                                        outDuration: 200, // Transition out duration
+                                        startingTop: '40%', // Starting top style attribute
+                                        endingTop: '10%'
+                                    });
 
                                     $('#calendar').fullCalendar({
                                         locale: 'es',
@@ -240,7 +249,7 @@
                                             $(element).off('click').on('click', function () {
                                                 swal({
                                                     title: calEvent.title,
-                                                    text: "<p style='font-size:15px'>" + calEvent.descripcion + "</p><br>Solicitado por: <h2><strong>"+calEvent.solicitado+"</strong></h2>",
+                                                    text: "<p style='font-size:15px'>" + calEvent.descripcion + "</p><br>Solicitado por: <h2><strong>" + calEvent.solicitado + "</strong></h2>",
                                                     html: true
                                                 });
                                             });

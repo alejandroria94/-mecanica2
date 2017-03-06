@@ -109,7 +109,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s4 offset-s1">
+                    <div class="col s5 offset-s1">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Equipo</strong></legend>
                         <div class="row">
                             <div class="input-field col s12">
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col s4">
+                    <div class="col s5">
                         <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Fabricante</strong></legend>   
                         <div class="row">
                             <div class="input-field col s12">
@@ -163,21 +163,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col s2">
-                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Imagen</strong></legend>
-                        <form  action="fileupload.jsp" method="post" enctype="multipart/form-data">
-                            <div class="file-field input-field">
-                                <div class="file-path-wrapper">
-                                    <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" width="200px"/>
-                                </div>
-                                <div class="btn">
-                                    <span>Imagen</span>
-                                    <input type="file" accept="image/*" id="fileUpload">
-                                </div>
-                            </div>
-                            <input type="submit" class="btn hide">
-                        </form>
-                    </div>
+                 
                 </div>
                 <div class="row">
                     <div class="col s5 offset-s1">

@@ -248,12 +248,20 @@
         <script src="js/highcharts.js"></script>
         <script>
                                     var app = {
-                                        init: function () {
-                                            $('select').material_select();
-                                        }
+                                    init: function () {
+                                    $('select').material_select();
+                                    $('.modal').modal({
+                                    dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                            opacity: .5, // Opacity of modal background
+                                            inDuration: 300, // Transition in duration
+                                            outDuration: 200, // Transition out duration
+                                            startingTop: '40%', // Starting top style attribute
+                                            endingTop: '10%'
+                                    });
+                                    }
                                     };
                                     $(document).ready(function () {
-                                        app.init();
+                                    app.init();
                                     });
         </script>
     </body>
