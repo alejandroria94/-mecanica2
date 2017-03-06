@@ -136,6 +136,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
             <%
                 if (usuarios != null) {
@@ -183,6 +184,7 @@
                                                         <li><a href="EditarFichaTecnica.jsp?id={{m.idEquipo}}" >Editar</a></li>
                                                         <li><a href="#" ng-click="ma.eliminar(m.idEquipo)">Eliminar</a></li>
                                                         <li><a href="#">Hoja de Vida</a></li>
+                                                        <li><a href="#matriz" ng-click="ma.matrizid(m.idEquipo)">Matriz</a></li>
                                                         <!--<li><a href="#">Otras</a></li>-->
                                                     </ul>
                                                 </li>
@@ -194,6 +196,27 @@
                         </table>
                     </div>
 
+                </div>
+                <div id="matriz" class="modal" style="width: 25%" >
+                    <div class="modal-content" >
+                        <div class="row">
+                            <div class="input-field col s10 offset-s1 ">
+                                <input id="email" type="number" ng-model="ma.seguridad">
+                                <label for="email" class="blue-text text-darken-2">Seguridad</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s10 offset-s1">
+                                <input id="password" type="number" ng-model="ma.ambiental">
+                                <label for="password" class="blue-text text-darken-2">Ambiental</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s5 offset-s1">
+                                <a class="waves-effect btn" ng-click="ma.matriz()">Enviar</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- MFin de contenido-->

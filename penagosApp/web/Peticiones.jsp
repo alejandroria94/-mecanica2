@@ -63,6 +63,7 @@
         "disponibilidad",
         "confiabilidad",
         "eliminarOT",
+        "matriz",
         "vereditarsolicitud",
         "guardarot",});
 
@@ -112,7 +113,7 @@
             String serie = "" + request.getParameter("serie");
             String imagen = "" + request.getParameter("imagen");
             String peso = "" + request.getParameter("peso");
-            String altura = "" + request.getParameter("altura");
+            String altura = "" + request.getParameter("alto");
             String largo = "" + request.getParameter("largo");
             String ancho = "" + request.getParameter("ancho");
             String potencia = "" + request.getParameter("potencia");
@@ -532,7 +533,17 @@
             String Id = "" + request.getParameter("id");
             SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento();
             respuesta += ",\"" + proceso + "\": true,\"Solicitud\":" + new Gson().toJson(sm.buscarSolicitudDeMantenimiento(Id));
-        } //        -----------------------------------
+        } else if (proceso.equals("matriz")) {
+            String id = "" + request.getParameter("id");
+            String seguridad = "" + request.getParameter("seguridad");
+            String ambiental = "" + request.getParameter("ambiental");
+            
+            if (true) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+        }//        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");
