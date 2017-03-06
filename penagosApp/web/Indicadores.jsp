@@ -174,28 +174,6 @@
                                 <label>Indicador</label>
                             </div>
                             <div class="input-field col s3">
-                                <select class="icons" id="indicador" ng-model="ind.mes">
-                                    <option value="" disabled selected>Seleccione un mes.</option>
-                                    <option value="1" class="left">Enero</option>
-                                    <option value="2" class="left">Febrero</option>
-                                    <option value="3" class="left">Marzo</option>
-                                    <option value="4" class="left">Abril</option>
-                                    <option value="5" class="left">Mayo</option>
-                                    <option value="6" class="left">Junio</option>
-                                    <option value="7" class="left">Julio</option>
-                                    <option value="8" class="left">Agosto</option>
-                                    <option value="9" class="left">Septiembre</option>
-                                    <option value="10" class="left">Octubre</option>
-                                    <option value="11" class="left">Noviembre</option>
-                                    <option value="12" class="left">Diciembre</option>
-                                </select>
-                                <label>Mes</label>
-                            </div>
-                            <%
-                                Calendar fecha = new GregorianCalendar();
-                                System.out.println(fecha.get(Calendar.YEAR));
-                            %>
-                            <div class="input-field col s1">
                                 <input id="last_name" type="number" class="validate "  placeholder=" " ng-model="ind.anno">
                                 <label for="last_name" class="indigo-text text-darken-4" >Año</label> 
                             </div>
@@ -205,13 +183,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+<!--                <div class="row">
                     <div class="col s10 offset-s1">
                         <div id="fallasmes">
 
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div id="fallasaño">

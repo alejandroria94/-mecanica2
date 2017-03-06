@@ -15,6 +15,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
         <link href="css/jasny-bootstrap.css" rel="stylesheet">
+        <link href="css/sweetalert.css" rel="stylesheet">
         <style>
             .switch label input[type=checkbox]:checked+.lever:after{
                 background-color: #1b5e20;
@@ -228,7 +229,7 @@
                             <input id="last_name" type="number" class="validate"ng-model="ft.tiempofuncionamiento">
                             <label for="last_name" class="indigo-text text-darken-4">Tiempo de funcionamiento</label>
                         </div>
-                        <div class="input-field col s3">
+<!--                        <div class="input-field col s3">
                             <input id="last_name" type="text" class="validate "ng-model="ft.pintura">
                             <label for="last_name" class="indigo-text text-darken-4">Estado pintura</label>
                         </div>
@@ -243,8 +244,8 @@
                                 </label>
                             </div>
 
-                            <!--<input id="last_name" type="text" class="validate ">-->
-                        </div>
+                            <input id="last_name" type="text" class="validate ">
+                        </div>-->
                     </div>
                 </div>
                 <div class="row">
@@ -299,6 +300,7 @@
         </div>
         <script src="js/jquery.min.js"></script>
         <script src="js/materialize.min.js"></script>
+        <script src="js/sweetalert.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/index.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>

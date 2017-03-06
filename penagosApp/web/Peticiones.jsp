@@ -49,6 +49,8 @@
         "generarpdfsolicitud",
         "generarpdfot",
         "guardasolicitud",
+        "editarsolicitud",
+        "eliminarsolicitud",
         "listarproveedores",
         "listarordenes",
         "guardaproveedor",
@@ -60,6 +62,8 @@
         "mantenibilidad",
         "disponibilidad",
         "confiabilidad",
+        "eliminarOT",
+        "vereditarsolicitud",
         "guardarot",});
 
     // Si el usuario tiene sesión válida y permisos.
@@ -271,6 +275,68 @@
                 respuesta += ",\"" + proceso + "\": false";
             }
 
+        } else if (proceso.equals("editarsolicitud")) {
+            String id = "" + request.getParameter("id");
+            String codigo = "" + request.getParameter("codigo");
+            String revision = "" + request.getParameter("revision");
+            String solicitud = "" + request.getParameter("solicitud");
+            String fecha = "" + request.getParameter("fecha");
+            String idequipo = "" + request.getParameter("idequipo");
+            String reparacion = "" + request.getParameter("reparacion");
+            String electrico = "" + request.getParameter("electrico");
+            String mecanico = "" + request.getParameter("mecanico");
+            String correctivo = "" + request.getParameter("correctivo");
+            String preventivo = "" + request.getParameter("preventivo");
+            String otros = "" + request.getParameter("otros");
+            String servicio = "" + request.getParameter("servicio");
+            String acciones = "" + request.getParameter("acciones");
+            String material = "" + request.getParameter("material");
+            String horasparada = "" + request.getParameter("horasparada");
+            String horasmto = "" + request.getParameter("horasmto");
+            String horasolicitud = "" + request.getParameter("horasolicitud");
+            String horaentrega = "" + request.getParameter("horaentrega");
+            String solicitado = "" + request.getParameter("solicitado");
+            String realizado = "" + request.getParameter("realizado");
+            String recibido = "" + request.getParameter("recibido");
+
+            SolicitudDeMantenimiento st = new SolicitudDeMantenimiento();
+            st.setIdsolicitudDeMantenimiento(Integer.parseInt(id));
+            st.setCodigo(codigo);
+            st.setDescripcionAcciones(acciones);
+            st.setDescripcionServicio(servicio);
+            st.setFecha(fecha);
+            st.setHoraEntrega(horaentrega);
+            st.setHoraSolicitud(horasolicitud);
+            st.setHorasMTO(Float.parseFloat(horasmto));
+            st.setHorasParada(Float.parseFloat(horasparada));
+            st.setIdequipo(Integer.parseInt(idequipo));
+            st.setMaterial(material);
+            st.setMtoCorrectivo(Boolean.parseBoolean(correctivo));
+            st.setMtoElectrico(Boolean.parseBoolean(electrico));
+            st.setMtoMecanico(Boolean.parseBoolean(mecanico));
+            st.setMtoPreventivo(Boolean.parseBoolean(preventivo));
+            st.setOrdenDeTrabajo(false);
+            st.setOtros(Boolean.parseBoolean(otros));
+            st.setRevision(revision);
+            st.setSolicitadoPor(solicitado);
+            st.setRealizadoPor(realizado);
+            st.setRecibidoPor(recibido);
+            st.setReparacion(Boolean.parseBoolean(reparacion));
+            st.setSolicitudDeServicio(solicitud);
+            if (st.actualizarSolicitudDeMantenimiento()) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+
+        } else if (proceso.equals("eliminarsolicitud")) {
+            String id = "" + request.getParameter("id");
+            SolicitudDeMantenimiento st = new SolicitudDeMantenimiento();
+            if (st.eliminarSolicitudDeMantenimiento(id)) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
         } else if (proceso.equals("guardarot")) {
             String ordendetrabajo = "" + request.getParameter("ordendetrabajo");
             String fechainicio = "" + request.getParameter("fechainicio");
@@ -407,63 +473,65 @@
         } else if (proceso.equals("pdfcronograma")) {
             SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento();
             CronogramaPDF crPDF = new CronogramaPDF(sM.getListaSolicitudesDeMantenimiento());
-            respuesta += ",\"" + proceso + "\":"+crPDF.pdfCronograma();
-            respuesta+=",\"ruta\":\"pdf/Cronograma.pdf\"";
+            respuesta += ",\"" + proceso + "\":" + crPDF.pdfCronograma();
+            respuesta += ",\"ruta\":\"pdf/Cronograma.pdf\"";
 
         } else if (proceso.equals("disponibilidad")) {
             String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
             String Anno = "" + request.getParameter("anno");
             Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
             List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
-            List<Float> tiempomes = new ArrayList<>();
             List<Float> tiempoanno = new ArrayList<>();
             for (Indicador to : anno) {
                 tiempoanno.add(to.getDisponibilidad());
             }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getDisponibilidad());
-            }
             respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
         } else if (proceso.equals("confiabilidad")) {
             String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
             String Anno = "" + request.getParameter("anno");
             Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
             List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
-            List<Float> tiempomes = new ArrayList<>();
             List<Float> tiempoanno = new ArrayList<>();
             for (Indicador to : anno) {
                 tiempoanno.add(to.getConfiabilidad());
             }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getConfiabilidad());
-            }
             respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
         } else if (proceso.equals("mantenibilidad")) {
             String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
             String Anno = "" + request.getParameter("anno");
             Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
             List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
-            List<Float> tiempomes = new ArrayList<>();
             List<Float> tiempoanno = new ArrayList<>();
             for (Indicador to : anno) {
                 tiempoanno.add(to.getMantenibilidad());
             }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getMantenibilidad());
-            }
             respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
+        } else if (proceso.equals("eliminarOT")) {
+            String idSolicitud = "" + request.getParameter("id");
+            String idEquipo = "" + request.getParameter("idequipo");
+            OrdenDeTrabajo ot = new OrdenDeTrabajo();
+            SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento();
+            if (ot.eliminarOrdenesDeTrabajo(idSolicitud, idEquipo)) {
+                sm = sm.buscarSolicitudDeMantenimiento(idSolicitud);
+                sm.setPdf(false);
+                sm.setOrdenDeTrabajo(false);
+                sm.actualizarSolicitudDeMantenimiento();
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+
+        } else if (proceso.equals("vereditar")) {
+            String Id = "" + request.getParameter("id");
+            Equipo e = new Equipo();
+            respuesta += ",\"" + proceso + "\": true,\"Equipo\":" + new Gson().toJson(e.buscarEquipo(Id));
+        } else if (proceso.equals("vereditarsolicitud")) {
+            String Id = "" + request.getParameter("id");
+            SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento();
+            respuesta += ",\"" + proceso + "\": true,\"Solicitud\":" + new Gson().toJson(sm.buscarSolicitudDeMantenimiento(Id));
         } //        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
@@ -486,28 +554,24 @@
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
-        } else if (proceso.equals("vereditar")) {
-            String Id = "" + request.getParameter("id");
-            Equipo e = new Equipo();
-            respuesta += ",\"" + proceso + "\": true,\"Equipo\":" + new Gson().toJson(e.buscarEquipo(Id));
         } else if (proceso.equals("OEE")) {
-            String Id = "" + request.getParameter("id");
-            String Mes = "" + request.getParameter("mes");
-            String Anno = "" + request.getParameter("anno");
-            Equipo e = new Equipo();
-            List<TiempoOcio> mes = e.listaMes(Id, Mes, Anno);
-            List<TiempoOcio> anno = e.listaAnno(Id, Anno);
-            List<Float> tiempomes = new ArrayList<>();
-            List<Float> tiempoanno = new ArrayList<>();
-            for (TiempoOcio to : anno) {
-                tiempoanno.add(to.getoEE());
-            }
-            for (TiempoOcio to : mes) {
-                tiempomes.add(to.getoEE());
-            }
-            respuesta += ",\"" + proceso + "\": true";
-            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
-            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
+//            String Id = "" + request.getParameter("id");
+//            String Mes = "" + request.getParameter("mes");
+//            String Anno = "" + request.getParameter("anno");
+//            Equipo e = new Equipo();
+//            List<TiempoOcio> mes = e.listaMes(Id, Mes, Anno);
+//            List<TiempoOcio> anno = e.listaAnno(Id, Anno);
+//            List<Float> tiempomes = new ArrayList<>();
+//            List<Float> tiempoanno = new ArrayList<>();
+//            for (TiempoOcio to : anno) {
+//                tiempoanno.add(to.getoEE());
+//            }
+//            for (TiempoOcio to : mes) {
+//                tiempomes.add(to.getoEE());
+//            }
+//            respuesta += ",\"" + proceso + "\": true";
+//            respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
+//            respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
         } else if (proceso.equals("guardarepuesto")) {
             String Codigo = "" + request.getParameter("codigo");
             String Nombre = "" + request.getParameter("nombre");
@@ -603,7 +667,7 @@
             respuesta += ",\"" + proceso + "\": true";
             respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
-        }else if (proceso.equals("guardarmantenimiento")) {
+        } else if (proceso.equals("guardarmantenimiento")) {
 //            String Id = "" + request.getParameter("id");
 //            String Nombre = "" + request.getParameter("nombre");
 //            String Codigo = "" + request.getParameter("codigo");

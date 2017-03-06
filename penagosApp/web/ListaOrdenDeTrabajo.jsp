@@ -182,7 +182,7 @@
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li><a href="#" >Eliminar</a></li>
+                                                        <li><a href="#"  ng-click="lot.eliminar(ot.idsolicitudDeMantenimiento,ot.idequipo)">Eliminar</a></li>
                                                         <li ng-if="ot.pdf === false"><a href="#" ng-click="lot.generarPdf(ot.idsolicitudDeMantenimiento,ot.idequipo)">Generar PDF</a></li>
                                                         <li ng-if="ot.pdf === true"><a href="{{ot.ruta}}" target="_blank">Ver PDF</a></li>
                                                     </ul>

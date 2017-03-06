@@ -12,6 +12,7 @@ app.controller('penagosProvAppCtrl', ['$http', controladorProv]);
 app.controller('penagosHerrAppCtrl', ['$http', controladorHerr]);
 app.controller('penagosCRAppCtrl', ['$http', controladorCR]);
 app.controller('penagosIndicadorAppCtrl', ['$http', controladorIndicador]);
+app.controller('penagosEditarSolicitudAppCtrl', ['$http', controladorEditarSolicitud]);
 
 function controladorLista($http) {
     var ma = this;
@@ -136,13 +137,19 @@ function controladorFichaTecnicaEditar($http) {
             peso: fte.peso,
             horasuso: fte.horasuso,
             tiempofuncionamiento: fte.tiempofuncionamiento,
-            pintura: fte.pintura,
-            corrosivo: fte.corrosivo,
             cespecificas: fte.cespecificas,
             funciones: fte.funciones,
             observaciones: fte.observaciones
         };
+        if (fte.horasuso !== undefined && fte.horasuso >= 0) {
+            if (fte.tiempofuncionamiento !== undefined && fte.tiempofuncionamiento >= 0) {
 
+            } else {
+                swal("Tiempo Funcionamiento", "Debe digitar un valor aceptado", "error");
+            }
+        } else {
+            swal("Horas Uso", "Debe digitar un valor aceptado", "error");
+        }
         $http({
             method: 'POST',
             url: 'Peticiones.jsp',
@@ -191,13 +198,21 @@ function controladorFichaTecnica($http) {
             peso: ft.peso,
             horasuso: ft.horasuso,
             tiempofuncionamiento: ft.tiempofuncionamiento,
-            pintura: ft.pintura,
-            corrosivo: ft.corrosivo,
+            pintura: "NA",
+            corrosivo: false,
             cespecificas: ft.cespecificas,
             funciones: ft.funciones,
             observaciones: ft.observaciones
         };
+        if (ft.horasuso !== undefined && ft.horasuso >= 0) {
+            if (ft.tiempofuncionamiento !== undefined && ft.tiempofuncionamiento >= 0) {
 
+            } else {
+                swal("Tiempo Funcionamiento", "Debe digitar un valor aceptado", "error");
+            }
+        } else {
+            swal("Horas Uso", "Debe digitar un valor aceptado", "error");
+        }
         $http({
             method: 'POST',
             url: 'Peticiones.jsp',
@@ -286,32 +301,32 @@ function controladorPrincipal($http) {
             }
         });
     };
-    vm.archivo = function () {
-        var inputFileImage = document.getElementById("fileUpload");
-        var file = inputFileImage.files[0];
-        var data = new FormData();
-        data.append('Archivo', file);
-        var data = {
-            proceso: "archivo",
-            file: file
-        };
-        $http({
-            method: 'POST',
-            url: 'Peticiones1.jsp',
-            contentType: 'multipart/form-data',
-            params: data
-        }).then(function (res, textStatus, jqXHR) {
-            if (res.data.ok === true) {
-                if (res.data[data.proceso] === true) {
-                    alert("Se elimino");
-                } else {
-                    alert("No se pudo guardar");
-                }
-            } else {
-                alert(res.data.errorMsg);
-            }
-        });
-    };
+//    vm.archivo = function () {
+//        var inputFileImage = document.getElementById("fileUpload");
+//        var file = inputFileImage.files[0];
+//        var data = new FormData();
+//        data.append('Archivo', file);
+//        var data = {
+//            proceso: "archivo",
+//            file: file
+//        };
+//        $http({
+//            method: 'POST',
+//            url: 'Peticiones1.jsp',
+//            contentType: 'multipart/form-data',
+//            params: data
+//        }).then(function (res, textStatus, jqXHR) {
+//            if (res.data.ok === true) {
+//                if (res.data[data.proceso] === true) {
+//                    alert("Se elimino");
+//                } else {
+//                    alert("No se pudo guardar");
+//                }
+//            } else {
+//                alert(res.data.errorMsg);
+//            }
+//        });
+//    };
 }
 ;
 function controladorSolicitudesEditar($http) {
@@ -351,7 +366,173 @@ function controladorSolicitudesEditar($http) {
             }
         });
     };
+    sm.eliminar = function (id) {
+        var params = {
+            proceso: "eliminarsolicitud",
+            id: id
+        };
+        swal({
+            title: "Esta seguro?",
+            text: "Se eliminara todo los registros asociados",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: params
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[params.proceso] === true) {
+                                    swal({
+                                        title: "Solicitud",
+                                        text: "Eliminada con exito",
+                                        type: "success",
+                                        confirmButtonColor: "#8CD4F5",
+                                        confirmButtonText: "OK",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.reload();
+                                                }
+                                            });
+                                } else {
+                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
+                                }
+                            } else {
+                                swal(res.data.errorMsg);
+                            }
+                            ;
+                        });
+                    }
+                });
+    };
+}
+;
+function controladorEditarSolicitud($http) {
+    var st = this;
+    var params = {
+        proceso: "vereditarsolicitud",
+        id: $("#identificador").val()
+    };
+    $http({
+        method: 'POST',
+        url: 'Peticiones.jsp',
+        params: params
+    }).then(function (res, textStatus, jqXHR) {
+        var s = res.data.Solicitud;
+        st.codigo = s.codigo;
+        st.revision = s.revision;
+        st.solicitud = s.solicitudDeServicio;
+        st.fecha = s.fecha;
+        st.seccion = s.equipo.ubicacion;
+        st.operario = s.equipo.operario;
+        st.reparacion = s.reparacion;
+        st.mtoelectrico = s.mtoElectrico;
+        st.mtomecanico = s.mtoMecanico;
+        st.mtocorrectivo = s.mtoCorrectivo;
+        st.mtopreventivo = s.mtoPreventivo;
+        st.otros = s.otros;
+        st.servicio = s.descripcionServicio;
+        st.acciones = s.descripcionAcciones;
+        st.material = s.material;
+        st.horasparada = s.horasParada;
+        st.horasmto = s.horasMTO;
+        st.horasolicitud = s.horaSolicitud;
+        st.horaentrega = s.horaEntrega;
+        st.solicitado = s.solicitadoPor;
+        st.realizado = s.realizadoPor;
+        st.recibido = s.recibidoPor;
+    });
+    var id;
+    st.equipo = function () {
+        var datos = st.equipos;
+        datos = datos.split("//");
+        st.operario = datos[2];
+        st.seccion = datos[1];
+        id = datos[0];
+    };
+    st.guardar = function () {
+        if (st.mtocorrectivo === undefined) {
+            st.mtocorrectivo = false;
+        }
+        if (st.reparacion === undefined) {
+            st.reparacion = false;
+        }
+        if (st.mtoelectrico === undefined) {
+            st.mtoelectrico = false;
+        }
+        if (st.mtomecanico === undefined) {
+            st.mtomecanico = false;
+        }
+        if (st.mtopreventivo === undefined) {
+            st.mtopreventivo = false;
+        }
+        if (st.otros === undefined) {
+            st.otros = false;
+        }
+        var solicitud = {
+            proceso: "editarsolicitud",
+            id: $("#identificador").val(),
+            codigo: st.codigo,
+            revision: st.revision,
+            solicitud: st.solicitud,
+            fecha: st.fecha,
+            idequipo: id,
+            reparacion: st.reparacion,
+            electrico: st.mtoelectrico,
+            mecanico: st.mtomecanico,
+            correctivo: st.mtocorrectivo,
+            preventivo: st.mtopreventivo,
+            otros: st.otros,
+            servicio: st.servicio,
+            acciones: st.acciones,
+            material: st.material,
+            horasparada: st.horasparada,
+            horasmto: st.horasmto,
+            horasolicitud: st.horasolicitud,
+            horaentrega: st.horaentrega,
+            solicitado: st.solicitado,
+            realizado: st.realizado,
+            recibido: st.recibido
+        };
+        if (st.fecha !== undefined) {
+            if (id !== undefined) {
+                $http({
+                    method: 'POST',
+                    url: 'Peticiones.jsp',
+                    params: solicitud
+                }).then(function (res, textStatus, jqXHR) {
+                    if (res.data.ok === true) {
+                        if (res.data[solicitud.proceso] === true) {
+                            window.location = "SolicitudesMto.jsp";
+                        } else {
+                            swal("Por favor verifique sus datos");
+                        }
+                    } else {
+                        alert(res.data.errorMsg);
+                    }
+                });
+            } else {
+                swal("Error", "Debe selecionar un equipo", "error");
+            }
+        } else {
+            swal("Error", "Debe selecionar una fecha", "error");
+        }
 
+    };
+    st.salir = function () {
+        window.location = "SolicitudesMto.jsp";
+    };
 }
 ;
 function controladorSolicitud($http) {
@@ -578,6 +759,57 @@ function controladorListOT($http) {
                 swal(res.data.errorMsg);
             }
         });
+    };
+    lot.eliminar = function (id, idequipo) {
+        var params = {
+            proceso: "eliminarOT",
+            id: id,
+            idequipo: idequipo
+        };
+        swal({
+            title: "Esta seguro?",
+            text: "Se eliminara todo los registros asociados",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: params
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[params.proceso] === true) {
+                                    swal({
+                                        title: "Orden de Trabajo",
+                                        text: "Eliminado con exito",
+                                        type: "success",
+                                        confirmButtonColor: "#8CD4F5",
+                                        confirmButtonText: "OK",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.reload();
+                                                }
+                                            });
+                                } else {
+                                    swal("Error", "No se ha eliminado, consulte con su administrador", "error");
+                                }
+                            } else {
+                                swal(res.data.errorMsg);
+                            }
+                            ;
+                        });
+                    }
+                });
     };
 
 }
@@ -822,52 +1054,52 @@ function controladorCR($http) {
 ;
 function controladorIndicador($http) {
     var ind = this;
-    ind.datosmes = [];
+//    ind.datosmes = [];
     ind.datosaño = [];
-    var mes = new Highcharts.Chart({
-        chart: {
-            renderTo: 'fallasmes',
-            type: 'column',
-            options3d: {
-                enabled: true,
-                alpha: 10,
-                beta: 6,
-                depth: 100,
-                viewDistance: 30
-            }
-        },
-        title: {
-            text: ''
-        },
-        subtitle: {
-            text: ''
-        },
-        tooltip: {
-            valueSuffix:''
-//            pointFormat: '<span><strong></strong></span><strong><b style="color:red; font-size:16px;">{point.y}</b> </strong><br/>'
-        },
-        xAxis: {
-            title: {
-                text: 'Día del Mes'
-            },
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
-        },
-        yAxis: {
-            title: {
-                text: 'Horas promedio de uso'
-            },
-            plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-        },
-        plotOptions: {
-            column: {
-                depth: 30
-            }
-        }
-    });
+//    var mes = new Highcharts.Chart({
+//        chart: {
+//            renderTo: 'fallasmes',
+//            type: 'column',
+//            options3d: {
+//                enabled: true,
+//                alpha: 10,
+//                beta: 6,
+//                depth: 100,
+//                viewDistance: 30
+//            }
+//        },
+//        title: {
+//            text: ''
+//        },
+//        subtitle: {
+//            text: ''
+//        },
+//        tooltip: {
+//            valueSuffix: ''
+////            pointFormat: '<span><strong></strong></span><strong><b style="color:red; font-size:16px;">{point.y}</b> </strong><br/>'
+//        },
+//        xAxis: {
+//            title: {
+//                text: 'Día del Mes'
+//            },
+//            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+//        },
+//        yAxis: {
+//            title: {
+//                text: 'Horas promedio de uso'
+//            },
+//            plotLines: [{
+//                    value: 0,
+//                    width: 1,
+//                    color: '#808080'
+//                }]
+//        },
+//        plotOptions: {
+//            column: {
+//                depth: 30
+//            }
+//        }
+//    });
     var anno = new Highcharts.Chart({
         chart: {
             renderTo: 'fallasaño'
@@ -903,51 +1135,44 @@ function controladorIndicador($http) {
     ind.ver = function () {
         if (ind.equipo !== null) {
             if (ind.indicador !== null) {
-                if (ind.mes !== null) {
-                    if (ind.anno !== undefined) {
-                        var nombre=ind.equipo.split("+")[1];
-                        var id=ind.equipo.split("+")[0];
-                        var params = {
-                            proceso: ind.indicador,
-                            id: id,
-                            mes: ind.mes,
-                            anno: ind.anno
-                        };
-                        $http({
-                            method: 'POST',
-                            url: 'Peticiones.jsp',
-                            params: params
-                        }).then(function (res, textStatus, jqXHR) {
-                            ind.datosmes = res.data.Mes;
-                            ind.datosaño = res.data.ANNO;
-                            mes.setTitle({text: ind.indicador});
-                            anno.setTitle({text: ind.indicador});
-                            mes.yAxis[0].setTitle({ text: "Bananas" });
-                            anno.yAxis[0].setTitle({ text: "Bananas" });
-                            var listam = mes.series[0];
-                            if (listam !== undefined) {
-                                listam.destroy();
-                            }
-                            var listay = anno.series[0];
-                            if (listay !== undefined) {
-                                listay.destroy();
-                            }
-                            mes.addSeries({
-                                name:nombre,
-                                data: ind.datosmes
-                            });
+                if (ind.anno !== undefined) {
+                    var nombre = ind.equipo.split("+")[1];
+                    var id = ind.equipo.split("+")[0];
+                    var params = {
+                        proceso: ind.indicador,
+                        id: id,
+                        anno: ind.anno
+                    };
+                    $http({
+                        method: 'POST',
+                        url: 'Peticiones.jsp',
+                        params: params
+                    }).then(function (res, textStatus, jqXHR) {
+                        ind.datosaño = res.data.ANNO;
+                        anno.setTitle({text: ind.indicador});
+//                        mes.yAxis[0].setTitle({text: "Bananas"});
+                        anno.yAxis[0].setTitle({text: "Bananas"});
+//                        var listam = mes.series[0];
+//                        if (listam !== undefined) {
+//                            listam.destroy();
+//                        }
+                        var listay = anno.series[0];
+                        if (listay !== undefined) {
+                            listay.destroy();
+                        }
+//                        mes.addSeries({
+//                            name: nombre,
+//                            data: ind.datosmes
+//                        });
 
-                            anno.addSeries({
-                                name:nombre,
-                                data: ind.datosaño
-                            });
-
+                        anno.addSeries({
+                            name: nombre,
+                            data: ind.datosaño
                         });
-                    } else {
-                        swal("Año", "Debe digitar uno", "error");
-                    }
+
+                    });
                 } else {
-                    swal("Mes", "Debe seleccionar uno", "error");
+                    swal("Año", "Debe digitar uno", "error");
                 }
             } else {
                 swal("Inidcador", "Debe seleccionar uno", "error");

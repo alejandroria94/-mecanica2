@@ -93,7 +93,7 @@
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
-                                <li ><a class="blue-text text-darken-2" href="#" >Maquinas</a></li>
+                                <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp" style="background-color: #ccc" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
@@ -180,8 +180,8 @@
                                             <ul>
                                                 <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
                                                     <ul>
-                                                        <li ng-if="mto.ordenDeTrabajo === false && mto.pdf===false "><a href="EditarFichaTecnica.jsp?id={{mto.idsolicitudesDeMantenimiento}}" >Editar</a></li>
-                                                        <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudesDeMantenimiento)">Eliminar</a></li>
+                                                        <li ng-if="mto.ordenDeTrabajo === false && mto.pdf===false "><a href="EditarSolicitud.jsp?id={{mto.idsolicitudDeMantenimiento}}" >Editar</a></li>
+                                                        <li><a href="#" ng-click="sm.eliminar(mto.idsolicitudDeMantenimiento)">Eliminar</a></li>
                                                         <li ng-if="mto.pdf === true"><a href="{{mto.ruta}}" target="_blank">Ver PDF</a></li>
                                                         <li ng-if="mto.pdf === false"><a  href="#" ng-click="sm.PDF(mto.idsolicitudDeMantenimiento, mto.equipo.idEquipo)">Generar PDF</a></li>
                                                         <li ng-if="mto.ordenDeTrabajo===false"><a href="OrdenDeTrabajo.jsp?codigo={{mto.idsolicitudDeMantenimiento}}">Orden de trabajo</a></li>
