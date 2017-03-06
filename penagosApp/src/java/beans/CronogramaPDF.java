@@ -73,7 +73,7 @@ public class CronogramaPDF {
         celda.setPadding(5);
         celda.setColspan(4);
         table.addCell(celda);
-        celda = new PdfPCell(new Phrase("\n\n\nFecha de creacion pdf: " + dateFormat.format(Calendar.getInstance().getTime()), font1));
+        celda = new PdfPCell(new Phrase("\n\n\nFecha de creación: " + dateFormat.format(Calendar.getInstance().getTime()), font1));
         celda.setColspan(8);
         // head.setBackgroundColor(BaseColor.CYAN);
         table.addCell(celda);

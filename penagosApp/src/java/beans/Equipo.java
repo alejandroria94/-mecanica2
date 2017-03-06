@@ -45,6 +45,8 @@ public class Equipo {
     private String imagen;
     private String operario;
     private int numeroOrdenes;
+    private int seguridad;
+    private int ambiental;
 
     public Equipo() {
 //        this.nombre = "";
@@ -107,10 +109,10 @@ public class Equipo {
     public boolean guardarEquipo() {
         boolean exito = false;
         ConexionBD conexion = new ConexionBD();
-        String sentencia = "INSERT INTO Equipos(nombre, tipoEquipo, marca, modelo, ubicacion, estado, serie, peso, altura, largo, ancho, potencia, tipoPotencia, frecuencia, alimentacion, ambienteCorrosivo, tiempoDeFuncionamiento, horasDeUso, funciones, caracteristicasEspecificas, observaciones, control, estadoPintura, imagen,codigo,operario) "
+        String sentencia = "INSERT INTO Equipos(nombre, tipoEquipo, marca, modelo, ubicacion, estado, serie, peso, altura, largo, ancho, potencia, tipoPotencia, frecuencia, alimentacion, ambienteCorrosivo, tiempoDeFuncionamiento, horasDeUso, funciones, caracteristicasEspecificas, observaciones, control, estadoPintura, imagen,codigo,operario,seguridad,ambiental) "
                 + " VALUES ( '" + this.nombre + "','" + this.tipoEquipo + "','" + this.marca + "','" + this.modelo + "','" + this.ubicacion + "','" + this.estado + "','" + this.serie + "','" + this.peso + "','" + this.altura + "','" + this.largo + "','"
                 + this.ancho + "','" + this.potencia + "','" + this.tipoPotencia + "','" + this.frecuencia + "','" + this.alimentacion + "','" + this.ambienteCorrosivo + "','" + this.tiempoDeFuncionamiento + "','" + this.horasDeUso + "','" + this.funciones + "','"
-                + this.caracteristicasEspecificas + "','" + this.observaciones + "','" + this.control + "','" + this.estadoPintura + "','" + this.imagen + "','" + this.codigo + "','" + this.operario + "');  ";
+                + this.caracteristicasEspecificas + "','" + this.observaciones + "','" + this.control + "','" + this.estadoPintura + "','" + this.imagen + "','" + this.codigo + "','" + this.operario + "','1','1');  ";
         if (conexion.setAutoCommitBD(false)) {
             boolean inserto = conexion.insertarBD(sentencia);
             if (inserto) {
@@ -142,7 +144,7 @@ public class Equipo {
                     + "',potencia='" + this.potencia + "',tipoPotencia='" + this.tipoPotencia + "',frecuencia='" + this.frecuencia + "',alimentacion='" + this.alimentacion
                     + "',ambienteCorrosivo='" + this.ambienteCorrosivo + "',tiempoDeFuncionamiento='" + this.tiempoDeFuncionamiento + "',horasDeUso='" + this.horasDeUso + "',funciones='" + this.funciones
                     + "',caracteristicasEspecificas='" + this.caracteristicasEspecificas + "',observaciones='" + this.observaciones + "',control='" + this.control + "',estadoPintura='" + this.estadoPintura
-                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "' WHERE `idEquipos`='" + this.idEquipo + "'";
+                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "',seguridad='"+this.seguridad+"',ambiental='"+this.ambiental+"' WHERE `idEquipos`='" + this.idEquipo + "'";
             boolean borro2 = conexion.actualizarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -209,6 +211,8 @@ public class Equipo {
             e.setEstadoPintura(rs.getString("estadoPintura"));
             e.setImagen(rs.getString("imagen"));
             e.setOperario(rs.getString("operario"));
+            e.setSeguridad(rs.getInt("seguridad"));
+            e.setAmbiental(rs.getInt("ambiental"));
             listaDeEquipos.add(e);
         }
         conexion.cerrarConexion();
@@ -256,6 +260,8 @@ public class Equipo {
             e.setEstadoPintura(datosE.getString("estadoPintura"));
             e.setImagen(datosE.getString("imagen"));
             e.setOperario(datosE.getString("operario"));
+            e.setSeguridad(datosE.getInt("seguridad"));
+            e.setAmbiental(datosE.getInt("ambiental"));
         }
         conexion.cerrarConexion();
         return e;
@@ -647,16 +653,35 @@ public class Equipo {
         this.operario = operario;
     }
 
+    public int getSeguridad() {
+        return seguridad;
+    }
+
+    public void setSeguridad(int seguridad) {
+        this.seguridad = seguridad;
+    }
+
+    public int getAmbiental() {
+        return ambiental;
+    }
+
+    public void setAmbiental(int ambiental) {
+        this.ambiental = ambiental;
+    }
+
+ 
+    
+
     public int getNumeroDeOTs() throws SQLException {
         ConexionBD conexion = new ConexionBD();
-        int i = 0;
+        this.numeroOrdenes = 0;
         String sql = "SELECT * FROM `ordenesdetrabajo` WHERE `solicitudesDeMantenimiento_equipos_idequipos`='" + this.idEquipo + "';";
         ResultSet datosOT = conexion.consultarBD(sql);
         while (datosOT.next()) {
-            i++;
+             this.numeroOrdenes++;
         }
         conexion.cerrarConexion();
-        return i;
+        return  this.numeroOrdenes ;
     }
 
 }
