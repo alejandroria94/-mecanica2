@@ -1054,52 +1054,7 @@ function controladorCR($http) {
 ;
 function controladorIndicador($http) {
     var ind = this;
-//    ind.datosmes = [];
     ind.datosaño = [];
-//    var mes = new Highcharts.Chart({
-//        chart: {
-//            renderTo: 'fallasmes',
-//            type: 'column',
-//            options3d: {
-//                enabled: true,
-//                alpha: 10,
-//                beta: 6,
-//                depth: 100,
-//                viewDistance: 30
-//            }
-//        },
-//        title: {
-//            text: ''
-//        },
-//        subtitle: {
-//            text: ''
-//        },
-//        tooltip: {
-//            valueSuffix: ''
-////            pointFormat: '<span><strong></strong></span><strong><b style="color:red; font-size:16px;">{point.y}</b> </strong><br/>'
-//        },
-//        xAxis: {
-//            title: {
-//                text: 'Día del Mes'
-//            },
-//            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
-//        },
-//        yAxis: {
-//            title: {
-//                text: 'Horas promedio de uso'
-//            },
-//            plotLines: [{
-//                    value: 0,
-//                    width: 1,
-//                    color: '#808080'
-//                }]
-//        },
-//        plotOptions: {
-//            column: {
-//                depth: 30
-//            }
-//        }
-//    });
     var anno = new Highcharts.Chart({
         chart: {
             renderTo: 'fallasaño'
@@ -1151,7 +1106,11 @@ function controladorIndicador($http) {
                         ind.datosaño = res.data.ANNO;
                         anno.setTitle({text: ind.indicador});
 //                        mes.yAxis[0].setTitle({text: "Bananas"});
-                        anno.yAxis[0].setTitle({text: "Bananas"});
+                        if(ind.indicador==="disponibilidad"){
+                        anno.yAxis[0].setTitle({text: "% Porcentaje"});
+                        }else{
+                        anno.yAxis[0].setTitle({text: "# Horas"});
+                        }
 //                        var listam = mes.series[0];
 //                        if (listam !== undefined) {
 //                            listam.destroy();
