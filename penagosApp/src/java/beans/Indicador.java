@@ -14,13 +14,28 @@ public class Indicador {
     float accidentabilidad;
     float disponibilidad;
     float confiabilidad;
+    float totalHorasMto;
+    float totalHorasParada;
     int dia;
+    int mes;
+    int anno;
+    int numeroOTs;
 
     public Indicador() {
         this.mantenibilidad=1;
         this.accidentabilidad=2;
         this.disponibilidad=3;
         this.confiabilidad=4;
+    }
+    
+     public void sumarNumeroOt(){
+        this.numeroOTs+=1;
+    }
+    public void sumarHorasParada(float horas){
+        this.totalHorasParada+=horas;
+    }
+    public void sumarHorasMTO(float horas){
+        this.totalHorasMto+=horas;
     }
 
     public float getMantenibilidad() {
@@ -62,10 +77,45 @@ public class Indicador {
     public void setDia(int dia) {
         this.dia = dia;
     }
-    
-    
-    
-    
-    
-    
+
+    public int getMes() {
+        return mes;
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+    }
+
+    public int getAnno() {
+        return anno;
+    }
+
+    public void setAnno(int anno) {
+        this.anno = anno;
+    }
+
+    public float getTotalHorasMto() {
+        return totalHorasMto;
+    }
+
+    public void setTotalHorasMto(float totalHorasMto) {
+        this.totalHorasMto = totalHorasMto;
+    }
+
+    public float getTotalHorasParada() {
+        return totalHorasParada;
+    }
+
+    public void setTotalHorasParada(float totalHorasParada) {
+        this.totalHorasParada = totalHorasParada;
+    }
+
+    public int getNumeroOTs() {
+        return numeroOTs;
+    }
+
+    public void setNumeroOTs(int numeroOTs) {
+        this.numeroOTs = numeroOTs;
+    }
+           
 }

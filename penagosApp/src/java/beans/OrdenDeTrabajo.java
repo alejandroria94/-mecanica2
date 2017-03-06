@@ -235,7 +235,9 @@ public class OrdenDeTrabajo {
         conexion.cerrarConexion();
         return exito;
     }
-
+    
+    
+   
     /**
      *
      * @param idSolicitud

@@ -654,16 +654,16 @@
             String Mes = "" + request.getParameter("mes");
             String Anno = "" + request.getParameter("anno");
             Equipo e = new Equipo();
-            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
+//            List<Indicador> mes = e.listaMesIndicador(Id, Mes, Anno, proceso);
             List<Indicador> anno = e.listaAnnoIndicador(Id, Anno, proceso);
             List<Float> tiempomes = new ArrayList<>();
             List<Float> tiempoanno = new ArrayList<>();
             for (Indicador to : anno) {
                 tiempoanno.add(to.getAccidentabilidad());
             }
-            for (Indicador to : mes) {
-                tiempomes.add(to.getAccidentabilidad());
-            }
+//            for (Indicador to : mes) {
+//                tiempomes.add(to.getAccidentabilidad());
+//            }
             respuesta += ",\"" + proceso + "\": true";
             respuesta = respuesta + ",\"Mes\":" + new Gson().toJson(tiempomes);
             respuesta = respuesta + ",\"ANNO\":" + new Gson().toJson(tiempoanno);
