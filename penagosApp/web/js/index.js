@@ -13,6 +13,7 @@ app.controller('penagosHerrAppCtrl', ['$http', controladorHerr]);
 app.controller('penagosCRAppCtrl', ['$http', controladorCR]);
 app.controller('penagosIndicadorAppCtrl', ['$http', controladorIndicador]);
 app.controller('penagosEditarSolicitudAppCtrl', ['$http', controladorEditarSolicitud]);
+app.controller('penagosMatrizAppCtrl', ['$http', controladorMatriz]);
 
 function controladorLista($http) {
     var ma = this;
@@ -46,7 +47,7 @@ function controladorLista($http) {
                 }).then(function (res, textStatus, jqXHR) {
                     if (res.data.ok === true) {
                         if (res.data[params.proceso] === true) {
-
+                            $('#matriz').modal('close');
                         } else {
                             swal("Error", "Ha ocurrido un error, consulte con su administrador", "error");
                         }
@@ -1189,6 +1190,28 @@ function controladorIndicador($http) {
             swal("Equipo", "Debe seleccionar uno", "error");
         }
 
+    };
+}
+;
+function controladorMatriz($http) {
+    var mt = this;
+    mt.ver = function () {
+        var params = {
+            proceso: "listar",
+            anno:mt.anno
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            mt.Equipos = res.data.Maquinas;
+            
+            for(var i=0; i>mt.Equipos.lenght;i++){
+               var jo={color:"#c62828"};
+                mt.Equipos
+            }
+        });
     };
 }
 ;

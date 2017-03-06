@@ -65,7 +65,8 @@
         "eliminarOT",
         "matriz",
         "vereditarsolicitud",
-        "guardarot",});
+        "guardarot",
+        "listamatriz",});
 
     // Si el usuario tiene sesión válida y permisos.
     String proceso = "" + request.getParameter("proceso");
@@ -537,12 +538,20 @@
             String id = "" + request.getParameter("id");
             String seguridad = "" + request.getParameter("seguridad");
             String ambiental = "" + request.getParameter("ambiental");
-            
-            if (true) {
+            Equipo e = new Equipo().buscarEquipo(id);
+            e.setAmbiental(Integer.parseInt(ambiental));
+            e.setSeguridad(Integer.parseInt(seguridad));
+            if (e.actualizarrEquipo()) {
                 respuesta += ",\"" + proceso + "\": true";
             } else {
                 respuesta += ",\"" + proceso + "\": false";
             }
+        } else if (proceso.equals("listamatriz")) {
+            String anno = "" + request.getParameter("anno");
+            Equipo e = new Equipo();
+            List<Equipo> lista = e.getListaDeEquipos();
+            respuesta += ",\"" + proceso + "\": true,\"Maquinas\":" + new Gson().toJson(lista);
+
         }//        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
