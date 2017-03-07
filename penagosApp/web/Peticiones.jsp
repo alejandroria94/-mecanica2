@@ -63,8 +63,10 @@
         "disponibilidad",
         "confiabilidad",
         "eliminarOT",
+        "matriz",
         "vereditarsolicitud",
-        "guardarot",});
+        "guardarot",
+        "listamatriz",});
 
     // Si el usuario tiene sesión válida y permisos.
     String proceso = "" + request.getParameter("proceso");
@@ -112,7 +114,7 @@
             String serie = "" + request.getParameter("serie");
             String imagen = "" + request.getParameter("imagen");
             String peso = "" + request.getParameter("peso");
-            String altura = "" + request.getParameter("altura");
+            String altura = "" + request.getParameter("alto");
             String largo = "" + request.getParameter("largo");
             String ancho = "" + request.getParameter("ancho");
             String potencia = "" + request.getParameter("potencia");
@@ -532,7 +534,25 @@
             String Id = "" + request.getParameter("id");
             SolicitudDeMantenimiento sm = new SolicitudDeMantenimiento();
             respuesta += ",\"" + proceso + "\": true,\"Solicitud\":" + new Gson().toJson(sm.buscarSolicitudDeMantenimiento(Id));
-        } //        -----------------------------------
+        } else if (proceso.equals("matriz")) {
+            String id = "" + request.getParameter("id");
+            String seguridad = "" + request.getParameter("seguridad");
+            String ambiental = "" + request.getParameter("ambiental");
+            Equipo e = new Equipo().buscarEquipo(id);
+            e.setAmbiental(Integer.parseInt(ambiental));
+            e.setSeguridad(Integer.parseInt(seguridad));
+            if (e.actualizarrEquipo()) {
+                respuesta += ",\"" + proceso + "\": true";
+            } else {
+                respuesta += ",\"" + proceso + "\": false";
+            }
+        } else if (proceso.equals("listamatriz")) {
+            String anno = "" + request.getParameter("anno");
+            Equipo e = new Equipo();
+            List<Equipo> lista = e.getListaDeEquipos();
+            respuesta += ",\"" + proceso + "\": true,\"Maquinas\":" + new Gson().toJson(lista);
+
+        }//        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {
             String Id = "" + request.getParameter("id");
             String Tiempo = "" + request.getParameter("tiempo");

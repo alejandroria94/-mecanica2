@@ -13,9 +13,11 @@ app.controller('penagosHerrAppCtrl', ['$http', controladorHerr]);
 app.controller('penagosCRAppCtrl', ['$http', controladorCR]);
 app.controller('penagosIndicadorAppCtrl', ['$http', controladorIndicador]);
 app.controller('penagosEditarSolicitudAppCtrl', ['$http', controladorEditarSolicitud]);
+app.controller('penagosMatrizAppCtrl', ['$http', controladorMatriz]);
 
 function controladorLista($http) {
     var ma = this;
+    var idequipo;
     var params = {
         proceso: "listar"
     };
@@ -26,6 +28,42 @@ function controladorLista($http) {
     }).then(function (res, textStatus, jqXHR) {
         ma.Maquinas = res.data.Maquinas;
     });
+    ma.matrizid = function (id) {
+        idequipo = id;
+    };
+    ma.matriz = function () {
+        var params = {
+            proceso: "matriz",
+            id: idequipo,
+            seguridad: ma.seguridad,
+            ambiental: ma.ambiental
+        };
+        if (ma.seguridad !== undefined && ma.seguridad > 0) {
+            if (ma.ambiental !== undefined && ma.ambiental > 0) {
+                $http({
+                    method: 'POST',
+                    url: 'Peticiones.jsp',
+                    params: params
+                }).then(function (res, textStatus, jqXHR) {
+                    if (res.data.ok === true) {
+                        if (res.data[params.proceso] === true) {
+                            $('#matriz').modal('close');
+                        } else {
+                            swal("Error", "Ha ocurrido un error, consulte con su administrador", "error");
+                        }
+                    } else {
+                        swal(res.data.errorMsg);
+                    }
+                    ;
+                });
+            } else {
+                swal("Ambiental", "Debe digitar un valor correcto", "error");
+            }
+        } else {
+            swal("Seguridad", "Debe digitar un valor correcto", "error");
+        }
+
+    };
     ma.nuevaMaquina = function () {
         window.location = "FichaTecnica.jsp";
     };
@@ -54,9 +92,21 @@ function controladorLista($http) {
                         }).then(function (res, textStatus, jqXHR) {
                             if (res.data.ok === true) {
                                 if (res.data[params.proceso] === true) {
-                                    swal("Eliminado!", "Se ha eliminado el registro", "success", function () {
-                                        window.location.reload();
-                                    });
+                                    swal({
+                                        title: "Equipo",
+                                        text: "Eliminada con exito",
+                                        type: "success",
+                                        confirmButtonColor: "#8CD4F5",
+                                        confirmButtonText: "OK",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.reload();
+                                                }
+                                            });
+
                                 } else {
                                     swal("Error", "No se ha eliminado, consulte con su administrador", "error");
                                 }
@@ -143,28 +193,28 @@ function controladorFichaTecnicaEditar($http) {
         };
         if (fte.horasuso !== undefined && fte.horasuso >= 0) {
             if (fte.tiempofuncionamiento !== undefined && fte.tiempofuncionamiento >= 0) {
-
+                $http({
+                    method: 'POST',
+                    url: 'Peticiones.jsp',
+                    params: equipo
+                }).then(function (res, textStatus, jqXHR) {
+                    if (res.data.ok === true) {
+                        if (res.data[equipo.proceso] === true) {
+                            window.location = "Maquinas.jsp";
+                        } else {
+                            alert("Por favor vefifique sus datos");
+                        }
+                    } else {
+                        alert(res.data.errorMsg);
+                    }
+                });
             } else {
                 swal("Tiempo Funcionamiento", "Debe digitar un valor aceptado", "error");
             }
         } else {
             swal("Horas Uso", "Debe digitar un valor aceptado", "error");
         }
-        $http({
-            method: 'POST',
-            url: 'Peticiones.jsp',
-            params: equipo
-        }).then(function (res, textStatus, jqXHR) {
-            if (res.data.ok === true) {
-                if (res.data[equipo.proceso] === true) {
-                    window.location = "Maquinas.jsp";
-                } else {
-                    alert("Por favor vefifique sus datos");
-                }
-            } else {
-                alert(res.data.errorMsg);
-            }
-        });
+
     };
     fte.salir = function () {
         window.location = "Maquinas.jsp";
@@ -206,28 +256,28 @@ function controladorFichaTecnica($http) {
         };
         if (ft.horasuso !== undefined && ft.horasuso >= 0) {
             if (ft.tiempofuncionamiento !== undefined && ft.tiempofuncionamiento >= 0) {
-
+                $http({
+                    method: 'POST',
+                    url: 'Peticiones.jsp',
+                    params: equipo
+                }).then(function (res, textStatus, jqXHR) {
+                    if (res.data.ok === true) {
+                        if (res.data[equipo.proceso] === true) {
+                            window.location = "Maquinas.jsp";
+                        } else {
+                            alert("Por favor vefifique sus datos");
+                        }
+                    } else {
+                        alert(res.data.errorMsg);
+                    }
+                });
             } else {
                 swal("Tiempo Funcionamiento", "Debe digitar un valor aceptado", "error");
             }
         } else {
             swal("Horas Uso", "Debe digitar un valor aceptado", "error");
         }
-        $http({
-            method: 'POST',
-            url: 'Peticiones.jsp',
-            params: equipo
-        }).then(function (res, textStatus, jqXHR) {
-            if (res.data.ok === true) {
-                if (res.data[equipo.proceso] === true) {
-                    window.location = "Maquinas.jsp";
-                } else {
-                    alert("Por favor vefifique sus datos");
-                }
-            } else {
-                alert(res.data.errorMsg);
-            }
-        });
+
     };
     ft.salir = function () {
         window.location = "Maquinas.jsp";
@@ -1106,10 +1156,10 @@ function controladorIndicador($http) {
                         ind.datosaño = res.data.ANNO;
                         anno.setTitle({text: ind.indicador});
 //                        mes.yAxis[0].setTitle({text: "Bananas"});
-                        if(ind.indicador==="disponibilidad"){
-                        anno.yAxis[0].setTitle({text: "% Porcentaje"});
-                        }else{
-                        anno.yAxis[0].setTitle({text: "# Horas"});
+                        if (ind.indicador === "disponibilidad") {
+                            anno.yAxis[0].setTitle({text: "% Porcentaje"});
+                        } else {
+                            anno.yAxis[0].setTitle({text: "# Horas"});
                         }
 //                        var listam = mes.series[0];
 //                        if (listam !== undefined) {
@@ -1140,6 +1190,28 @@ function controladorIndicador($http) {
             swal("Equipo", "Debe seleccionar uno", "error");
         }
 
+    };
+}
+;
+function controladorMatriz($http) {
+    var mt = this;
+    mt.ver = function () {
+        var params = {
+            proceso: "listar",
+            anno:mt.anno
+        };
+        $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            mt.Equipos = res.data.Maquinas;
+            
+            for(var i=0; i>mt.Equipos.lenght;i++){
+               var jo={color:"#c62828"};
+                mt.Equipos
+            }
+        });
     };
 }
 ;

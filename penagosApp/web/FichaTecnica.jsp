@@ -172,7 +172,7 @@
                         <div class="row">
                             <div class="input-field col s4">
                                 <input id="last_name" type="text" class="validate "ng-model="ft.tipoCF">
-                                <label for="last_name" class="indigo-text text-darken-4">Tipo</label>
+                                <label for="last_name" class="indigo-text text-darken-4">Tipo Potencia</label>
                             </div>
                             <div class="input-field col s4">
                                 <input id="last_name" type="text" class="validate " ng-model="ft.potencia">

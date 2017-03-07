@@ -1,16 +1,20 @@
 <%-- 
-    Document   : Maquinas
+    Document   : Solicitudes Mantenimiento
     Created on : 23/02/2017, 04:34:07 PM
     Author     : Andres
 --%>
 
 
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.List"%>
+<%@page import="beans.Equipo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="usuarios" class="beans.Usuario" scope="session"/>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Maquinas</title>
+        <title>Indicadores</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/materialize.min.css" rel="stylesheet">
@@ -67,6 +71,26 @@
                 float: left;
                 position: relative;
             }
+            .rojo{
+                background-color: #c62828;
+            }
+            .rojo:hover{
+                background-color: #c62828;
+            }
+            .amarillo{
+                background-color: #ffee58;
+                 color: black;
+            }
+            .amarillo:hover{
+                background-color: #ffee58;
+            }
+            .verde{
+                background-color: #00c853;
+            }
+            .verde:hover{
+                background-color: #00c853;
+            }
+            
         </style>
     </head>
     <body >
@@ -93,11 +117,11 @@
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
-                                <li ><a class="blue-text text-darken-2" href="#" style="background-color: #ccc">Maquinas</a></li>
-                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2"href="Indicadores.jsp" >Indicadores</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" href="#!" data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
+                                <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
+                                <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" >Orden de Trabajo</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" style="background-color: #ccc" href="Indicadores.jsp" >Indicadores</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="#!"  data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
                                         if (usuarios == null) {%>
@@ -136,86 +160,35 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
             <%
                 if (usuarios != null) {
             %>
             <!--inicio de contenido-->
-            <div ng-controller="penagosListaAppCtrl as ma">
-                <div class="row">
-                    <div class="col s2 offset-s5">
-                        <legend><strong  class="indigo-text text-darken-4" style="font-size: 20px">Maquinas</strong></legend>
-                    </div>
-                </div>
+            <div ng-controller="penagosMatrizAppCtrl as mt">
                 <div class="row">
                     <div class="col s10 offset-s1">
                         <div class="row">
+                            <div class="input-field col s3">
+                                <input id="last_name" type="number" class="validate "  placeholder=" " ng-model="mt.anno">
+                                <label for="last_name" class="indigo-text text-darken-4" >Año</label> 
+                            </div>
                             <div class="input-field col s2">
-                                <a class="waves-effect light-blue lighten-1 btn left-align" ng-click="ma.nuevaMaquina()">Nueva</a>
+                                <a class="waves-effect cyan darken-2 btn left-align" href=""ng-click="mt.ver()">Ver Indicador</a>
                             </div>
-                            <div class="input-field col s2 offset-s8">
-                                <input id="last_name" type="text" ng-model="ma.busqueda" class="validate ">
-                                <label class="indigo-text text-darken-4" >Busqueda</label>
-                            </div>
-
                         </div>
-                        <table class="bordered highlight responsive-table">
-                            <thead>
-                                <tr>
-                                    <th class="indigo-text text-darken-4">Codigo</th>
-                                    <th class="indigo-text text-darken-4">Nombre</th>
-                                    <th class="indigo-text text-darken-4">Seccion</th>
-                                    <th class="indigo-text text-darken-4">Modelo</th>
-                                    <th class="indigo-text text-darken-4" style="width: 200px">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr  ng-repeat="m in ma.Maquinas| filter:ma.busqueda |orderBy: 'nombre'" data-id="{{m.idEquipos}}">
-                                    <td>{{m.codigo}}</td>
-                                    <td>{{m.nombre}}</td>
-                                    <td>{{m.ubicacion}}</td>
-                                    <td>{{m.modelo}}</td>
-                                    <td>
-                                        <div id="menu">
-                                            <ul>
-                                                <li class="nivel1 btn"><a href="#" class="nivel1">Opciones</a>
-                                                    <ul>
-                                                        <li><a href="EditarFichaTecnica.jsp?id={{m.idEquipo}}" >Editar</a></li>
-                                                        <li><a href="#" ng-click="ma.eliminar(m.idEquipo)">Eliminar</a></li>
-                                                        <li><a href="#">Hoja de Vida</a></li>
-                                                        <li><a href="#matriz" ng-click="ma.matrizid(m.idEquipo)">Matriz</a></li>
-                                                        <!--<li><a href="#">Otras</a></li>-->
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
-
                 </div>
-                <div id="matriz" class="modal" style="width: 25%" >
-                    <div class="modal-content" >
-                        <div class="row">
-                            <div class="input-field col s10 offset-s1 ">
-                                <input id="email" type="number" ng-model="ma.seguridad">
-                                <label for="email" class="blue-text text-darken-2">Seguridad</label>
-                            </div>
+<!--                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div id="fallasmes">
+
                         </div>
-                        <div class="row">
-                            <div class="input-field col s10 offset-s1">
-                                <input id="password" type="number" ng-model="ma.ambiental">
-                                <label for="password" class="blue-text text-darken-2">Ambiental</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s5 offset-s1">
-                                <a class="waves-effect btn" ng-click="ma.matriz()">Enviar</a>
-                            </div>
-                        </div>
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <a ng-repeat="m in mt.Equipos"   ng-class="{verde: m.ambiental===2, amarillo: m.ambiental===1, rojo: m.ambiental===0}" class="btn" >{{m.nombre}}</a>
                     </div>
                 </div>
             </div>
@@ -244,33 +217,24 @@
         <script src="js/index.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/underscore.js"></script>
+        <script src="js/highcharts.js"></script>
         <script>
-    var app = {
-        init: function () {
-
-            $('.carousel.carousel-slider').carousel({
-                fullWidth: true,
-                duration: 500
-            });
-            $('.modal').modal({
-                dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                opacity: .5, // Opacity of modal background
-                inDuration: 300, // Transition in duration
-                outDuration: 200, // Transition out duration
-                startingTop: '40%', // Starting top style attribute
-                endingTop: '10%'
-            });
-
-        },
-        boton: function (btn) {
-            $(btn).parents("tr").find("#menu").show();
-            //                                                    $("#menu").show();
-        }
-        
-    };
-    $(document).ready(function () {
-        app.init();
-    });
+                                    var app = {
+                                    init: function () {
+                                    $('select').material_select();
+                                    $('.modal').modal({
+                                    dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                                            opacity: .5, // Opacity of modal background
+                                            inDuration: 300, // Transition in duration
+                                            outDuration: 200, // Transition out duration
+                                            startingTop: '40%', // Starting top style attribute
+                                            endingTop: '10%'
+                                    });
+                                    }
+                                    };
+                                    $(document).ready(function () {
+                                    app.init();
+                                    });
         </script>
     </body>
 </html>
