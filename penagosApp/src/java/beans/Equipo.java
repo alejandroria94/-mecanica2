@@ -44,9 +44,12 @@ public class Equipo {
     private String estadoPintura;
     private String imagen;
     private String operario;
-    private int numeroOrdenes;
     private int seguridad;
     private int ambiental;
+    private int numeroOrdenes;
+    private float costo;
+    private int totalHorasParada;
+    private int valorMatriz;
 
     public Equipo() {
 //        this.nombre = "";
@@ -144,7 +147,7 @@ public class Equipo {
                     + "',potencia='" + this.potencia + "',tipoPotencia='" + this.tipoPotencia + "',frecuencia='" + this.frecuencia + "',alimentacion='" + this.alimentacion
                     + "',ambienteCorrosivo='" + this.ambienteCorrosivo + "',tiempoDeFuncionamiento='" + this.tiempoDeFuncionamiento + "',horasDeUso='" + this.horasDeUso + "',funciones='" + this.funciones
                     + "',caracteristicasEspecificas='" + this.caracteristicasEspecificas + "',observaciones='" + this.observaciones + "',control='" + this.control + "',estadoPintura='" + this.estadoPintura
-                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "',seguridad='"+this.seguridad+"',ambiental='"+this.ambiental+"' WHERE `idEquipos`='" + this.idEquipo + "'";
+                    + "',imagen='" + this.imagen + "',codigo='" + this.codigo + "',operario='" + this.operario + "',seguridad='" + this.seguridad + "',ambiental='" + this.ambiental + "' WHERE `idEquipos`='" + this.idEquipo + "'";
             boolean borro2 = conexion.actualizarBD(sql2);
             if (borro2) {
                 conexion.commitBD();
@@ -213,6 +216,50 @@ public class Equipo {
             e.setOperario(rs.getString("operario"));
             e.setSeguridad(rs.getInt("seguridad"));
             e.setAmbiental(rs.getInt("ambiental"));
+            listaDeEquipos.add(e);
+        }
+        conexion.cerrarConexion();
+        return listaDeEquipos;
+    }
+    
+     public List<Equipo> getListaDeEquipos(String anno) throws SQLException {
+        ConexionBD conexion = new ConexionBD();
+        Equipo e;
+        List<Equipo> listaDeEquipos = new ArrayList<>();
+        String sql = "select * from Equipos;";
+        ResultSet rs = conexion.consultarBD(sql);
+        while (rs.next()) {
+            e = new Equipo();
+            e.setIdEquipo(Integer.parseInt(rs.getString("idEquipos")));
+            e.setNombre(rs.getString("nombre"));
+            e.setCodigo(rs.getString("codigo"));
+            e.setTipoEquipo(rs.getString("tipoEquipo"));
+            e.setMarca(rs.getString("marca"));
+            e.setModelo(rs.getString("modelo"));
+            e.setUbicacion(rs.getString("ubicacion"));
+            e.setEstado(rs.getString("estado"));
+            e.setSerie(rs.getString("serie"));
+            e.setPeso(rs.getString("peso"));
+            e.setAltura(rs.getString("altura"));
+            e.setLargo(rs.getString("largo"));
+            e.setAncho(rs.getString("ancho"));
+            e.setPotencia(rs.getString("potencia"));
+            e.setTipoPotencia(rs.getString("tipoPotencia"));
+            e.setFrecuencia(rs.getString("frecuencia"));
+            e.setAlimentacion(rs.getString("alimentacion"));
+            e.setAmbienteCorrosivo(rs.getBoolean("ambienteCorrosivo"));
+            e.setTiempoDeFuncionamiento(rs.getFloat("tiempoDeFuncionamiento"));
+            e.setHorasDeUso(rs.getFloat("horasDeUso"));
+            e.setFunciones(rs.getString("funciones"));
+            e.setCaracteristicasEspecificas(rs.getString("caracteristicasEspecificas"));
+            e.setObservaciones(rs.getString("observaciones"));
+            e.setControl(rs.getString("control"));
+            e.setEstadoPintura(rs.getString("estadoPintura"));
+            e.setImagen(rs.getString("imagen"));
+            e.setOperario(rs.getString("operario"));
+            e.setSeguridad(rs.getInt("seguridad"));
+            e.setAmbiental(rs.getInt("ambiental"));
+            e.calcularValorMatriz(anno);
             listaDeEquipos.add(e);
         }
         conexion.cerrarConexion();
@@ -290,6 +337,7 @@ public class Equipo {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
@@ -310,6 +358,7 @@ public class Equipo {
             lista.add(i);
             ots++;
         }
+        conexion.cerrarConexion();
         return lista;
     }
 
@@ -384,7 +433,7 @@ public class Equipo {
             case "disponibilidad":
                 float disponibilidad;
                 for (Indicador in : listaIndicador) {
-                    disponibilidad = (in.getConfiabilidad() / (in.getConfiabilidad() + in.getMantenibilidad()))*100;
+                    disponibilidad = (in.getConfiabilidad() / (in.getConfiabilidad() + in.getMantenibilidad())) * 100;
                     in.setDisponibilidad(disponibilidad);
                 }
                 break;
@@ -669,19 +718,36 @@ public class Equipo {
         this.ambiental = ambiental;
     }
 
- 
-    
+    public int getValorMatriz() {
+        return valorMatriz;
+    }
 
-    public int getNumeroDeOTs() throws SQLException {
+    public void calcularCostosyNumeroDeOT(String anno) throws SQLException {
         ConexionBD conexion = new ConexionBD();
         this.numeroOrdenes = 0;
-        String sql = "SELECT * FROM `ordenesdetrabajo` WHERE `solicitudesDeMantenimiento_equipos_idequipos`='" + this.idEquipo + "';";
-        ResultSet datosOT = conexion.consultarBD(sql);
-        while (datosOT.next()) {
-             this.numeroOrdenes++;
+        this.costo = 0;
+        this.totalHorasParada = 0;
+        String sql = " SELECT totalHorasParada, (costoManoDeObra + costoMateriales )AS costo FROM `ordenesdetrabajo`"
+                + " WHERE solicitudesDeMantenimiento_equipos_idequipos='" + this.idEquipo + "' AND YEAR(`fechaInicio`)='" + anno + "';";
+        ResultSet datosE = conexion.consultarBD(sql);
+        while (datosE.next()) {
+            this.numeroOrdenes++;
+            this.costo += datosE.getInt("costo");
+            this.totalHorasParada += datosE.getFloat("totalHorasParada");
         }
         conexion.cerrarConexion();
-        return  this.numeroOrdenes ;
+    }
+
+    
+    public void calcularValorMatriz(String anno) throws SQLException {
+        calcularCostosyNumeroDeOT(anno);
+        int operacion = 0;
+        if (this.numeroOrdenes == 0) {
+            operacion = this.totalHorasParada;
+        } else {
+            operacion=this.totalHorasParada/this.numeroOrdenes;
+        }
+        this.valorMatriz = (int) (this.numeroOrdenes + this.seguridad + this.ambiental + this.costo + operacion);
     }
 
 }
