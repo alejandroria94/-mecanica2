@@ -320,7 +320,7 @@ function controladorPrincipal($http) {
         }).then(function (res, textStatus, jqXHR) {
             if (res.data.ok === true) {
                 if (res.data[c1.proceso] === true) {
-                    window.location.reload();
+                    window.location="index.jsp";
                 } else {
                 }
             } else {
@@ -778,6 +778,8 @@ function controladorOT($http) {
 ;
 function controladorListOT($http) {
     var lot = this;
+    var idso;
+    var ideq;
     var params = {
         proceso: "listarordenes"
     };
@@ -788,6 +790,30 @@ function controladorListOT($http) {
     }).then(function (res, textStatus, jqXHR) {
         lot.Ordenes = res.data.Ordenes;
     });
+    lot.cerrarorden= function (ids, ide){
+        idso=ids;
+        ideq=ide;
+        var params = {
+            proceso: "cerrarorden",
+            id: ids,
+            idequipo: ide
+        };
+          $http({
+            method: 'POST',
+            url: 'Peticiones.jsp',
+            params: params
+        }).then(function (res, textStatus, jqXHR) {
+            if (res.data.ok === true) {
+                if (res.data[params.proceso] === true) {
+                    swal("Exito", "Orden cerrada con exito", "success");
+                } else {
+                    swal("Error", "Ha ocurrido un error, consulte con el administrador", "error");
+                }
+            } else {
+                swal(res.data.errorMsg);
+            }
+        });
+    };
     lot.generarPdf = function (ids, ide) {
         var params = {
             proceso: "generarpdfot",
@@ -1196,8 +1222,9 @@ function controladorIndicador($http) {
 function controladorMatriz($http) {
     var mt = this;
     mt.ver = function () {
-        var params = {
-            proceso: "listar",
+        if(mt.anno!==undefined &&mt.anno>0){
+              var params = {
+            proceso: "listamatriz",
             anno:mt.anno
         };
         $http({
@@ -1205,13 +1232,13 @@ function controladorMatriz($http) {
             url: 'Peticiones.jsp',
             params: params
         }).then(function (res, textStatus, jqXHR) {
-            mt.Equipos = res.data.Maquinas;
+            mt.Equipos = res.data.Equipos;
             
-            for(var i=0; i>mt.Equipos.lenght;i++){
-               var jo={color:"#c62828"};
-                mt.Equipos
-            }
         });
+        }else{
+            swal("Año","Debe digitar un valor correcto","error");
+        }
+      
     };
 }
 ;

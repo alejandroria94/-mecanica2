@@ -44,7 +44,6 @@
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="Cronograma.jsp">Cronograma</a></li>
@@ -58,6 +57,7 @@
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
+                                <li ><a class="blue-text text-darken-2" href="Matriz.jsp">Matriz De Criticidad</a></li>
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp">Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp">Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!" style="background-color: #ccc" data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
@@ -299,7 +299,7 @@
                                 init: function () {
                                     $('.timepicker').pickatime({
                                         format:"hh:mm:ss",
-                                        twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
+                                        twelvehour: true, // change to 12 hour AM/PM clock from 24 hour
                                         autoclose: true,
                                         vibrate: true // vibrate the device when dragging clock hand
                                     });

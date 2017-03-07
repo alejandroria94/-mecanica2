@@ -72,25 +72,26 @@
                 position: relative;
             }
             .rojo{
-                background-color: #c62828;
+                background-color: #f44336 ;
             }
             .rojo:hover{
-                background-color: #c62828;
+                background-color: #f44336 ;
             }
             .amarillo{
-                background-color: #ffee58;
+                background-color: #ffd600 ;
                  color: black;
             }
             .amarillo:hover{
-                background-color: #ffee58;
+                background-color: #ffd600 ;
+                 color: black;
             }
             .verde{
                 background-color: #00c853;
+                 color: black;
             }
             .verde:hover{
                 background-color: #00c853;
             }
-            
         </style>
     </head>
     <body >
@@ -103,7 +104,6 @@
                         <ul id="almacen" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="ListaProveedores.jsp">Proveedores</a></li>
                             <li><a class="blue-text text-darken-2" href="ListaHerramientas.jsp">Herramientas</a></li>
-                            <li><a class="blue-text text-darken-2" href="#!">Repuestos</a></li>
                         </ul>
                         <ul id="mantenimiento" class="dropdown-content">
                             <li><a class="blue-text text-darken-2"href="Cronograma.jsp">Cronograma</a></li>
@@ -117,10 +117,11 @@
                                         usuarios = (beans.Usuario) session.getAttribute("usr");
                                         if (usuarios != null) {
                                     %>
+                                <li ><a class="blue-text text-darken-2" href="Matriz.jsp" style="background-color: #ccc" >Matriz De Criticidad</a></li>
                                 <li ><a class="blue-text text-darken-2" href="Maquinas.jsp" >Maquinas</a></li>
                                 <li><a class="blue-text text-darken-2" href="ListaOrdenDeTrabajo.jsp" >Orden de Trabajo</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="SolicitudesMto.jsp"  data-activates="mantenimiento">Mantenimiento&nbsp;▼</a></li>
-                                <li><a class="dropdown-button blue-text text-darken-2" style="background-color: #ccc" href="Indicadores.jsp" >Indicadores</a></li>
+                                <li><a class="dropdown-button blue-text text-darken-2" href="Indicadores.jsp" >Indicadores</a></li>
                                 <li><a class="dropdown-button blue-text text-darken-2" href="#!"  data-activates="almacen">&nbsp;&nbsp;&nbsp;Almacen&nbsp;&nbsp;&nbsp;▼</a></li>
                                 <li><a class="dropdown-button red-text text-accent-4" ng-click="vm.salir()">Salir</a></li>
                                     <%} else
@@ -176,6 +177,11 @@
                             <div class="input-field col s2">
                                 <a class="waves-effect cyan darken-2 btn left-align" href=""ng-click="mt.ver()">Ver Indicador</a>
                             </div>
+                            <div class="input-field col s7">
+                                <a class="red btn left-align black-text" >Criticos</a>
+                                <a class="yellow accent-4 btn left-align black-text" >Medianamente critico</a>
+                                <a class="green accent-4 btn left-align black-text" >No Criticos</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -188,7 +194,7 @@
                 </div>-->
                 <div class="row">
                     <div class="col s10 offset-s1">
-                        <a ng-repeat="m in mt.Equipos"   ng-class="{verde: m.ambiental===2, amarillo: m.ambiental===1, rojo: m.ambiental===0}" class="btn" >{{m.nombre}}</a>
+                        <a ng-repeat="m in mt.Equipos"   ng-class="{verde: m.valorMatriz<=71, amarillo: m.valorMatriz<=123, rojo: m.valorMatriz>123}" class="btn" >{{m.nombre}}</a>
                     </div>
                 </div>
             </div>

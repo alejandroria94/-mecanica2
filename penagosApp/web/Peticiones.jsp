@@ -53,6 +53,7 @@
         "eliminarsolicitud",
         "listarproveedores",
         "listarordenes",
+        "cerrarorden",
         "guardaproveedor",
         "eliminarproveedor",
         "listarherramientas",
@@ -403,6 +404,17 @@
             OrdenDeTrabajo ot = new OrdenDeTrabajo();
             List<OrdenDeTrabajo> lista = ot.getListaOrdenesDeTrabajo();
             respuesta += ",\"" + proceso + "\": true,\"Ordenes\":" + new Gson().toJson(lista);
+        } else if (proceso.equals("cerrarorden")) {
+            String idSolicitud = "" + request.getParameter("id");
+            String idEquipo = "" + request.getParameter("idequipo");
+            OrdenDeTrabajo ot = new OrdenDeTrabajo().buscarOrdenDeTrabajo(idSolicitud, idEquipo);
+            ot.setCerrada(true);
+            if (ot.actualizarOrdenDeTrabajo()) {
+                 respuesta += ",\"" + proceso + "\": true";
+            } else {
+                 respuesta += ",\"" + proceso + "\": false";
+            }
+
         } else if (proceso.equals("generarpdfsolicitud")) {
             String idSolicitud = "" + request.getParameter("id");
             String idEquipo = "" + request.getParameter("idequipo");
@@ -549,8 +561,8 @@
         } else if (proceso.equals("listamatriz")) {
             String anno = "" + request.getParameter("anno");
             Equipo e = new Equipo();
-            List<Equipo> lista = e.getListaDeEquipos();
-            respuesta += ",\"" + proceso + "\": true,\"Maquinas\":" + new Gson().toJson(lista);
+            List<Equipo> lista = e.getListaDeEquipos(anno);
+            respuesta += ",\"" + proceso + "\": true,\"Equipos\":" + new Gson().toJson(lista);
 
         }//        -----------------------------------
         else if (proceso.equals("tiempodeocio")) {

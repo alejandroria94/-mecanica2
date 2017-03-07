@@ -740,7 +740,7 @@ public class Equipo {
 
     public void calcularValorMatriz(String anno) throws SQLException {
         calcularCostosyNumeroDeOT(anno);
-        int operacion = 0;
+        int operacion;
         if (this.numeroOrdenes == 0) {operacion = this.totalHorasParada;}
         else { operacion = this.totalHorasParada / this.numeroOrdenes;}
         int f = 0;
