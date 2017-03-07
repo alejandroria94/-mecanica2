@@ -320,7 +320,7 @@ function controladorPrincipal($http) {
         }).then(function (res, textStatus, jqXHR) {
             if (res.data.ok === true) {
                 if (res.data[c1.proceso] === true) {
-                    window.location="index.jsp";
+                    window.location = "index.jsp";
                 } else {
                 }
             } else {
@@ -557,21 +557,29 @@ function controladorEditarSolicitud($http) {
         };
         if (st.fecha !== undefined) {
             if (id !== undefined) {
-                $http({
-                    method: 'POST',
-                    url: 'Peticiones.jsp',
-                    params: solicitud
-                }).then(function (res, textStatus, jqXHR) {
-                    if (res.data.ok === true) {
-                        if (res.data[solicitud.proceso] === true) {
-                            window.location = "SolicitudesMto.jsp";
-                        } else {
-                            swal("Por favor verifique sus datos");
-                        }
+                if (st.horasmto !== undefined) {
+                    if (st.horasparada !== undefined) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: solicitud
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[solicitud.proceso] === true) {
+                                    window.location = "SolicitudesMto.jsp";
+                                } else {
+                                    swal("Por favor verifique sus datos");
+                                }
+                            } else {
+                                alert(res.data.errorMsg);
+                            }
+                        });
                     } else {
-                        alert(res.data.errorMsg);
+                        swal("Error", "Debe digitar horas de parada", "error");
                     }
-                });
+                } else {
+                    swal("Error", "Debe digitar horas de mantenimiento", "error");
+                }
             } else {
                 swal("Error", "Debe selecionar un equipo", "error");
             }
@@ -638,23 +646,31 @@ function controladorSolicitud($http) {
             realizado: st.realizado,
             recibido: st.recibido
         };
-        if (st.fecha !== undefined) {
+      if (st.fecha !== undefined) {
             if (id !== undefined) {
-                $http({
-                    method: 'POST',
-                    url: 'Peticiones.jsp',
-                    params: solicitud
-                }).then(function (res, textStatus, jqXHR) {
-                    if (res.data.ok === true) {
-                        if (res.data[solicitud.proceso] === true) {
-                            window.location = "SolicitudesMto.jsp";
-                        } else {
-                            alert("Por favor vefifique sus datos");
-                        }
+                if (st.horasmto !== undefined) {
+                    if (st.horasparada !== undefined) {
+                        $http({
+                            method: 'POST',
+                            url: 'Peticiones.jsp',
+                            params: solicitud
+                        }).then(function (res, textStatus, jqXHR) {
+                            if (res.data.ok === true) {
+                                if (res.data[solicitud.proceso] === true) {
+                                    window.location = "SolicitudesMto.jsp";
+                                } else {
+                                    swal("Por favor verifique sus datos");
+                                }
+                            } else {
+                                alert(res.data.errorMsg);
+                            }
+                        });
                     } else {
-                        alert(res.data.errorMsg);
+                        swal("Error", "Debe digitar horas de parada", "error");
                     }
-                });
+                } else {
+                    swal("Error", "Debe digitar horas de mantenimiento", "error");
+                }
             } else {
                 swal("Error", "Debe selecionar un equipo", "error");
             }
@@ -790,15 +806,15 @@ function controladorListOT($http) {
     }).then(function (res, textStatus, jqXHR) {
         lot.Ordenes = res.data.Ordenes;
     });
-    lot.cerrarorden= function (ids, ide){
-        idso=ids;
-        ideq=ide;
+    lot.cerrarorden = function (ids, ide) {
+        idso = ids;
+        ideq = ide;
         var params = {
             proceso: "cerrarorden",
             id: ids,
             idequipo: ide
         };
-          $http({
+        $http({
             method: 'POST',
             url: 'Peticiones.jsp',
             params: params
@@ -1222,23 +1238,23 @@ function controladorIndicador($http) {
 function controladorMatriz($http) {
     var mt = this;
     mt.ver = function () {
-        if(mt.anno!==undefined &&mt.anno>0){
-              var params = {
-            proceso: "listamatriz",
-            anno:mt.anno
-        };
-        $http({
-            method: 'POST',
-            url: 'Peticiones.jsp',
-            params: params
-        }).then(function (res, textStatus, jqXHR) {
-            mt.Equipos = res.data.Equipos;
-            
-        });
-        }else{
-            swal("Año","Debe digitar un valor correcto","error");
+        if (mt.anno !== undefined && mt.anno > 0) {
+            var params = {
+                proceso: "listamatriz",
+                anno: mt.anno
+            };
+            $http({
+                method: 'POST',
+                url: 'Peticiones.jsp',
+                params: params
+            }).then(function (res, textStatus, jqXHR) {
+                mt.Equipos = res.data.Equipos;
+
+            });
+        } else {
+            swal("Año", "Debe digitar un valor correcto", "error");
         }
-      
+
     };
 }
 ;
