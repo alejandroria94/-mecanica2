@@ -194,7 +194,7 @@
                 </div>-->
                 <div class="row">
                     <div class="col s10 offset-s1">
-                        <a ng-repeat="m in mt.Equipos"   ng-class="{verde: m.valorMatriz<=71, amarillo: m.valorMatriz<=123, rojo: m.valorMatriz>123}" class="btn" >{{m.nombre}}</a>
+                        <a ng-repeat="m in mt.Equipos"   ng-class="{verde: m.valorMatriz<=71, amarillo: m.valorMatriz<=123, rojo: m.valorMatriz>123}" class="btn"ng-click="mt.verequipo(m.idEquipo)" >{{m.nombre}} </a>
                     </div>
                 </div>
             </div>

@@ -1237,6 +1237,7 @@ function controladorIndicador($http) {
 ;
 function controladorMatriz($http) {
     var mt = this;
+    var lista;
     mt.ver = function () {
         if (mt.anno !== undefined && mt.anno > 0) {
             var params = {
@@ -1249,12 +1250,17 @@ function controladorMatriz($http) {
                 params: params
             }).then(function (res, textStatus, jqXHR) {
                 mt.Equipos = res.data.Equipos;
+                lista = res.data.Equipos;
 
             });
         } else {
             swal("Año", "Debe digitar un valor correcto", "error");
         }
 
+    };
+    mt.verequipo= function (id){
+        var equipo= _.findWhere(lista, {idEquipo: id});
+        swal(equipo.nombre, "valor: "+equipo.valorMatriz,"success");
     };
 }
 ;
