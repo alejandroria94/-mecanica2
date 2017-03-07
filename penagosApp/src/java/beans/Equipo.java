@@ -221,8 +221,8 @@ public class Equipo {
         conexion.cerrarConexion();
         return listaDeEquipos;
     }
-    
-     public List<Equipo> getListaDeEquipos(String anno) throws SQLException {
+
+    public List<Equipo> getListaDeEquipos(String anno) throws SQLException {
         ConexionBD conexion = new ConexionBD();
         Equipo e;
         List<Equipo> listaDeEquipos = new ArrayList<>();
@@ -738,16 +738,30 @@ public class Equipo {
         conexion.cerrarConexion();
     }
 
-    
     public void calcularValorMatriz(String anno) throws SQLException {
         calcularCostosyNumeroDeOT(anno);
         int operacion = 0;
-        if (this.numeroOrdenes == 0) {
-            operacion = this.totalHorasParada;
-        } else {
-            operacion=this.totalHorasParada/this.numeroOrdenes;
-        }
-        this.valorMatriz = (int) (this.numeroOrdenes + this.seguridad + this.ambiental + this.costo + operacion);
+        if (this.numeroOrdenes == 0) {operacion = this.totalHorasParada;}
+        else { operacion = this.totalHorasParada / this.numeroOrdenes;}
+        int f = 0;
+        if (this.numeroOrdenes <= 1) { f = 1;}
+        else if (this.numeroOrdenes <= 12){f = 3;}
+        else if(this.numeroOrdenes <= 52){f = 4;}
+        else if(this.numeroOrdenes >52){f = 6;}
+        int tfs = 0;
+        if (operacion < 4) { tfs = 1;}
+        else if (operacion <= 8){tfs = 2;}
+        else if(operacion <= 24){tfs = 4;}
+        else if(operacion >24){tfs = 6;}
+        int ic = 0;
+        if (this.costo < 5000000) { ic = 3;}
+        else if (this.costo <= 20000000){ic = 5;}
+        else if(this.costo <= 50000000){ic = 10;}
+        else if(this.costo <=100000000){ic = 25;}
+        else if(this.costo >100000000){ic = 30;}
+        
+        
+        this.valorMatriz = (int) (f + this.seguridad + this.ambiental + ic + tfs);
     }
 
 }
