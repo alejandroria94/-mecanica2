@@ -95,7 +95,7 @@ public class CronogramaPDF {
         table.addCell(celda);
 
         celda = new PdfPCell(new Phrase("FECHA SOLICITUD", font));
-        celda.setColspan(2);
+        celda.setColspan(1);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
@@ -104,20 +104,20 @@ public class CronogramaPDF {
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("ESTADO SOLICITUD", font));
-        celda.setColspan(2);
+        celda = new PdfPCell(new Phrase("SERVICIO SOLICITADO", font));
+        celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
-        celda = new PdfPCell(new Phrase("SOLICITADA POR", font));
+        celda = new PdfPCell(new Phrase("ACCIONES A REALIZAR", font));
         celda.setColspan(3);
         celda.setBackgroundColor(new BaseColor(142, 170, 219));
         table.addCell(celda);
 
         int i = 1;
         for (SolicitudDeMantenimiento sM : this.solicitudes) {
-
-            celda = new PdfPCell(new Phrase(i + "", font));
+            if(!sM.getEstado().equals("Realizada")){
+             celda = new PdfPCell(new Phrase(i + "", font));
             celda.setColspan(1);
             table.addCell(celda);
 
@@ -126,21 +126,23 @@ public class CronogramaPDF {
             table.addCell(celda);
 
             celda = new PdfPCell(new Phrase(sM.getFecha(), font));
-            celda.setColspan(2);
+            celda.setColspan(1);
             table.addCell(celda);
 
             celda = new PdfPCell(new Phrase(sM.getEquipo().getNombre(), font));
             celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase(sM.getEstado(), font));
-            celda.setColspan(2);
+            celda = new PdfPCell(new Phrase(sM.getDescripcionServicio(), font));
+            celda.setColspan(3);
             table.addCell(celda);
 
-            celda = new PdfPCell(new Phrase(sM.getSolicitadoPor(), font));
+            celda = new PdfPCell(new Phrase(sM.getDescripcionAcciones(), font));
             celda.setColspan(3);
             table.addCell(celda);
             i++;
+            }
+           
         }
         document.add(table);
         document.close();
