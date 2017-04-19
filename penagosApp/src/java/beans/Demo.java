@@ -20,7 +20,7 @@ import java.util.List;
  * @author Fido
  */
 public class Demo {
-
+    
     public static void main(String[] args) throws SQLException, IOException, DocumentException, ParseException {
 
 //        Equipo e = new Equipo();
@@ -103,10 +103,10 @@ public class Demo {
 //        sM.setRealizadoPor("realizadoPor4");
 //        sM.setRecibidoPor("recibidoPor4");
 //        
-//        System.out.println(sM.actualizarSolicitudDeMantenimiento("4"));
-        SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento();
-        CronogramaPDF crPDF = new CronogramaPDF(sM.getListaSolicitudesDeMantenimiento());
-        System.out.println(crPDF.pdfCronograma());
+////        System.out.println(sM.actualizarSolicitudDeMantenimiento("4"));
+//        SolicitudDeMantenimiento sM = new SolicitudDeMantenimiento();
+//        CronogramaPDF crPDF = new CronogramaPDF(sM.getListaSolicitudesDeMantenimiento());
+//        System.out.println(crPDF.pdfCronograma());
 //        
 //        System.out.println(sM.eliminarSolicitudDeMantenimiento("2"));
 //        OrdenDeTrabajo ot = new OrdenDeTrabajo().buscarOrdenDeTrabajo("4", "2");
@@ -123,6 +123,17 @@ public class Demo {
 //        }
 //        System.out.println(new Parametrizacion().getParametro("rutaImgServer"));
 //        System.out.println(new Parametrizacion().getParametro("rutaImgDB"));
-    }
 
+        Instructivo i = new Instructivo();
+        i.setSistema("sistema");
+        i.setHerramientas("herramientas");
+        i.setActividades("actividades");
+        i.setRecomendaciones("recomendaciones");
+        i.setRepuestos("repuestos");
+        i.setGeneralidades("generalidades");
+        i.setNombre("nombre");
+        System.out.println(i.guardarInstructivo("1"));
+          // i.borrarInstructivo("4");
+    }
+    
 }

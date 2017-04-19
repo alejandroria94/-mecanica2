@@ -36,6 +36,7 @@ public class Proveedor {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
@@ -54,6 +55,7 @@ public class Proveedor {
                 conexion.rollbackBD();
             }
         }
+        conexion.cerrarConexion();
         return exito;
     }
 
